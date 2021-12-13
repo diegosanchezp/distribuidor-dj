@@ -1,0 +1,7 @@
+# PostgreSQL Development settings
+# ------------------------------------------------------------------------------
+POSTGRES_HOST=127.0.0.1
+POSTGRES_PORT=5432
+POSTGRES_DB_NAME=devdb
+POSTGRES_USER=devuser
+POSTGRES_PASSWORD=devpass1234
