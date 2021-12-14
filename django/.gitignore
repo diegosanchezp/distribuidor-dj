@@ -1,26 +1,6 @@
-### Python template
-# Byte-compiled / optimized / DLL files
-__pycache__/
-*.py[cod]
-*$py.class
-
 # Django stuff:
 distribuidor_dj/static
 distribuidor_dj/media
 
 # Sphinx documentation
 distribuidor_dj/docs/_build/
-
-# PyBuilder
-target/
-
-# pyenv
-.python-version
-
-celerybeat-schedule
-
-# Temporary
-.netrwhist
-
-# Auto-generated tag files
-tags
