@@ -46,10 +46,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # Out apps
+    # Our apps
     "distribuidor_dj.apps.api.apps.ApiConfig",
     # Third party
     'rest_framework',
+    'drf_spectacular',
 ]
 
 MIDDLEWARE = [
@@ -150,3 +151,15 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # https://overiq.com/django-1-10/handling-media-files-in-django/
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 MEDIA_URL = "/media/"
+
+REST_FRAMEWORK = {
+    # YOUR SETTINGS
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Distribuidor API',
+    'DESCRIPTION': 'Comercio electrónico 2-2021, Distribuidor API',
+    'VERSION': '1.0.0',
+    # OTHER SETTINGS
+}
