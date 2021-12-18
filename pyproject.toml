@@ -12,6 +12,7 @@ django-environ = "^0.8.1"
 djangorestframework = "^3.13.0"
 Markdown = "^3.3.6"
 drf-spectacular = "^0.21.0"
+django-tailwind = "^3.0.1"
 
 [tool.poetry.dev-dependencies]
 

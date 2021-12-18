@@ -46,11 +46,17 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # Our apps
+    # ---- Our apps ----
     "distribuidor_dj.apps.api.apps.ApiConfig",
-    # Third party
+    # ---- Third party ----
+
+    # API REST
     'rest_framework',
     'drf_spectacular',
+
+    # CSS
+    'tailwind',
+    'distribuidor_dj.apps.tailwind_theme.apps.Tailwind_themeConfig',
 ]
 
 MIDDLEWARE = [
@@ -163,3 +169,8 @@ SPECTACULAR_SETTINGS = {
     'VERSION': '1.0.0',
     # OTHER SETTINGS
 }
+
+TAILWIND_APP_NAME = 'distribuidor_dj.apps.tailwind_theme'
+INTERNAL_IPS = [
+    "127.0.0.1",
+]
