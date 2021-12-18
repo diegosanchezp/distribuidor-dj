@@ -1,0 +1,46 @@
+{% comment %}
+Base template for the front end
+{% endcomment %}
+
+{% load i18n %}
+{% load static %}
+{% load tailwind_tags %}
+
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE|default:"en-gb" }}" class="{% block html_class %}no-js{% endblock %}">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <meta name="created" content="{% now "jS M Y h:i" %}" />
+    <meta name="description" content="{% block description %}{% endblock %}" />
+    <meta name="viewport" content="{% block viewport %}width=device-width, initial-scale=1.0{% endblock %}" />
+    <meta name="robots" content="NOARCHIVE,NOCACHE" />
+
+    {% block favicon %}
+    <link rel="shortcut icon" href="{% static "" %}" />
+    {% endblock %}
+
+    {% tailwind_css %}
+    {% block extrahead %}{% endblock %}
+
+    {# ==== Cascading Style Sheets ==== #}
+    {# - Global stylesheet #}
+    {% block extrastyles %}{% endblock %}
+
+    {# ==== JavaScripts ==== #}
+    {% block extrascripts %}{% endblock %}
+    {% block cdn_scripts %}{% endblock %}
+
+  </head>
+  <body>
+    {% comment %}
+      {% include "project/components/header.html" %}
+    {% endcomment %}
+
+    {% block body %}
+    {% endblock %}
+
+    {% comment %}
+      {% include "project/components/footer.html" %}
+    {% endcomment %}
+  </body>
+</html>
