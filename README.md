@@ -44,3 +44,14 @@ python django/manage.py runserver
 ```
 
 Si el servidor inicio exitosamente deberías de poder ingresar a http://127.0.0.1:8000
+
+### Crear app de django
+Las apps de django se crean en la carpeta `django/distribuidor-dj/apps`
+
+Para crear una app ejecute el siguiente comando
+
+```bash
+APP_NAME="myapp"
+mkdir django/distribuidor-dj/apps/$APP_NAME
+python django/manage.py startapp $APP_NAME django/distribuidor-dj/apps/$APP_NAME
+```
