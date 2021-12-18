@@ -56,6 +56,11 @@ except sp.CalledProcessError as e:
     # Better message ?
     raise e
 
+# Install django-tailwind nodejs dependencies
+sp.run(
+    ["python", "manage.py", "tailwind", "install"]
+)
+
 # Apply migrations
 sp.run(
     ["python", "manage.py", "migrate"]
