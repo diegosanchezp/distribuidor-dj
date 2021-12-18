@@ -54,7 +54,8 @@ INSTALLED_APPS = [
     # API REST
     'rest_framework',
     'drf_spectacular',
-
+    # JS
+    "django_htmx",
     # CSS
     'tailwind',
     'distribuidor_dj.apps.tailwind_theme.apps.Tailwind_themeConfig',
@@ -68,6 +69,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "django_htmx.middleware.HtmxMiddleware",
 ]
 
 ROOT_URLCONF = 'distribuidor_dj.urls'
