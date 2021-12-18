@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # ---- Our apps ----
     "distribuidor_dj.apps.api.apps.ApiConfig",
+    "distribuidor_dj.apps.home.apps.HomeConfig",
     # ---- Third party ----
 
     # API REST
