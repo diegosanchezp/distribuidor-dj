@@ -3,6 +3,9 @@
 {% block body %}
   <section class="flex flex-col items-center justify-center h-screen">
     <h1 class="text-5xl">Django + Tailwind = ❤️</h1>
-    <button class="block btn btn-primary mt-4">daisyUI Button</button>
+    <div class="flex flex-col justify-center" x-data="{ count: 0 }">
+      <button class="block btn btn-primary mt-4" x-on:click="count++">Increment</button>
+      <span class="text-center mt-4" x-text="count"></span>
+    </div>
   </section>
 {% endblock body %}
