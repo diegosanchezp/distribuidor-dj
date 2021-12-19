@@ -54,7 +54,9 @@ INSTALLED_APPS = [
     # API REST
     'rest_framework',
     'drf_spectacular',
-
+    # JS
+    "django_htmx",
+    "django_node_assets",
     # CSS
     'tailwind',
     'distribuidor_dj.apps.tailwind_theme.apps.Tailwind_themeConfig',
@@ -68,6 +70,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "django_htmx.middleware.HtmxMiddleware",
 ]
 
 ROOT_URLCONF = 'distribuidor_dj.urls'
@@ -146,6 +149,12 @@ STATIC_ROOT = str(BASE_DIR / "staticfiles")
 # https://docs.djangoproject.com/en/dev/ref/settings/#static-url
 STATIC_URL = "/static/"
 
+STATICFILES_FINDERS = [
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    'django_node_assets.finders.NodeModulesFinder',
+]
+
 # https://docs.djangoproject.com/en/dev/ref/contrib/staticfiles/#std:setting-STATICFILES_DIRS
 STATICFILES_DIRS = [str(BASE_DIR / "static")]
 
@@ -171,7 +180,14 @@ SPECTACULAR_SETTINGS = {
     # OTHER SETTINGS
 }
 
-TAILWIND_APP_NAME = 'distribuidor_dj.apps.tailwind_theme'
+TAILWIND_THEME = "tailwind_theme"
+# django-tailwind config
+TAILWIND_APP_NAME = f'distribuidor_dj.apps.{TAILWIND_THEME}'
 INTERNAL_IPS = [
     "127.0.0.1",
 ]
+
+# django-node-assets config
+STATIC_SRC = BASE_DIR / "distribuidor_dj" / "apps" / TAILWIND_THEME / "static_src"
+NODE_PACKAGE_JSON = str(STATIC_SRC / "package.json")
+NODE_MODULES_ROOT = str(STATIC_SRC / "node_modules")
