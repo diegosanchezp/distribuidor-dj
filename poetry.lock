@@ -151,6 +151,14 @@ python-versions = ">=3.6"
 Django = ">=2.2"
 
 [[package]]
+name = "django-node-assets"
+version = "0.9.10"
+description = "The Django application that allows install and serve assets via Node.js package manager infrastructure."
+category = "main"
+optional = false
+python-versions = "*"
+
+[[package]]
 name = "django-tailwind"
 version = "3.0.1"
 description = "Tailwind CSS Framework for Django projects"
@@ -441,7 +449,7 @@ testing = ["pytest (>=4.6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytes
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "e7b9ae7a6afbf0b00881eccc351038ad9a56b2d2de0665751da16d47315ca281"
+content-hash = "1096fe2ee12f862bd6565e7c27043f9b30674c5225cf35ffb1982f1e5a1e72a8"
 
 [metadata.files]
 arrow = [
@@ -495,6 +503,10 @@ django-environ = [
 django-htmx = [
     {file = "django-htmx-1.6.0.tar.gz", hash = "sha256:e985d01831b95ad88d42694f5667ff2732872dcf3334e835eeb0f31dc4a61d46"},
     {file = "django_htmx-1.6.0-py3-none-any.whl", hash = "sha256:917236c85c7e295b1d52972610a4382d1df6e398bdb6bf964b453ac8756f1d8f"},
+]
+django-node-assets = [
+    {file = "django-node-assets-0.9.10.tar.gz", hash = "sha256:89118fb7eb61453ba09282df5f25e723c2dbd46de601e50eb58951d0011ed407"},
+    {file = "django_node_assets-0.9.10-py3-none-any.whl", hash = "sha256:33cb1cf7b9007252204b08a229f78973d4a65f160cd52a32247895133019ba29"},
 ]
 django-tailwind = [
     {file = "django-tailwind-3.0.1.tar.gz", hash = "sha256:db633c797cb30083385b0951d7871fa1b36359d0603a75303fd32f4bc45bccbc"},
