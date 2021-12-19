@@ -45,6 +45,49 @@ python django/manage.py runserver
 
 Si el servidor inicio exitosamente deberías de poder ingresar a http://127.0.0.1:8000
 
+## Flujo de desarrollo
+
+### Servidores
+Para desarrollar tienes que tener los siguientes servidores levantados
+
+```bash
+# Servidor de django
+python django/manage.py runserver
+
+# Servidor que sincroniza archivos de tailwind
+python django/manage.py tailwind start
+```
+
+### Flujo de commits
+Antes de hacer un commit se ejecutan varios programas que verifican el código que se va a añadir al control de versiones, algunos de estos son
+
+```bash
+Trim Trailing Whitespace.................................................Passed
+Fix End of Files.........................................................Passed
+Check Yaml...........................................(no files to check)Skipped
+Check for added large files..............................................Passed
+Debug Statements (Python)................................................Passed
+Check python ast.........................................................Passed
+flake8...................................................................Passed
+isort....................................................................Passed
+black....................................................................Passed
+```
+
+Usted verá un log similar a ese cuando intente hacer commit, si observan el estado `Failed`, tienen que arreglar modificar su código para arreglarlo
+
+Flake8 verifica que el código de python tenga un estilo predeterminado, si este programa llega a fallar puedes entrar en esta página
+
+https://www.flake8rules.com/
+
+Para saber como arreglar esos errores, con el código que te dice
+
+Si no quieres que ninguna de las verificaciones corra, en caso de tener un problema con alguno de los programas, puedes ejecutar tu commit con el flag `--no-verify`.
+
+```bash
+# NO HAGAS ESTO, a menos que no tengas otra opción
+git commit . -m 'quick fix' --no-verify
+```
+
 ### Crear app de django
 Las apps de django se crean en la carpeta `django/distribuidor-dj/apps`
 
