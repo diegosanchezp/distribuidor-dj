@@ -33,6 +33,7 @@ tags
 # Distribution / packaging
 .Python
 build/
+django/staticfiles/
 develop-eggs/
 dist/
 downloads/
