@@ -98,7 +98,7 @@ USE_TZ = True
 STATICFILES_FINDERS = [
     "django.contrib.staticfiles.finders.FileSystemFinder",
     "django.contrib.staticfiles.finders.AppDirectoriesFinder",
-    "django_node_assets.finders.NodeModulesFinder",
+    "django_node_assets.finders.ManifestNodeModulesFinder",
 ]
 
 REST_FRAMEWORK = {
