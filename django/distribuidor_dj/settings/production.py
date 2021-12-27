@@ -10,6 +10,6 @@ from .base import *  # noqa
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env("SECRET_KEY")  # noqa F405
 
-DATABASES["default"] = dj_database_url.config(conn_max_age=600)  # noqa F405
+DATABASES = {"default": dj_database_url.config(conn_max_age=600)}  # noqa F405
 
 django_heroku.settings(locals(), databases=False, test_runner=False)
