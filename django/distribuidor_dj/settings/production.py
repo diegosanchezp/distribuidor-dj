@@ -1,3 +1,4 @@
+import dj_database_url
 import django_heroku
 
 from .base import *  # noqa
@@ -8,25 +9,7 @@ from .base import *  # noqa
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env("SECRET_KEY")  # noqa F405
-LOGGING = {
-    "version": 1,
-    "disable_existing_loggers": False,
-    "handlers": {
-        "console": {
-            "class": "logging.StreamHandler",
-        },
-    },
-    "root": {
-        "handlers": ["console"],
-        "level": "WARNING",
-    },
-    "loggers": {
-        "django": {
-            "handlers": ["console"],
-            "level": "DEBUG",
-            "propagate": False,
-        },
-    },
-}
 
-django_heroku.settings(locals())
+DATABASES["default"] = dj_database_url.config(conn_max_age=600)  # noqa F405
+
+django_heroku.settings(locals(), databases=False, test_runner=False)
