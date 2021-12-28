@@ -12,4 +12,28 @@ SECRET_KEY = env("SECRET_KEY")  # noqa F405
 
 DATABASES = {"default": dj_database_url.config(conn_max_age=600)}  # noqa F405
 
-django_heroku.settings(locals(), databases=False, test_runner=False)
+STATICFILES_STORAGE = "distribuidor_dj.storage.WhiteNoiseStaticFilesStorage"
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+        },
+    },
+    "loggers": {
+        "django": {
+            "handlers": ["console"],
+            "level": "DEBUG",
+        },
+    },
+}
+
+django_heroku.settings(
+    locals(),
+    databases=False,
+    test_runner=False,
+    staticfiles=False,
+    logging=False,
+)
