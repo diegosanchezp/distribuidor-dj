@@ -1,5 +1,5 @@
 {
   "scripts": {
-    "heroku-prebuild": "npm install ./django/distribuidor_dj/apps/tailwind_theme/static_src/"
+    "heroku-prebuild": "cd ./django/distribuidor_dj/apps/tailwind_theme/static_src/ && npm install"
   }
 }
