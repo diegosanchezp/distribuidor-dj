@@ -14,4 +14,4 @@ build:
 release:
   image: web
   command:
-    - python django/manage.py makemigrations --settings distribuidor_dj.settings.production
+    - python django/manage.py migrate --settings distribuidor_dj.settings.production
