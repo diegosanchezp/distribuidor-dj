@@ -1,5 +1,0 @@
-{
-  "scripts": {
-    "heroku-postbuild": "npm install django/distribuidor_dj/apps/tailwind_theme/static_src/"
-  }
-}
