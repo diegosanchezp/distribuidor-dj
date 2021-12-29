@@ -1,0 +1,8 @@
+node_modules
+Dockerfile
+docker-compose.yml
+.git
+.venv
+.github
+.pre-commit-config.yaml
+README.md
