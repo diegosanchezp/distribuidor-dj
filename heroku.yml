@@ -10,5 +10,7 @@ build:
     release:
      dockerfile: Dockerfile
      target: djangoapp
-     command: python django/manage.py makemigrations --settings distribuidor_dj.settings.production
     web: Dockerfile
+release:
+  image: djangoapp
+  command: python django/manage.py makemigrations --settings distribuidor_dj.settings.production
