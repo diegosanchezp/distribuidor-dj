@@ -1,9 +1,10 @@
 FROM node:17 AS jsbuild
-WORKDIR /distribuidor-dj
-COPY django/ .
-RUN cd ./django/distribuidor_dj/apps/tailwind_theme/static_src && \
-    # Install nodejs dependencies
-    npm ci --only=production && \
+WORKDIR /usr/src/distribuidor-dj
+COPY . ./
+WORKDIR django/distribuidor_dj/apps/tailwind_theme/static_src
+
+ # Install nodejs dependencies
+RUN npm ci && \
     # Build tailwind CSS
     npm run build
 
@@ -14,10 +15,10 @@ ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
 WORKDIR /distribuidor-dj
-COPY --from=jsbuild /distribuidor-dj .
+COPY --from=jsbuild /usr/src/distribuidor-dj .
 RUN pip install -r requirements.txt
-RUN ./django/manage.py migrate && \
-    ./django/manage.py collectstatic --noinput
+RUN python django/manage.py migrate && \
+    python django/manage.py collectstatic --noinput
 # TODO:Run the image as a non-root user
 # RUN adduser -D myuser
 # USER myuser
