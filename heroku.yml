@@ -1,0 +1,13 @@
+# https://devcenter.heroku.com/articles/build-docker-images-heroku-yml
+# TODO: delete heroku python and node extensions
+setup:
+  addons:
+    - plan: heroku-postgresql:hobby-dev
+      as: DATABASE
+build:
+  docker:
+    # TODO multistage build
+    release:
+     dockerfile: Dockerfile
+     target: jsbuild
+    web: Dockerfile # TODO
