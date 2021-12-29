@@ -17,11 +17,13 @@ ENV PYTHONUNBUFFERED=1
 WORKDIR /distribuidor-dj
 COPY --from=jsbuild /usr/src/distribuidor-dj .
 RUN pip install -r requirements.txt
-RUN python django/manage.py migrate && \
-    python django/manage.py collectstatic --noinput
-# TODO:Run the image as a non-root user
-# RUN adduser -D myuser
-# USER myuser
+
+# Copy static files
+RUN python django/manage.py collectstatic --noinput
+
+# Run the image as a non-root user
+#RUN adduser -D myuser
+#USER myuser
 
 # Run the app.  CMD is required to run on Heroku
 # $PORT is set by Heroku
