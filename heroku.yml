@@ -12,4 +12,4 @@ build:
 release:
   image: web
   command:
-    - python django/manage.py migrate --settings distribuidor_dj.settings.production
+    - ./release-tasks.sh
