@@ -9,5 +9,6 @@ build:
     # TODO multistage build
     release:
      dockerfile: Dockerfile
-     target: jsbuild
-    web: Dockerfile # TODO
+     target: djangoapp
+     command: python django/manage.py makemigrations --settings distribuidor_dj.settings.production
+    web: Dockerfile

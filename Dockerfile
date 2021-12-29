@@ -8,7 +8,7 @@ RUN npm ci && \
     # Build tailwind CSS
     npm run build
 
-FROM python:3.9.9
+FROM python:3.9.9 AS djangoapp
 # Prevents Python from writing pyc files to disc
 ENV PYTHONDONTWRITEBYTECODE=1
 # Prevents Python from buffering stdout and stderr
@@ -18,8 +18,9 @@ WORKDIR /distribuidor-dj
 COPY --from=jsbuild /usr/src/distribuidor-dj .
 RUN pip install -r requirements.txt
 
-# Copy static files
-RUN python django/manage.py collectstatic --noinput
+# Copy static files and remove node_modules folder
+RUN python django/manage.py collectstatic --noinput && \
+    rm -r django/distribuidor_dj/apps/tailwind_theme/static_src/node_modules
 
 # Run the image as a non-root user
 #RUN adduser -D myuser
