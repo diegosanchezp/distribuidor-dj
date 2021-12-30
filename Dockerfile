@@ -1,13 +1,16 @@
+# https://docs.docker.com/develop/develop-images/multistage-build/
+
+# --- JS BUILD --- #
 FROM node:17 AS jsbuild
 WORKDIR /usr/src/distribuidor-dj
 COPY . ./
 WORKDIR django/distribuidor_dj/apps/tailwind_theme/static_src
-
  # Install nodejs dependencies
 RUN npm ci && \
     # Build tailwind CSS
     npm run build
 
+# --- PYTHON BUILD --- #
 FROM python:3.9.9 AS djangoapp
 # Prevents Python from writing pyc files to disc
 ENV PYTHONDONTWRITEBYTECODE=1
