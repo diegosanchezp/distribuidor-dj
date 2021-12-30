@@ -5,3 +5,5 @@ POSTGRES_PORT=5432
 POSTGRES_DB_NAME=devdb
 POSTGRES_USER=devuser
 POSTGRES_PASSWORD=devpass1234
+# This environment variable can be read by dj_database_url python package
+DATABASE_URL=postgresql://devuser:devpass1234@127.0.0.1:5432/devdb
