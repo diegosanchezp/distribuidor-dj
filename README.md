@@ -57,6 +57,27 @@ python django/manage.py runserver
 # Servidor que sincroniza archivos de tailwind
 python django/manage.py tailwind start
 ```
+### Coding
+Se recomienda utilizar [tipos](https://docs.python.org/3/library/typing.html) en el código de python que se escriba para mejorar la legibilidad y evitar menos bugs.
+
+Por ejemplo
+
+```py
+from django.shortcuts import render
+from django.http import HttpRequest, HttpResponse
+
+# HttpRequest y HttpResponse provenientes de django se utilizan para los tipos de
+# la función home_view
+def home_view(request: HttpRequest) -> HttpResponse:
+    return render(request, template_name="home.html", context={})
+```
+
+Para checkear los tipos puedes instalar la extensión de Visual Estudio Code [Pyright](https://github.com/microsoft/pyright#vs-code-integration)
+
+Para mayor información
+https://github.com/typeddjango/django-stubs
+https://sobolevn.me/2019/08/typechecking-django-and-drf
+
 
 ### Flujo de commits
 Antes de hacer un commit se ejecutan varios programas que verifican el código que se va a añadir al control de versiones, algunos de estos son
