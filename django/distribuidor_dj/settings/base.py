@@ -24,6 +24,10 @@ INSTALLED_APPS = [
     # ---- Our apps ----
     "distribuidor_dj.apps.api.apps.ApiConfig",
     "distribuidor_dj.apps.home.apps.HomeConfig",
+    "distribuidor_dj.apps.state.apps.StateConfig",
+    "distribuidor_dj.apps.invoice.apps.InvoiceConfig",
+    "distribuidor_dj.apps.shipment.apps.ShipmentConfig",
+    "distribuidor_dj.apps.customer.apps.CustomerConfig",
     # ---- Third party ----
     # API REST
     "rest_framework",
