@@ -11,7 +11,8 @@ Estas son las dependencias que tienen que tener instaladas en su sistema operati
      2. https://wiki.archlinux.org/title/PostgreSQL#Initial_configuration
    - **Windows**: les toca de tarea a ustedes ver como instalar PostgreSQL en Windows, tiene que tener la configuración de instalación, sin usuarios ni autenticación
 2. Python3.9
-3. Poetry ( Gestor de dependencias de python )
+3. Nodejs 17
+4. Poetry ( Gestor de dependencias de python )
    - https://python-poetry.org/docs/#installation
 
 ### Instalación de dependencias de python
