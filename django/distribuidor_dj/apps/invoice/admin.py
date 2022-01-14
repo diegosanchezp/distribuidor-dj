@@ -1,10 +1,14 @@
 from django.contrib import admin
 
-from .models import Invoice, InvoiceStatusDate  # noqa F401
+from .models import Invoice, InvoiceStatusDate
+
 
 # Register your models here.
+class InvoiceStatusDateInline(admin.TabularInline):
+    model = InvoiceStatusDate
+    extra = 1
 
 
 @admin.register(Invoice)
 class InvoiceAdmin(admin.ModelAdmin):
-    pass
+    inlines = (InvoiceStatusDateInline,)
