@@ -70,8 +70,9 @@ class Shipment(StateMachineModel):
     )
 
     customer = models.ForeignKey(
-        "customer.Customer",
+        "auth.User",
         verbose_name=_("Cliente del comercio"),
+        limit_choices_to={"groups__name": "cliente"},
         # delete shipment if customer deleted
         on_delete=models.CASCADE,
     )

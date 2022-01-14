@@ -44,7 +44,8 @@ class Invoice(StateMachineModel):
 
     # TODO: limit to groups
     commerce = models.ForeignKey(
-        "customer.Customer",
+        "auth.User",
+        limit_choices_to={"groups__name": "comercio"},
         verbose_name=_("Cliente comercio"),
         # delete shipment if customer deleted
         on_delete=models.CASCADE,
