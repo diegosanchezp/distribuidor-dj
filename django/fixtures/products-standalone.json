@@ -1,0 +1,37 @@
+[
+{
+    "model": "shipment.product",
+    "pk": 1,
+    "fields": {
+        "name": "Playstation 5"
+    }
+},
+{
+    "model": "shipment.product",
+    "pk": 2,
+    "fields": {
+        "name": "Laptop Acer"
+    }
+},
+{
+    "model": "shipment.product",
+    "pk": 3,
+    "fields": {
+        "name": "Laptop Dell"
+    }
+},
+{
+    "model": "shipment.product",
+    "pk": 4,
+    "fields": {
+        "name": "Audifonos Xiaomi"
+    }
+},
+{
+    "model": "shipment.product",
+    "pk": 5,
+    "fields": {
+        "name": "Telefono Xiaomi"
+    }
+}
+]

@@ -1,0 +1,22 @@
+[
+{
+    "model": "shipment.address",
+    "pk": 1,
+    "fields": {
+        "state": "Zulia",
+        "city": "Maracaibo",
+        "street": "Calle 23",
+        "zipcode": ""
+    }
+},
+{
+    "model": "shipment.address",
+    "pk": 2,
+    "fields": {
+        "state": "Miranda",
+        "city": "Caracas",
+        "street": "Calle New York",
+        "zipcode": "1073"
+    }
+}
+]
