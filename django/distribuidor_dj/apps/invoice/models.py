@@ -1,6 +1,7 @@
 from enum import auto, unique
 
 from distribuidor_dj.apps.state.models import StateMachineModel, StatusDate
+from distribuidor_dj.utils import const
 from distribuidor_dj.utils.enum import AutoName
 
 from django.core.validators import MinValueValidator
@@ -42,10 +43,9 @@ class Invoice(StateMachineModel):
         related_name="invoice",
     )
 
-    # TODO: limit to groups
     commerce = models.ForeignKey(
         "auth.User",
-        limit_choices_to={"groups__name": "comercio"},
+        limit_choices_to={"groups__name": const.COMMERCE_GROUP_NAME},
         verbose_name=_("Cliente comercio"),
         # delete shipment if customer deleted
         on_delete=models.CASCADE,

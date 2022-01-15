@@ -1,6 +1,7 @@
 from enum import auto, unique
 
 from distribuidor_dj.apps.state.models import StateMachineModel, StatusDate
+from distribuidor_dj.utils import const
 from distribuidor_dj.utils.enum import AutoName
 
 from django.core.validators import MinValueValidator
@@ -72,7 +73,7 @@ class Shipment(StateMachineModel):
     customer = models.ForeignKey(
         "auth.User",
         verbose_name=_("Cliente del comercio"),
-        limit_choices_to={"groups__name": "cliente"},
+        limit_choices_to={"groups__name": const.CLIENT_GROUP_NAME},
         # delete shipment if customer deleted
         on_delete=models.CASCADE,
     )
