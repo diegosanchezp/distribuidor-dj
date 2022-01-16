@@ -117,6 +117,6 @@ Para crear una app ejecute el siguiente comando
 
 ```bash
 APP_NAME="myapp"
-mkdir django/distribuidor-dj/apps/$APP_NAME
-python django/manage.py startapp $APP_NAME django/distribuidor-dj/apps/$APP_NAME
+mkdir django/distribuidor_dj/apps/$APP_NAME
+python django/manage.py startapp $APP_NAME django/distribuidor_dj/apps/$APP_NAME
 ```
