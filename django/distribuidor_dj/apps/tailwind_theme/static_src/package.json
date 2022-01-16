@@ -35,7 +35,7 @@
   },
   "dependencies": {
     "alpinejs": "^3.7.0",
-    "daisyui": "^1.16.6",
+    "daisyui": "^1.23.0",
     "htmx.org": "^1.6.1"
   }
 }
