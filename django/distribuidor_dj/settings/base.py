@@ -38,6 +38,8 @@ INSTALLED_APPS = [
     # CSS
     "tailwind",
     "distribuidor_dj.apps.tailwind_theme.apps.Tailwind_themeConfig",
+    # Forms
+    "widget_tweaks",
 ]
 
 MIDDLEWARE = [
