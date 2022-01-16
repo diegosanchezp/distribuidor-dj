@@ -24,4 +24,5 @@ urlpatterns = [
     path("", home_view, name="home"),
     path("admin/", admin.site.urls),
     path("api/", include("distribuidor_dj.apps.api.urls")),
+    path("accounts/", include("distribuidor_dj.apps.auth.urls")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
