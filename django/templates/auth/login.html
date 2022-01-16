@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block body %}
+
+<form method="post" action="{% url 'login' %}">
+  {% csrf_token %}
+
+  <input type="hidden" name="next" value="{{ next }}">
+
+  <div class="hero min-h-screen bg-base-200">
+    <div class="flex-col justify-center hero-content lg:flex-row">
+      <div class="text-center lg:text-left">
+        <h1 class="mb-5 text-5xl font-bold">
+          Arcane Express
+        </h1>
+        <p class="mb-5">
+          Ingresar al dashboard.
+        </p>
+        <div>
+        </div>
+
+        {# For unauthenticated views #}
+
+        {% if next %}
+        <div class="flex flex-col justify-center items-center border border-solid border-error">
+            {% if user.is_authenticated %}
+              <p class="text-error">
+                Tu cuenta no tiene have acceso a la pagina. Para proceder,
+                por favor ingresa con una cuenta que tenga acceso.
+              </p>
+            {% else %}
+              <p class="text-error">Please autenticate para ver la pagina.</p>
+            {% endif %}
+        </div>
+        {% endif %}
+
+      </div>
+      <div class="card flex-shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
+        <div class="card-body">
+          {% include "partials/form_field.html" with field=form.username %}
+          {% include "partials/form_field.html" with field=form.password %}
+          <div class="form-control">
+            <label class="label">
+              {# Assumes you set up the password_reset view in your URLconf #}
+              <a href="{% url 'password_reset' %}" class="label-text-alt">Olvidaste tu contraseña?</a>
+            </label>
+          </div>
+          {% if form.errors %}
+            <p class="text-error">Tu usuario y contraseña no coinciden.</p>
+          {% endif %}
+          <div class="form-control mt-6">
+            <input type="submit" value="Ingresar" class="btn btn-primary">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+{% endblock %}
