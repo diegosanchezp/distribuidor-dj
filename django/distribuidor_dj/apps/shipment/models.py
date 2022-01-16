@@ -4,6 +4,7 @@ from distribuidor_dj.apps.state.models import StateMachineModel, StatusDate
 from distribuidor_dj.utils import const
 from distribuidor_dj.utils.enum import AutoName
 
+from django.apps import apps
 from django.core.validators import MinValueValidator
 from django.db import models
 from django.utils.translation import gettext_lazy as _
@@ -16,6 +17,12 @@ class ShipmentEvents(AutoName):
 
 
 class Shipment(StateMachineModel):
+    def __init__(self, *args, **kwargs):
+        self.status_date_class = apps.get_model(
+            "shipment", "ShipmentStatusDate"
+        )
+        super().__init__(*args, **kwargs)
+
     class States(models.TextChoices):
         """
         Shipment States enumeration
@@ -31,6 +38,8 @@ class Shipment(StateMachineModel):
         RECIEVED = "RECIEVED", _("Recibido")  # The shipment product has
         # reached its target
         # Final state
+
+    status_date_relattr = "shipment"
 
     machine = {
         States.SENDED: {

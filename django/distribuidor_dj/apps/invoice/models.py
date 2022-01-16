@@ -4,6 +4,7 @@ from distribuidor_dj.apps.state.models import StateMachineModel, StatusDate
 from distribuidor_dj.utils import const
 from distribuidor_dj.utils.enum import AutoName
 
+from django.apps import apps
 from django.core.validators import MinValueValidator
 from django.db import models
 from django.utils.translation import gettext_lazy as _
@@ -16,6 +17,10 @@ class InvoiceEvents(AutoName):
 
 # Create your models here.
 class Invoice(StateMachineModel):
+    def __init__(self, *args, **kwargs):
+        self.status_date_class = apps.get_model("invoice", "InvoiceStatusDate")
+        super().__init__(*args, **kwargs)
+
     class States(models.TextChoices):
         """
         Invoice States enumeration
@@ -23,6 +28,8 @@ class Invoice(StateMachineModel):
 
         PAID = "PAID", _("Pagado")
         UNPAID = "UNPAID", _("No pagado")
+
+    status_date_relattr = "invoice"
 
     machine = {
         States.UNPAID: {
