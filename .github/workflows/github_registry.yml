@@ -57,6 +57,10 @@ jobs:
       -
         name: Checkout
         uses: actions/checkout@v2
+
+      -
+        name: Login to heroku registry
+        run: docker login --username=_ --password=$HEROKU_API_KEY registry.heroku.com
       -
         name: Release to heroku
         run: |
