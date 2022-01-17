@@ -1,7 +1,11 @@
-name: CI to GHCR
+name: CI to GHCR and deploy to heroku
 
 on: [push]
 
+# Set environment variables
+env:
+  HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+  APP_NAME: ${{ 'distribuidor-dj' }}
 jobs:
 
   build:
@@ -37,7 +41,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: ./
-          file: ./Dockerfile
+          file: ./Dockerfile.real
           builder: ${{ steps.buildx.outputs.name }}
           push: true
           tags: ghcr.io/diegosanchezp/distribuidor-dj:latest
@@ -46,3 +50,15 @@ jobs:
       -
         name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      -
+        name: Checkout
+        uses: actions/checkout@v2
+      -
+        name: Release to heroku
+        run: |
+          heroku container:push web -a $APP_NAME
+          heroku container:release web -a $APP_NAME
