@@ -1,6 +1,8 @@
 name: CI to GHCR and deploy to heroku
 
-on: [push]
+on:
+  push:
+    branches: [ main ]
 
 # Set environment variables
 env:
