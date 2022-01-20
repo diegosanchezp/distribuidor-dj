@@ -5,6 +5,7 @@ from . import views
 
 urlpatterns = [
     path("login/", views.LoginView.as_view(), name="login"),
+    path("login-proxy/", views.LoginProxyView.as_view(), name="login_proxy"),
     path(
         "password_change/",
         auth_views.PasswordChangeView.as_view(),
@@ -31,7 +32,7 @@ urlpatterns = [
         name="password_reset_confirm",
     ),
     path(
-        "accounts/reset/done/",
+        "reset/done/",
         auth_views.PasswordResetCompleteView.as_view(),
         name="password_reset_complete",
     ),
