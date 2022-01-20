@@ -46,6 +46,9 @@ django-node-assets==0.9.10 \
 django-tailwind==3.0.1; python_version >= "3.8" and python_version < "4.0" \
     --hash=sha256:db633c797cb30083385b0951d7871fa1b36359d0603a75303fd32f4bc45bccbc \
     --hash=sha256:941907f403b8b5fe177f8fb50503f45412f8f67fe923d8efda0fad45b5865d71
+django-widget-tweaks==1.4.12; python_version >= "3.7" \
+    --hash=sha256:9bfc5c705684754a83cc81da328b39ad1b80f32bd0f4340e2a810cbab4b0c00e \
+    --hash=sha256:fe6b17d5d595c63331f300917980db2afcf71f240ab9341b954aea8f45d25b9a
 django==4.0; python_version >= "3.8" \
     --hash=sha256:59304646ebc6a77b9b6a59adc67d51ecb03c5e3d63ed1f14c909cdfda84e8010 \
     --hash=sha256:d5a8a14da819a8b9237ee4d8c78dfe056ff6e8a7511987be627192225113ee75
