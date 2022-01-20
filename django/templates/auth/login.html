@@ -22,16 +22,21 @@
         {# For unauthenticated views #}
 
         {% if next %}
-        <div class="flex flex-col justify-center items-center border border-solid border-error">
             {% if user.is_authenticated %}
-              <p class="text-error">
-                Tu cuenta no tiene have acceso a la pagina. Para proceder,
-                por favor ingresa con una cuenta que tenga acceso.
-              </p>
+              {% for message in messages %}
+                <div class="alert alert-{{message.tags|default:"error"}}">
+                  <div class="flex-1">
+                    <label>{{message}}</label>
+                  </div>
+                </div>
+              {% endfor %}
             {% else %}
-              <p class="text-error">Please autenticate para ver la pagina.</p>
+              <div class="alert alert-error">
+                <div class="flex-1">
+                  <label>Por favor autenticate, para ver la pagina.</label>
+                </div>
+              </div>
             {% endif %}
-        </div>
         {% endif %}
 
       </div>
