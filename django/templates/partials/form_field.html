@@ -1,0 +1,58 @@
+{% load widget_tweaks %}
+
+{% if field.is_hidden %}
+    {{ field }}
+{% else %}
+    {% comment %}
+        Make the field widget type available to templates so we can mark-up
+        checkbox and radio inputs differently to other widgets.
+    {% endcomment %}
+
+    {% block control_group %}
+        <div class="form-control{% if style == "horizontal" %} row{% endif %}">
+
+            {% block label %}
+                {% if not nolabel and field.widget_type != 'checkbox' %}
+                    <label for="{{ field.auto_id }}" class="{% if style|default:"stacked" != 'stacked' %}{% endif %}label{% if field.field.required %} required{% endif %}">
+                      <span class="label-text">{{ field.label|safe }}</span>
+                    </label>
+                {% endif %}
+            {% endblock %}
+
+            {% block controls %}
+                    {% block widget %}
+                        {% if field.widget_type == 'checkbox' %}
+                            {# I haven't test if this works or not #}
+                            <label for="{{ field.auto_id }}" class="label cursor-pointer{% if field.field.required %}required{% endif %}">
+                                <span>{{ field.label|safe }}</span>
+                                {% render_field field class+="checkbox checkbox-primary" %}
+                            </label>
+                        {% else %}
+                            {% if field.errors %}
+                              {% render_field field class+="input input-warning input-bordered" %}
+                            {% else %}
+                              {% render_field field class+="input input-bordered" %}
+                            {% endif %}
+                        {% endif %}
+                    {% endblock %}
+
+                    {% block errors %}
+                        {% for error in field.errors %}
+                            <label>
+                              <span class="text-error">{{ error }}</span>
+                            </label>
+                        {% endfor %}
+                    {% endblock %}
+
+                    {% block help_text %}
+                        {% if field.help_text %}
+                            <small class="text-primary">
+                                {# We allow HTML within form help fields #}
+                                {{ field.help_text|safe }}
+                            </small>
+                        {% endif %}
+                    {% endblock %}
+            {% endblock %}
+        </div>
+    {% endblock %}
+{% endif %}

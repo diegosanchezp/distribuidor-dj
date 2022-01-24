@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block body %}
+<section class="flex flex-col items-center justify-center h-screen">
+  <h1 class="text-3xl text-center">Permiso denegado</h1>
+  <p class="text-center">No tienes los permisos necesarios para acceder a esta vista</p>
+  <p>Razon: {{ exception }}</p>
+  <button class="btn btn-primary"><a href="{% url "login" %}">Login</a></button>
+</section>
+{% endblock body %}
