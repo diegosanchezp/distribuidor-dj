@@ -12,6 +12,7 @@ repos:
     -   id: end-of-file-fixer
     -   id: check-yaml
     -   id: check-added-large-files
+        args: ['--maxkb=2048']
     # Python
     -   id: debug-statements # checks for debugger imports and py37+ `breakpoint()` calls in python source
     -   id: check-ast # simply checks whether the files parse as valid python.

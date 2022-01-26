@@ -1,11 +1,54 @@
 {% extends "base.html" %}
+{% load static %}
+
+{% block extrastyles %}
+  <style>
+    .wall-img {
+      background-image: url("/static/img/home-hero-img.webp");
+      height: 25em;
+      background-position: center;
+      background-size: cover;
+    }
+    .hero-title {
+      background-color: rgba(0, 0, 0, 0.5);
+      width: fit-content;
+      padding: 0.5em 2em;
+      margin-bottom: 2em;
+    }
+
+    .hero-title-shadow {
+      text-shadow: 0px 4px 4px #000000;
+    }
+  </style>
+{% endblock %}
 
 {% block body %}
-  <section class="flex flex-col items-center justify-center h-screen">
-    <h1 class="text-5xl">Django + Tailwind = ❤️</h1>
-    <div class="flex flex-col justify-center" x-data="{ count: 0 }">
-      <button class="block btn btn-primary mt-4" x-on:click="count++">Increment</button>
-      <span class="text-center mt-4" x-text="count"></span>
+  <section class="wall-img flex flex-col justify-center items-center">
+    <div class="hero-title mb-8">
+      <p class="text-2xl hero-title-shadow">El futuro es hoy, rastrea tu envio</p>
+    </div>
+    <form>
+      <input class="input input-bordered" placeholder="Número de rastreo" type="text">
+      <button class="btn btn-primary" type="submit">Buscar</button>
+    </form>
+  </section>
+
+  <article class="flex gap-x-6 m-10">
+    <img src="{% static 'img/imagenSeñores.png' %}">
+    <div class="flex flex-col gap-y-2">
+      <h3>Trabajando para <span class="underline decoration-2 underline-offset-4 decoration-primary">lograr</span> un mundo mejor.</h3>
+      <p>Realizamos envíos a todas partes del mundo, Brasil, Panamá, Argentina, Bolivia, Norteamérica, Centroamérica, Europa, Asia, África y Oceanía.</p>
+    </div>
+  </article>
+
+  <section class="px-2">
+    <h3 class="text-center text-3xl m-6">Ayudamos a impulsar tu comercio</h3>
+    <div class="flex gap-x-1">
+      {% include "partials/daisy-card.html" with card_title="Contacta con nosotros" picsum_url="https://picsum.photos/id/1033/400/250" body_text="Escríbenos a nuestro correo distribuidorarcane@mail.com"%}
+
+      {% include "partials/daisy-card.html" with card_title="Envíos seguros" picsum_url="https://picsum.photos/id/1026/300/250" body_text="Garantizamos que tu envío llegue sano y salvo."%}
+
+      {% include "partials/daisy-card.html" with card_title="Reembolsos" picsum_url="https://picsum.photos/id/103/300/250" body_text="Nos hacemos responsables de cualquier perdida."%}
     </div>
   </section>
 {% endblock body %}
