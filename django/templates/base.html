@@ -35,16 +35,12 @@ Base template for the front end
 
   </head>
   <body>
-    {% comment %}
-      {% include "project/components/header.html" %}
-    {% endcomment %}
+    {% include "./components/header.html" %}
 
     {% block body %}
     {% endblock %}
 
-    {% comment %}
-      {% include "project/components/footer.html" %}
-    {% endcomment %}
+    {% include "./components/footer.html" %}
 
     {# Had to put this here #}
     {% django_htmx_script %}
