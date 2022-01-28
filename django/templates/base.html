@@ -36,10 +36,12 @@ Base template for the front end
   </head>
   <body>
     {% include "./components/header.html" %}
+    <main class="flex flex-col my-0 mx-auto justify-items-stretch max-w-screen-2xl">
 
-    {% block body %}
-    {% endblock %}
+      {% block body %}
+      {% endblock %}
 
+    </main>
     {% include "./components/footer.html" %}
 
     {# Had to put this here #}
