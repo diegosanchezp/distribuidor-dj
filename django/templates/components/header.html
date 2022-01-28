@@ -4,13 +4,13 @@
 <header class="h-20">
   <section class="navbar shadow-lg bg-neutral text-neutral-content rounded-b-lg px-20 fixed w-full z-20 h-20 2xl:w-full">
     <div class="flex-none px-2 mx-2">
-      <a href="/">
+      <a href="{% url "home" %}">
         <img src="{% static "img/arcane-logo.png" %}" width="53" height="51">
       </a>
     </div>
     <div class="flex-1 px-2 mx-2">
       <div class="items-stretch hidden lg:flex">
-        <a class="btn btn-ghost btn-sm rounded-btn uppercase">
+        <a class="btn btn-ghost btn-sm rounded-btn uppercase" href="{% url "home" %}">
           Home
         </a>
         <a class="btn btn-ghost btn-sm rounded-btn uppercase">
