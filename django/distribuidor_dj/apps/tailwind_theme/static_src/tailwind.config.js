@@ -60,4 +60,9 @@ module.exports = {
         // tailwind library that provides our default styles
         require('daisyui'),
     ],
+    daisyui: {
+        themes: [
+            "dark"
+        ],
+    }
 }

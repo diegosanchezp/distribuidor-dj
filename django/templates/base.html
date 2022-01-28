@@ -8,7 +8,7 @@ Base template for the front end
 {% load django_htmx %}
 
 <!DOCTYPE html>
-<html lang="{{ LANGUAGE_CODE|default:"en-gb" }}" class="{% block html_class %}no-js{% endblock %}">
+<html lang="{{ LANGUAGE_CODE|default:"en-gb" }}" class="{% block html_class %}no-js{% endblock %}" data-theme="dark">
   <head>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
     <meta name="created" content="{% now "jS M Y h:i" %}" />
