@@ -26,7 +26,7 @@ urlpatterns = [
     path("api/", include("distribuidor_dj.apps.api.urls")),
     path("accounts/", include("distribuidor_dj.apps.auth.urls")),
     path(
-        "dashboard",
+        "dashboard/",
         include("distribuidor_dj.apps.dashboard.urls", namespace="dashboard"),
     ),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

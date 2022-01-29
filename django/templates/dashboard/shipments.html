@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block body %}
+  {% include "components/dashboard/title.html" with underline_text="Env" underline_subtext="ios" %}
+
+  {# table #}
+  <div class="overflow-x-auto">
+    <table class="table w-full">
+      <thead>
+        <tr>
+          <th>
+            <label>
+              <input type="checkbox" class="checkbox">
+            </label>
+          </th>
+          <th>Nro. Ref</th>
+          <th>Dirección destino</th>
+          <th>Estatus</th>
+          <th>Accion</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for shipment in page_obj %}
+          <tr>
+            <th>
+              <label>
+                <input type="checkbox" class="checkbox">
+              </label>
+            </th>
+            {# Nro.Ref #}
+            <td>
+              {{ shipment.id }}
+            </td>
+            {# Dirección #}
+            <td>{{shipment.target_address}}</td>
+            {# Estatus #}
+            <td>{{shipment.state}}</td>
+            {# Accion #}
+            <th>
+              <button class="btn btn-ghost btn-xs">details</button>
+            </th>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {# Pagination #}
+  <div class="flex justify-center w-full">
+    {% include "partials/pagination.html" %}
+  </div>
+  {# pagination #}
+{% endblock %}

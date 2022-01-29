@@ -1,0 +1,27 @@
+{% load paginator_tags %}
+{% get_proper_elided_page_range paginator page_obj.number as page_range %} <!-- here -->
+<div class="btn-group flex">
+
+    {% if page_obj.has_previous %}
+        <a class="btn btn-sm" href="?page={{ page_obj.previous_page_number }}">«</a>
+    {% endif %}
+
+    {% for page_num in page_range %}
+            <a
+                class="btn btn-sm
+                    {% if page_num == page_obj.number %}btn-active{% endif %}
+                    {% if page_num == paginator.ELLIPSIS %}btn-disabled{%endif%}"
+                href="{% if page_num != paginator.ellipsis %}?page={{ page_num }}{% endif %}"
+                >
+                {% if page_num == paginator.ELLIPSIS %}
+                    {{ paginator.ELLIPSIS }}
+                {% else %}
+                    {{page_num}}
+                {% endif %}
+            </a>
+    {% endfor %}
+
+    {% if page_obj.has_next %}
+        <a class="btn btn-sm" href="?page={{ page_obj.next_page_number }}">»</a>
+    {% endif %}
+</div>

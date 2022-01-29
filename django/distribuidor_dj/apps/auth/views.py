@@ -25,6 +25,15 @@ class LoginView(auth_views.LoginView):
     next_page = "/accounts/login-proxy"
 
 
+class LoginOutView(RedirectView):
+    url = reverse_lazy("home")
+
+    def get(self, request, *args, **kwargs):
+        response = super().get(request, *args, **kwargs)
+        logout(request)
+        return response
+
+
 class LoginProxyView(RedirectView):
     """
     View for redirecting succesfull logins
