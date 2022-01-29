@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block body %}
-    <h1 class="align-middle text-2xl my-6"><span class="underline decoration-4 underline-offset-4 decoration-primary">Dash</span>board</h1>
+  {% include "components/dashboard/title.html" with underline_text="Dash" underline_subtext="board" %}
 
     <section class="grid grid-cols-3 gap-x-6">
         <div class="card shadow-2xl lg:card-side bg-primary text-primary-content">
@@ -8,12 +8,12 @@
                 <h2 class="card-title">Envios</h2>
                 <p>Revisa toda la información de los envíos creados.</p>
                 <div class="justify-end card-actions">
-                    <button class="btn btn-primary">
+                    <a href="{% url "dashboard:shipments" %}" class="btn btn-primary">
                         Ver más
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block w-6 h-6 ml-2 stroke-current">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                         </svg>
-                    </button>
+                    </a>
                 </div>
             </div>
         </div>
