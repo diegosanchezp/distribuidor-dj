@@ -1,7 +1,6 @@
 [
 {
     "model": "shipment.address",
-    "pk": 1,
     "fields": {
         "state": "Zulia",
         "city": "Maracaibo",
@@ -11,7 +10,6 @@
 },
 {
     "model": "shipment.address",
-    "pk": 2,
     "fields": {
         "state": "Miranda",
         "city": "Caracas",

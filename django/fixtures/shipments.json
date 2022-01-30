@@ -1,0 +1,74 @@
+[
+{
+    "model": "shipment.shipment",
+    "pk": "03d21ddb-8523-4750-88c2-3c781069a6ee",
+    "fields": {
+        "state": "CREATED",
+        "target_address": [
+            "Zulia",
+            "Maracaibo",
+            "Calle 23"
+        ],
+        "initial_address": [
+            "Miranda",
+            "Caracas",
+            "Calle New York"
+        ],
+        "customer": null,
+        "commerce": [
+            "gshoes"
+        ]
+    }
+},
+{
+    "model": "shipment.shipment",
+    "pk": "34062eb9-79cd-4a51-a407-7029bd260a0c",
+    "fields": {
+        "state": "CREATED",
+        "target_address": [
+            "Miranda",
+            "Caracas",
+            "Calle New York"
+        ],
+        "initial_address": [
+            "Zulia",
+            "Maracaibo",
+            "Calle 23"
+        ],
+        "customer": null,
+        "commerce": [
+            "jjcclothes"
+        ]
+    }
+},
+{
+    "model": "shipment.productquantity",
+    "fields": {
+        "product": [
+            "Playstation 5"
+        ],
+        "shipment": "03d21ddb-8523-4750-88c2-3c781069a6ee",
+        "quantity": 1
+    }
+},
+{
+    "model": "shipment.productquantity",
+    "fields": {
+        "product": [
+            "Laptop Acer"
+        ],
+        "shipment": "34062eb9-79cd-4a51-a407-7029bd260a0c",
+        "quantity": 1
+    }
+},
+{
+    "model": "shipment.productquantity",
+    "fields": {
+        "product": [
+            "Audifonos Xiaomi"
+        ],
+        "shipment": "34062eb9-79cd-4a51-a407-7029bd260a0c",
+        "quantity": 1
+    }
+}
+]

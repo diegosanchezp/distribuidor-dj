@@ -1,7 +1,6 @@
 [
 {
     "model": "auth.user",
-    "pk": 4,
     "fields": {
         "password": "pbkdf2_sha256$320000$09i2dlsQf3ZbfH6nT5tCzm$2gA0Fy9KXq+1vCjGK7VQ9yjyoP3obC6Q9/DlTDlbVW4=",
         "last_login": null,
@@ -13,13 +12,14 @@
         "is_staff": false,
         "is_active": true,
         "date_joined": "2022-01-14T18:38:52Z",
-        "groups": [],
+        "groups": [
+            ["cliente"]
+        ],
         "user_permissions": []
     }
 },
 {
     "model": "auth.user",
-    "pk": 5,
     "fields": {
         "password": "pbkdf2_sha256$320000$g61qlFhiXWFlPFGbDnrbsr$zvEdsiFj9OJJRgI9HBKN+1rmdAl/3pLV7NqiGh67vEY=",
         "last_login": null,
@@ -32,14 +32,13 @@
         "is_active": true,
         "date_joined": "2022-01-14T18:43:21Z",
         "groups": [
-            3
+            ["comercio"]
         ],
         "user_permissions": []
     }
 },
 {
     "model": "auth.user",
-    "pk": 6,
     "fields": {
         "password": "pbkdf2_sha256$320000$tvGoaD71ev70lvzvnJXMrc$bk2F1KC6y3BaXr/mMQa3bynx5yzr0KtWc70PLcYBRiI=",
         "last_login": null,
@@ -52,7 +51,7 @@
         "is_active": true,
         "date_joined": "2022-01-14T18:44:04Z",
         "groups": [
-            3
+            ["comercio"]
         ],
         "user_permissions": []
     }
