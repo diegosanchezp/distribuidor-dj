@@ -1,3 +1,4 @@
+import uuid
 from enum import auto, unique
 
 from distribuidor_dj.apps.state.models import StateMachineModel, StatusDate
@@ -41,10 +42,12 @@ class Invoice(StateMachineModel):
         _("Estado"), choices=States.choices, default=States.UNPAID
     )
 
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+
     ammount = models.FloatField(validators=[MinValueValidator(0)])
 
     shipment = models.OneToOneField(
-        "invoice.Invoice",
+        "shipment.Shipment",
         verbose_name=_("Envio"),
         on_delete=models.CASCADE,
         related_name="invoice",

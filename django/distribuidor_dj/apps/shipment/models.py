@@ -1,3 +1,4 @@
+import uuid
 from enum import auto, unique
 
 from distribuidor_dj.apps.state.models import StateMachineModel, StatusDate
@@ -56,6 +57,8 @@ class Shipment(StateMachineModel):
         default=States.CREATED,
     )
 
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+
     products = models.ManyToManyField(
         "Product",
         verbose_name=_("Productos"),
@@ -84,13 +87,24 @@ class Shipment(StateMachineModel):
         verbose_name=_("Cliente del comercio"),
         limit_choices_to={"groups__name": const.CLIENT_GROUP_NAME},
         # delete shipment if customer deleted
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+    )
+
+    commerce = models.ForeignKey(
+        "auth.User",
+        verbose_name=_("Usuario comercio"),
+        limit_choices_to={"groups__name": const.COMMERCE_GROUP_NAME},
+        related_name="shipments",  # envios
+        # delete shipment if customer deleted
         on_delete=models.CASCADE,
     )
 
     # TODO: field for distance between target and initial address
 
     def __str__(self) -> str:
-        return f"{self.state}"
+        return f"{self.state} {self.commerce.username}"
 
 
 class ShipmentStatusDate(StatusDate):
@@ -115,8 +129,20 @@ class ShipmentStatusDate(StatusDate):
         return f"{self.date} {self.status}"
 
 
+class ProductManager(models.Manager):
+    use_in_migrations = True
+
+    def get_by_natural_key(self, name):
+        return self.get(name=name)
+
+
 class Product(models.Model):
-    name = models.TextField(_("Nombre"))
+    name = models.TextField(_("Nombre"), unique=True)
+
+    objects = ProductManager()
+
+    def natural_key(self):
+        return (self.name,)
 
     def __str__(self) -> str:
         desc = (self.name[:30] + "...") if len(self.name) > 33 else self.name
@@ -145,6 +171,13 @@ class ProductQuantity(models.Model):
     )
 
 
+class AddressManager(models.Manager):
+    use_in_migrations = True
+
+    def get_by_natural_key(self, state, city, street):
+        return self.get(state=state, city=city, street=street)
+
+
 class Address(models.Model):
     state = models.TextField(_("Estado"))
     city = models.TextField(_("Ciudad"))
@@ -153,6 +186,14 @@ class Address(models.Model):
         _("Codigo Zip"),
         blank=True,
     )  # optional
+
+    objects = AddressManager()
+
+    def natural_key(self):
+        return (self.state, self.city, self.street)
+
+    class Meta:
+        unique_together = [["state", "city", "street"]]
 
     def __str__(self) -> str:
         return f"{self.state}, {self.city}, {self.street}"
