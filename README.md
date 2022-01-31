@@ -120,3 +120,24 @@ APP_NAME="myapp"
 mkdir django/distribuidor_dj/apps/$APP_NAME
 python django/manage.py startapp $APP_NAME django/distribuidor_dj/apps/$APP_NAME
 ```
+
+## Respaldo y carga de datos para la base de datos
+### Respaldar datos
+
+```
+python django/manage.py dumpdata --natural-foreign --natural-primary --indent 4 [app_label[.ModelName] ...]
+```
+
+### Cargar datos respaldados
+
+```bash
+python django/manage.py loaddata django/fixtures/{customers.json,address-standalone.json,products-standalone.json,invoices.json}
+```
+
+## Borrar base de datos
+Con el siguiente comando puedes borrar la base de datos y cargar los datos respaldados, ten en cuenta que el servidor de desarrollo de django no puede estar levantado porque tiene una conexión activa con postgres, si no el comando se quedara pegado por un rato hasta darte error.
+
+```bash
+# Borrar base de datos y cargar datos respaldados
+python django/setup_dev.py --reset-db
+```
