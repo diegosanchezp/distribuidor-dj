@@ -1,7 +1,7 @@
 """
 Script to automatically setup django development environment
 """
-
+import argparse
 import os
 import subprocess as sp
 from pathlib import Path
@@ -28,6 +28,21 @@ def read_env(BASE_DIR):
     return env
 
 
+parser = argparse.ArgumentParser(description="Development scripts.")
+
+
+parser.add_argument(
+    "--reset-db",
+    help="restet the database",
+    action="store_true",
+    default=False,
+)
+
+
+args = parser.parse_args()
+reset_db = args.reset_db  # alias
+
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent  # Directory of this file
 
@@ -42,6 +57,19 @@ except ImportError as exc:
         "available on your PYTHONPATH environment variable? Did you "
         "forget to activate a virtual environment?"
     ) from exc
+
+if reset_db:
+    sp.run(
+        [
+            "psql",
+            "-h",
+            env("POSTGRES_HOST"),
+            "-U",
+            "postgres",
+            "-c",
+            f"DROP DATABASE IF EXISTS {env('POSTGRES_DB_NAME')}",
+        ]
+    )
 
 # Maybe refactor later using psycopg2 ?
 # Create database and database user
@@ -74,14 +102,32 @@ except sp.CalledProcessError as e:
 
 MANAGE = str(BASE_DIR / "manage.py")
 # Install django-tailwind nodejs dependencies
-sp.run(["python", MANAGE, "tailwind", "install"])
+if not reset_db:
+    sp.run(["python", MANAGE, "tailwind", "install"])
 
 # Install git hooks
-print("Installing git hooks")
-sp.run(["pre-commit", "install"])
+if not reset_db:
+    print("Installing git hooks")
+    sp.run(["pre-commit", "install"])
 
 # Apply migrations
 sp.run(["python", MANAGE, "migrate"])
+
+# Load fixtures
+if reset_db:
+    FIXTURES = "fixtures"
+    sp.run(
+        [
+            "python",
+            MANAGE,
+            "loaddata",
+            f"{FIXTURES}/customers.json",
+            f"{FIXTURES}/address-standalone.json",
+            f"{FIXTURES}/products-standalone.json",
+            f"{FIXTURES}/shipments.json",
+            f"{FIXTURES}/invoices.json",
+        ]
+    )
 
 print("createsuperuser (asking for password)")
 
