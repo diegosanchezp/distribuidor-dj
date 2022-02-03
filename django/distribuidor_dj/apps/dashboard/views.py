@@ -1,6 +1,7 @@
 """
 Dashboard views
 """
+from distribuidor_dj.apps.invoice.models import Invoice
 from distribuidor_dj.apps.shipment.models import Shipment
 
 from django.views.generic import TemplateView
@@ -17,3 +18,13 @@ class ShipmentsView(DashboardPassesTestMixin, ListView):
     template_name = "dashboard/shipments.html"
     model = Shipment
     paginate_by = 1  # change this later to 10
+
+
+class InvoicesView(DashboardPassesTestMixin, ListView):
+    template_name = "dashboard/invoices.html"
+    model = Invoice
+    paginate_by = 1  # change this later to 10
+
+
+class SettingsView(DashboardPassesTestMixin, TemplateView):
+    template_name = "dashboard/settings.html"

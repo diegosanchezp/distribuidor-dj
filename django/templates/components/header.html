@@ -2,7 +2,7 @@
 {% block header %}
 
 <header class="h-20">
-  <section class="navbar shadow-lg bg-neutral text-neutral-content rounded-b-lg px-20 fixed w-full z-20 h-20 2xl:w-full">
+  <section class="navbar shadow-lg bg-neutral text-neutral-content rounded-b-lg px-5 lg:px-20 fixed w-full z-20 h-20 2xl:w-full">
     <div class="flex-none px-2 mx-2">
       <a href="{% url "home" %}">
         <img src="{% static "img/arcane-logo.png" %}" width="53" height="51">
@@ -40,12 +40,17 @@
     </div>
 
       {% if request.user.is_authenticated %}
-        <div class="flex-none">
-          <div class="avatar placeholder">
+        <div class="dropdown dropdown-left dropdown-bottom">
+          <div tabindex="0" class="avatar placeholder cursor-pointer">
             <div class="bg-neutral-focus text-neutral-content rounded-full w-10 h-10">
               <span>{{request.user.username|make_list|first}}</span>
             </div>
           </div>
+          <ul tabindex="0" class="p-2 shadow menu dropdown-content bg-base-100 rounded-box w-52">
+            <li>
+              <a  href="{% url 'dashboard:settings' %}">Configuracion personal</a>
+            </li>
+          </ul>
         </div>
       {% else %}
       {% endif %}

@@ -2,7 +2,7 @@
 {% block body %}
   {% include "components/dashboard/title.html" with underline_text="Dash" underline_subtext="board" %}
 
-    <section class="grid grid-cols-3 gap-x-6">
+    <section class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
         <div class="card shadow-2xl lg:card-side bg-primary text-primary-content">
             <div class="card-body">
                 <h2 class="card-title">Envios</h2>
@@ -22,12 +22,12 @@
                 <h2 class="card-title">Facturas</h2>
                 <p>Revisa toda  la información de las facturas.</p>
                 <div class="justify-end card-actions">
-                    <button class="btn btn-secondary">
+                    <a href="{% url "dashboard:invoices" %}" class="btn btn-secondary">
                         Ver más
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block w-6 h-6 ml-2 stroke-current">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                         </svg>
-                    </button>
+                    </a>
                 </div>
             </div>
         </div>
@@ -36,12 +36,12 @@
                 <h2 class="card-title">Configuración</h2>
                 <p>Tokens de autenticación y información de perfil.</p>
                 <div class="justify-end card-actions">
-                    <button class="btn btn-accent">
+                    <a href="{% url 'dashboard:settings' %}" class="btn btn-accent">
                         Ver más
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block w-6 h-6 ml-2 stroke-current">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                         </svg>
-                    </button>
+                    </a>
                 </div>
             </div>
         </div>
