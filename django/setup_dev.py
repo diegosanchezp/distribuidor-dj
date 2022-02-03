@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 """
 Script to automatically setup django development environment
 """
@@ -93,6 +94,8 @@ try:
             f"ALTER ROLE {env('POSTGRES_USER')} SET timezone TO 'America/Caracas';",  # noqa: E501
             "-c",
             f"GRANT ALL PRIVILEGES ON DATABASE {env('POSTGRES_DB_NAME')} TO {env('POSTGRES_USER')};",  # noqa: E501
+            "-c",
+            f"ALTER USER {env('POSTGRES_USER')} CREATEDB;",
         ],
         check=True,
     )
@@ -115,7 +118,7 @@ sp.run(["python", MANAGE, "migrate"])
 
 # Load fixtures
 if reset_db:
-    FIXTURES = "fixtures"
+    FIXTURES = "django/fixtures"
     sp.run(
         [
             "python",
