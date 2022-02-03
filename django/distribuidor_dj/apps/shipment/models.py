@@ -63,23 +63,24 @@ class Shipment(StateMachineModel):
         "Product",
         verbose_name=_("Productos"),
         through="ProductQuantity",
+        through_fields=("shipment", "product"),
     )
 
-    target_address = models.OneToOneField(
+    target_address = models.ForeignKey(
         "Address",
         null=True,
         verbose_name=_("Dirección destino"),
         # set to null this column if address deleted
         on_delete=models.SET_NULL,
-        related_name="shipment_target_address",
+        related_name="shipment_target_addresses",
     )
 
-    initial_address = models.OneToOneField(
+    initial_address = models.ForeignKey(
         "Address",
         verbose_name=("Dirección inicial"),
         null=True,
         on_delete=models.SET_NULL,
-        related_name="shipment_initial_address",
+        related_name="shipment_initial_addresses",
     )
 
     customer = models.ForeignKey(

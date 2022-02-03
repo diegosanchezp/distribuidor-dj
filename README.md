@@ -131,7 +131,7 @@ python django/manage.py dumpdata --natural-foreign --natural-primary --indent 4 
 ### Cargar datos respaldados
 
 ```bash
-python django/manage.py loaddata django/fixtures/{customers.json,address-standalone.json,products-standalone.json,invoices.json}
+python django/manage.py loaddata django/fixtures/{customers.json,address-standalone.json,products-standalone.json,shipments.json,invoices.json}
 ```
 
 ## Borrar base de datos
