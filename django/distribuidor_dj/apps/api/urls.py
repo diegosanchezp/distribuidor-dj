@@ -3,8 +3,15 @@ from drf_spectacular.views import (
     SpectacularRedocView,
     SpectacularSwaggerView,
 )
+from rest_framework import routers
 
 from django.urls import path
+
+from .views import ShipmentViewSet
+
+router = routers.SimpleRouter()
+
+router.register(r"shipments", ShipmentViewSet)
 
 urlpatterns = [
     path("schema/", SpectacularAPIView.as_view(), name="schema"),
@@ -20,3 +27,5 @@ urlpatterns = [
         name="redoc",
     ),
 ]
+
+urlpatterns += router.urls
