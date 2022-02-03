@@ -71,7 +71,7 @@ class Shipment(StateMachineModel):
         verbose_name=_("Dirección destino"),
         # set to null this column if address deleted
         on_delete=models.SET_NULL,
-        related_name="shipment_target_address",
+        related_name="shipment_target_addresses",
     )
 
     initial_address = models.OneToOneField(
@@ -79,7 +79,7 @@ class Shipment(StateMachineModel):
         verbose_name=("Dirección inicial"),
         null=True,
         on_delete=models.SET_NULL,
-        related_name="shipment_initial_address",
+        related_name="shipment_initial_addresses",
     )
 
     customer = models.ForeignKey(
