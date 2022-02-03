@@ -52,7 +52,7 @@ class ShipmentSerializer(serializers.ModelSerializer):
         ),
         many=False,
     )
-    initial_address = AddressSerializer(required=True)
+    initial_address = AddressSerializer(required=False, read_only=True)
     target_address = AddressSerializer(required=True)
 
     class Meta:
@@ -65,14 +65,22 @@ class ShipmentSerializer(serializers.ModelSerializer):
             "commerce",
             "state",
         ]
-        read_only_fields = ["id", "state"]
+        read_only_fields = [
+            "id",
+            "state",
+        ]
 
     def create(self, validated_data):
         products_dict = validated_data.pop("productquantity_set")
-        # Create Addresses
-        initial_address, _ = Address.objects.get_or_create(
-            **validated_data.pop("initial_address")
+
+        initial_address = Address.objects.get(
+            state="Miranda",
+            city="Caracas",
+            street="Calle New York",
+            zipcode="1073",
         )
+
+        # Create Addresses
         target_address, _ = Address.objects.get_or_create(
             **validated_data.pop("target_address")
         )
