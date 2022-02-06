@@ -2,6 +2,7 @@ from django.contrib import admin
 
 from .models import (
     Address,
+    AddressState,
     Product,
     ProductQuantity,
     Shipment,
@@ -34,5 +35,14 @@ class ShipmentAdmin(admin.ModelAdmin):
         return str(date)
 
 
+@admin.register(Address)
+class AddressAdmin(admin.ModelAdmin):
+    list_display = ("state", "city", "street", "zipcode")
+
+    @admin.display()
+    def state(self, obj: AddressState):
+        return obj.name
+
+
 admin.site.register(Product)
-admin.site.register(Address)
+admin.site.register(AddressState)

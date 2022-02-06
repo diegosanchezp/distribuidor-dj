@@ -11,4 +11,5 @@ class InvoiceStatusDateInline(admin.TabularInline):
 
 @admin.register(Invoice)
 class InvoiceAdmin(admin.ModelAdmin):
+    list_display = ("commerce", "state")
     inlines = (InvoiceStatusDateInline,)
