@@ -2,6 +2,7 @@ from typing import OrderedDict
 
 from distribuidor_dj.apps.shipment.models import (
     Address,
+    AddressState,
     Product,
     ProductQuantity,
     Shipment,
@@ -28,12 +29,12 @@ class ProductQuantitySerializer(serializers.ModelSerializer):
 
 
 class AddressSerializer(serializers.ModelSerializer):
-    # Probably for later
-    # state = serializers.SlugRelatedField(
-    #     slug_field="state",
-    #     queryset=CountryStates.objects.all(),
-    #     many=False,
-    # )
+    state = serializers.SlugRelatedField(
+        slug_field="name",
+        queryset=AddressState.objects.all(),
+        many=False,
+    )
+
     class Meta:
         model = Address
         # We don't want to enforce UniqueTogetherValidator
@@ -54,6 +55,7 @@ class ShipmentSerializer(serializers.ModelSerializer):
     )
     initial_address = AddressSerializer(required=False, read_only=True)
     target_address = AddressSerializer(required=True)
+    price = serializers.FloatField(read_only=True, min_value=0)
 
     class Meta:
         model = Shipment
@@ -64,21 +66,18 @@ class ShipmentSerializer(serializers.ModelSerializer):
             "initial_address",
             "commerce",
             "state",
+            "price",
         ]
         read_only_fields = [
             "id",
             "state",
+            "price",
         ]
 
     def create(self, validated_data):
         products_dict = validated_data.pop("productquantity_set")
 
-        initial_address = Address.objects.get(
-            state="Miranda",
-            city="Caracas",
-            street="Calle New York",
-            zipcode="1073",
-        )
+        initial_address = Address.objects.get(Shipment.default_address_q)
 
         # Create Addresses
         target_address, _ = Address.objects.get_or_create(
@@ -113,33 +112,32 @@ class ShipmentSerializer(serializers.ModelSerializer):
 
         return shipment
 
+    def to_representation(self, shipment: Shipment):
+        ret = super().to_representation(shipment)
+        ret["price"] = shipment.target_address.state.price
+        return ret
+
 
 # Create your views here.
 class ShipmentViewSet(viewsets.ModelViewSet):
     """
-    A viewset for viewing and editing user instances.
+    A viewset for viewing and editing shipment instances.
     """
 
     serializer_class = ShipmentSerializer
     queryset = Shipment.objects.all()
 
 
-"""
-{
-    target_address: {
-        state: "",
-        city: "",
-    },
-    initial_address: {
-        state: "",
-        city: "",
-    },
-    products: [
-        {
-            name: "PlayStation 5",
-            quantity: "1",
-        },
-    ],
-    commerce: "commerce_username_from_our_platform",
-}
-"""
+class AddressStateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AddressState
+        exclude = ["id"]
+
+
+class AddressStateViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    A viewset for viewing address state instances.
+    """
+
+    serializer_class = AddressStateSerializer
+    queryset = AddressState.objects.all()
