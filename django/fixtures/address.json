@@ -1,0 +1,41 @@
+[
+{
+    "model": "shipment.address",
+    "pk": "0d29b135-85f5-42d7-bdf8-6cbac0e90221",
+    "fields": {
+        "state": [
+            "Zulia",
+            20.0
+        ],
+        "city": "Maracaibo",
+        "street": "Calle Carabobo",
+        "zipcode": ""
+    }
+},
+{
+    "model": "shipment.address",
+    "pk": "78fce0d8-88af-4edf-b956-5aeca05382de",
+    "fields": {
+        "state": [
+            "Distrito Capital",
+            2.0
+        ],
+        "city": "Caracas",
+        "street": "Calle New York",
+        "zipcode": "1073"
+    }
+},
+{
+    "model": "shipment.address",
+    "pk": "b3b36736-4eb3-4afb-aa76-f9ceee8acfaa",
+    "fields": {
+        "state": [
+            "Táchira",
+            9.0
+        ],
+        "city": "San Cristóbal",
+        "street": "Séptima Avenida",
+        "zipcode": ""
+    }
+}
+]

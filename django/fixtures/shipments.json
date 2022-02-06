@@ -1,40 +1,11 @@
 [
 {
     "model": "shipment.shipment",
-    "pk": "03d21ddb-8523-4750-88c2-3c781069a6ee",
+    "pk": "088ffbca-0c42-496d-b0d0-37d88212a163",
     "fields": {
         "state": "CREATED",
-        "target_address": [
-            "Zulia",
-            "Maracaibo",
-            "Calle 23"
-        ],
-        "initial_address": [
-            "Miranda",
-            "Caracas",
-            "Calle New York"
-        ],
-        "customer": null,
-        "commerce": [
-            "gshoes"
-        ]
-    }
-},
-{
-    "model": "shipment.shipment",
-    "pk": "34062eb9-79cd-4a51-a407-7029bd260a0c",
-    "fields": {
-        "state": "CREATED",
-        "target_address": [
-            "Miranda",
-            "Caracas",
-            "Calle New York"
-        ],
-        "initial_address": [
-            "Zulia",
-            "Maracaibo",
-            "Calle 23"
-        ],
+        "target_address": "b3b36736-4eb3-4afb-aa76-f9ceee8acfaa",
+        "initial_address": "78fce0d8-88af-4edf-b956-5aeca05382de",
         "customer": null,
         "commerce": [
             "jjcclothes"
@@ -42,32 +13,66 @@
     }
 },
 {
+    "model": "shipment.shipment",
+    "pk": "302d5c43-109c-462e-bf3a-43a0a9166cb3",
+    "fields": {
+        "state": "CREATED",
+        "target_address": "0d29b135-85f5-42d7-bdf8-6cbac0e90221",
+        "initial_address": "78fce0d8-88af-4edf-b956-5aeca05382de",
+        "customer": null,
+        "commerce": [
+            "gshoes"
+        ]
+    }
+},
+{
+    "model": "shipment.shipmentstatusdate",
+    "pk": "e3d18127-6143-4ae0-b8a9-2f2189188cee",
+    "fields": {
+        "date": "2022-02-06T15:31:10.670Z",
+        "status": "CREATED",
+        "shipment": "302d5c43-109c-462e-bf3a-43a0a9166cb3"
+    }
+},
+{
+    "model": "shipment.shipmentstatusdate",
+    "pk": "fcadc9a6-9f37-4c03-969c-fa340ce7c9ee",
+    "fields": {
+        "date": "2022-02-06T15:32:02.612Z",
+        "status": "CREATED",
+        "shipment": "088ffbca-0c42-496d-b0d0-37d88212a163"
+    }
+},
+{
     "model": "shipment.productquantity",
+    "pk": 1,
     "fields": {
         "product": [
-            "Playstation 5"
+            "Zapatos Skate Adidas"
         ],
-        "shipment": "03d21ddb-8523-4750-88c2-3c781069a6ee",
+        "shipment": "302d5c43-109c-462e-bf3a-43a0a9166cb3",
         "quantity": 1
     }
 },
 {
     "model": "shipment.productquantity",
+    "pk": 2,
     "fields": {
         "product": [
-            "Laptop Acer"
+            "Franela blanca"
         ],
-        "shipment": "34062eb9-79cd-4a51-a407-7029bd260a0c",
+        "shipment": "088ffbca-0c42-496d-b0d0-37d88212a163",
         "quantity": 1
     }
 },
 {
     "model": "shipment.productquantity",
+    "pk": 3,
     "fields": {
         "product": [
-            "Audifonos Xiaomi"
+            "Chaqueta negra"
         ],
-        "shipment": "34062eb9-79cd-4a51-a407-7029bd260a0c",
+        "shipment": "088ffbca-0c42-496d-b0d0-37d88212a163",
         "quantity": 1
     }
 }
