@@ -61,6 +61,9 @@ class Invoice(StateMachineModel):
         on_delete=models.CASCADE,
     )
 
+    def __str__(self) -> str:
+        return f"{self.commerce} {self.state}"
+
 
 class InvoiceStatusDate(StatusDate):
     """
