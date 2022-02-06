@@ -55,6 +55,7 @@ class ShipmentSerializer(serializers.ModelSerializer):
     )
     initial_address = AddressSerializer(required=False, read_only=True)
     target_address = AddressSerializer(required=True)
+    price = serializers.FloatField(read_only=True, min_value=0)
 
     class Meta:
         model = Shipment
@@ -65,10 +66,12 @@ class ShipmentSerializer(serializers.ModelSerializer):
             "initial_address",
             "commerce",
             "state",
+            "price",
         ]
         read_only_fields = [
             "id",
             "state",
+            "price",
         ]
 
     def create(self, validated_data):
@@ -108,6 +111,11 @@ class ShipmentSerializer(serializers.ModelSerializer):
         ProductQuantity.objects.bulk_create(pqs)
 
         return shipment
+
+    def to_representation(self, shipment: Shipment):
+        ret = super().to_representation(shipment)
+        ret["price"] = shipment.target_address.state.price
+        return ret
 
 
 # Create your views here.
