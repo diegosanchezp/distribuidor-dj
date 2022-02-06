@@ -1,4 +1,4 @@
-from django.contrib import admin  # noqa F401
+from django.contrib import admin
 
 from .models import (
     Address,
@@ -22,7 +22,16 @@ class ShipmentStatusDateInline(admin.TabularInline):
 # Register your models here.
 @admin.register(Shipment)
 class ShipmentAdmin(admin.ModelAdmin):
+    list_display = ("commerce", "state", "date")
+    list_filter = ("state",)
     inlines = (ProductQuantityInline, ShipmentStatusDateInline)
+
+    @admin.display()
+    def date(self, obj: Shipment) -> str:
+        date = obj.get_current_status_date()
+        if date is None:
+            return "-"
+        return str(date)
 
 
 admin.site.register(Product)
