@@ -7,11 +7,12 @@ from rest_framework import routers
 
 from django.urls import path
 
-from .views import ShipmentViewSet
+from .views import AddressStateViewSet, ShipmentViewSet
 
 router = routers.SimpleRouter()
 
 router.register(r"shipments", ShipmentViewSet)
+router.register(r"address_state", AddressStateViewSet)
 
 urlpatterns = [
     path("schema/", SpectacularAPIView.as_view(), name="schema"),

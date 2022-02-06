@@ -113,29 +113,23 @@ class ShipmentSerializer(serializers.ModelSerializer):
 # Create your views here.
 class ShipmentViewSet(viewsets.ModelViewSet):
     """
-    A viewset for viewing and editing user instances.
+    A viewset for viewing and editing shipment instances.
     """
 
     serializer_class = ShipmentSerializer
     queryset = Shipment.objects.all()
 
 
-"""
-{
-    target_address: {
-        state: "",
-        city: "",
-    },
-    initial_address: {
-        state: "",
-        city: "",
-    },
-    products: [
-        {
-            name: "PlayStation 5",
-            quantity: "1",
-        },
-    ],
-    commerce: "commerce_username_from_our_platform",
-}
-"""
+class AddressStateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AddressState
+        exclude = ["id"]
+
+
+class AddressStateViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    A viewset for viewing address state instances.
+    """
+
+    serializer_class = AddressStateSerializer
+    queryset = AddressState.objects.all()
