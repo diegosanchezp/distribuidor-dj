@@ -1,5 +1,7 @@
 import uuid
+from datetime import datetime
 from enum import auto, unique
+from typing import Union
 
 from distribuidor_dj.apps.state.models import StateMachineModel, StatusDate
 from distribuidor_dj.utils import const
@@ -106,6 +108,16 @@ class Shipment(StateMachineModel):
 
     def __str__(self) -> str:
         return f"{self.state} {self.commerce.username}"
+
+    def get_current_status_date(self) -> Union[datetime, None]:
+        """
+        Get the the date of the current status
+        """
+        try:
+            date: ShipmentStatusDate = self.dates.get(status=self.state)
+            return date.date
+        except ShipmentStatusDate.DoesNotExist:
+            return None
 
 
 class ShipmentStatusDate(StatusDate):
