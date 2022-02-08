@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block body %}
-  {% include "components/dashboard/title.html" with underline_text="Env" underline_subtext="ios" %}
+  {% include "components/dashboard/title.html" with underline_text="Fac" underline_subtext="turas" %}
 
   {# table #}
   <div class="overflow-x-auto px-4">
@@ -13,13 +13,14 @@
             </label>
           </th>
           <th>Nro. Ref</th>
-          <th>Dirección destino</th>
+          <th>Fecha</th>
           <th>Estatus</th>
+          <th>Monto Total</th>
           <th>Accion</th>
         </tr>
       </thead>
       <tbody>
-        {% for shipment in page_obj %}
+        {% for invoice in page_obj %}
           <tr>
             <th>
               <label>
@@ -28,12 +29,19 @@
             </th>
             {# Nro.Ref #}
             <td>
-              {{ shipment.id }}
+              {{ invoice.id }}
             </td>
-            {# Dirección #}
-            <td>{{shipment.target_address}}</td>
+            {# Fecha #}
+            <td class="flex justify-center items-center gap-x-2">
+              {% for date in invoice.dates.all %}
+                <p>{{ date.date }}</p>
+              {% endfor %}
+            </td>
+
             {# Estatus #}
-            <td>{{shipment.state}}</td>
+            <td>{{invoice.state}}</td>
+            {# Monto total #}
+            <td>{{invoice.ammount}}</td>
             {# Accion #}
             <th>
               <button class="btn btn-ghost btn-xs">details</button>
