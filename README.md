@@ -1,5 +1,7 @@
 # Distribuidor: Proyecto Comercio Electrónico 2-2021
 
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
+
 ## Setup ambiente de desarrollo
 Para Windows se recomienda utilizar el subsistema de Linux
 
@@ -125,13 +127,22 @@ python django/manage.py startapp $APP_NAME django/distribuidor_dj/apps/$APP_NAME
 ### Respaldar datos
 
 ```
-python django/manage.py dumpdata --natural-foreign --natural-primary --indent 4 [app_label[.ModelName] ...]
+# Manera general de como respaldar los datos
+python django/manage.py dumpdata --natural-foreign --natural-primary --indent 4 -o django/fixtures/name.json [app_label[.ModelName] ...]
+
+# -- Ejemplos ---
+
+# shipments
+python django/manage.py dumpdata --natural-foreign --natural-primary --indent 4 -o django/fixtures/shipments.json shipment.Shipment shipment.ShipmentStatusDate shipment.ProductQuantity
+
+# invoices
+python django/manage.py dumpdata --natural-foreign --natural-primary --indent 4 -o django/fixtures/invoices.json invoice.Invoice invoice.InvoiceStatusDate
 ```
 
 ### Cargar datos respaldados
 
 ```bash
-python django/manage.py loaddata django/fixtures/{customers.json,address-standalone.json,products-standalone.json,shipments.json,invoices.json}
+python django/manage.py loaddata django/fixtures/{customers.json,address-state.json,address.json,products-standalone.json,shipments.json,invoices.json}
 ```
 
 ## Borrar base de datos

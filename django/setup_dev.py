@@ -125,8 +125,9 @@ if reset_db:
             MANAGE,
             "loaddata",
             f"{FIXTURES}/customers.json",
-            f"{FIXTURES}/address-standalone.json",
             f"{FIXTURES}/products-standalone.json",
+            f"{FIXTURES}/address-state.json",
+            f"{FIXTURES}/address.json",
             f"{FIXTURES}/shipments.json",
             f"{FIXTURES}/invoices.json",
         ]

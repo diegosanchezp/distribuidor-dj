@@ -1,0 +1,23 @@
+[
+{
+    "model": "shipment.addressstate",
+    "fields": {
+        "name": "Zulia",
+        "price": 20.0
+    }
+},
+{
+    "model": "shipment.addressstate",
+    "fields": {
+        "name": "Distrito Capital",
+        "price": 2.0
+    }
+},
+{
+    "model": "shipment.addressstate",
+    "fields": {
+        "name": "Táchira",
+        "price": 9.0
+    }
+}
+]
