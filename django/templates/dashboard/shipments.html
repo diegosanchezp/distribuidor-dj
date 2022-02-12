@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 {% load widget_tweaks %}
+{% load enums_tags %}
 
 {% block body %}
   {% include "components/dashboard/title.html" with underline_text="Env" underline_subtext="ios" %}
@@ -47,7 +48,7 @@
               {# Dirección #}
               <td>{{shipment.target_address}}</td>
               {# Estatus #}
-              <td>{{shipment.state}}</td>
+              <td>{% get_textchoice_label shipment.state statechoices %}</td>
               {# Accion #}
               <th>
                 <button class="btn btn-ghost btn-xs">details</button>
