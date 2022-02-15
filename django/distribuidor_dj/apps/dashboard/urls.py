@@ -20,9 +20,4 @@ urlpatterns = [
         shviews.AdminShipmentDetail.as_view(),
         name="admin-shipment-detail",
     ),
-    path(
-        "admin/shipment/transition/<slug:pk>/",
-        shviews.TransitionShipmentStateView.as_view(),
-        name="admin-transition-shipment",
-    ),
 ]

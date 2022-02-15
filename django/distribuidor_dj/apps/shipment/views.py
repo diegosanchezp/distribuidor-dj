@@ -83,10 +83,3 @@ class AdminShipmentDetail(AdminDashboardPassessTest, UpdateView):
         return self.render_to_response(
             self.get_context_data(form=self.form_class(instance=shipment))
         )
-
-
-# HTMX support views
-class TransitionShipmentStateView(UpdateView):
-    template_name = "shipments/admin/state_transition.html"
-    context_object_name = "shipment"
-    form_class = TransitionShipmentForm
