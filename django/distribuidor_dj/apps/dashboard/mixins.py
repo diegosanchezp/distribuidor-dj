@@ -27,3 +27,13 @@ class DashboardPassesTestMixin(UserPassesTestMixin):
             self.get_login_url(),
             self.get_redirect_field_name(),
         )
+
+
+class AdminDashboardPassessTest(DashboardPassesTestMixin):
+    permission_denied_message = (
+        "Ingresa como administrador para ver el dashboard"
+    )
+
+    def test_func(self) -> bool:
+        # Do not allow users that are not django administrators
+        return self.request.user.is_staff

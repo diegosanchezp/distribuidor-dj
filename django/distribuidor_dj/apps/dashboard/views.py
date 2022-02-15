@@ -25,6 +25,7 @@ class ShipmentsView(DashboardPassesTestMixin, ListView):
     def get_context_data(self):
         ctx = super().get_context_data()
         ctx["filter_form"] = ShipmentsFilterForm(data=self.request.GET)
+        ctx["statechoices"] = Shipment.States
         return ctx
 
     def get_queryset(self) -> "QuerySet[Shipment]":
