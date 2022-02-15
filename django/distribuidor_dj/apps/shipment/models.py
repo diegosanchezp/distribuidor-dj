@@ -43,6 +43,14 @@ class Shipment(StateMachineModel):
         # reached its target
         # Final state
 
+    class Events(models.TextChoices):
+        """
+        Shipment States enumeration
+        """
+
+        ON_SEND = "ON_SEND", _("Enviar")
+        ON_RECIEVE = "ON_RECIEVE", _("Recibir")
+
     status_date_relattr = "shipment"
 
     default_address_q = Q(
@@ -53,10 +61,10 @@ class Shipment(StateMachineModel):
     )
     machine = {
         States.SENDED: {
-            ShipmentEvents.ON_RECIEVE: States.RECIEVED,
+            Events.ON_RECIEVE: States.RECIEVED,
         },
         States.CREATED: {
-            ShipmentEvents.ON_SEND: States.SENDED,
+            Events.ON_SEND: States.SENDED,
         },
     }
 

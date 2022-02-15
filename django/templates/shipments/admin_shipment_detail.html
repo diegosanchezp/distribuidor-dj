@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% load enums_tags %}
+
+{% block body %}
+  <section class="flex flex-col justify-center items-center">
+    <p class="text-center text-xl my-2">Envio <br/> </p>
+    <p class="badge badge-sm">{{ shipment.id }}</p>
+  </section>
+
+<section class="my-8">
+  <h3 class="text-lg font-bold">Productos</h3>
+  <div class="overflow-x-auto flex justify-center my-2">
+    <table class="table table-zebra" id="product-list">
+      <thead>
+        <th>Producto</th>
+        <th>Cantidad</th>
+      </thead>
+      <tbody>
+        {% for pq in shipment.productquantity_set.all %}
+          <tr>
+            <td>
+              {{ pq.product.name }}
+            </td>
+            <td class="text-center">
+              {{ pq.quantity }}
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="my-8">
+  <h2 class="my-2 text-lg font-bold">Direcciones</h2>
+  <ul class="mx-6 my-2">
+    <li class="my-2"><span class="badge badge-lg mx-2">Inicio</span>{{shipment.initial_address}}</li>
+    <li class="my-2"><span class="badge badge-lg mx-2">Destino</span>{{shipment.target_address}}</li>
+  </ul>
+  <p></p>
+  <p></p>
+</section>
+
+<fieldset class="text-center my-8">
+  <legend class="text-lg font-bold">
+    Estatus
+  </legend>
+  <label class="badge badge-info badge-lg" id="shipment_state">{% get_textchoice_label shipment.state statechoices %}</label>
+</fieldset>
+
+<section class="my-8 font-bold">
+  <h2 class="text-lg">Acciones</h2>
+  {% include "shipments/admin/state_transition.html" %}
+</section>
+{% endblock %}

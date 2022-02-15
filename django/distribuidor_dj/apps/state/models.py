@@ -17,7 +17,7 @@ class StateMachineModel(models.Model):
     """
 
     # Todo validate that these fields are not none
-    machine: dict[Enum, dict[Enum, Enum]]
+    machine: dict[str, dict[Enum, Enum]]
     status_date_class: Type["StatusDate"]
     status_date_relattr: str
 

@@ -45,7 +45,7 @@ class LoginProxyView(RedirectView):
         elif self.request.user.groups.filter(name=CLIENT_GROUP_NAME).exists():
             return reverse("home")
         elif self.request.user.is_staff:
-            return reverse("admin:index")
+            return reverse("dashboard:adminshipments")
         return super().get_redirect_url(*args, **kwargs)
 
 

@@ -11,8 +11,18 @@ urlpatterns = [
     path("invoices/", views.InvoicesView.as_view(), name="invoices"),
     path("settings/", views.SettingsView.as_view(), name="settings"),
     path(
-        "admin-shipments",
+        "admin/shipments/",
         shviews.AdminDashShipmentList.as_view(),
         name="adminshipments",
+    ),
+    path(
+        "admin/shipment/<slug:pk>/",
+        shviews.AdminShipmentDetail.as_view(),
+        name="admin-shipment-detail",
+    ),
+    path(
+        "admin/shipment/transition/<slug:pk>/",
+        shviews.TransitionShipmentStateView.as_view(),
+        name="admin-transition-shipment",
     ),
 ]

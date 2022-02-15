@@ -43,7 +43,9 @@
               </th>
               {# Nro.Ref #}
               <td>
-                {{ shipment.id }}
+                <a href="{% url shipment_detail_url pk=shipment.id %}">
+                  {{ shipment.id }}
+                </a>
               </td>
               {# Dirección #}
               <td>{{shipment.target_address}}</td>
@@ -51,7 +53,7 @@
               <td>{% get_textchoice_label shipment.state statechoices %}</td>
               {# Accion #}
               <th>
-                <button class="btn btn-ghost btn-xs">details</button>
+                <button class="btn btn-ghost btn-xs">Ver</button>
               </th>
             </tr>
           {% empty %}
