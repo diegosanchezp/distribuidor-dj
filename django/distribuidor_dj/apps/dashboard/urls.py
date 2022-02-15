@@ -16,6 +16,11 @@ urlpatterns = [
         name="adminshipments",
     ),
     path(
+        "shipment/<slug:pk>/",
+        views.ShipmentDetail.as_view(),
+        name="shipment-detail",
+    ),
+    path(
         "admin/shipment/<slug:pk>/",
         shviews.AdminShipmentDetail.as_view(),
         name="admin-shipment-detail",
