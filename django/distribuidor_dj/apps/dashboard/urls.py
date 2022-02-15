@@ -16,13 +16,18 @@ urlpatterns = [
         name="adminshipments",
     ),
     path(
+        "admin/reportes",
+        views.ReportesView.as_view(),
+        name="reportes",
+    ),
+    path(
+        "shipment/<slug:pk>/",
+        views.ShipmentDetail.as_view(),
+        name="shipment-detail",
+    ),
+    path(
         "admin/shipment/<slug:pk>/",
         shviews.AdminShipmentDetail.as_view(),
         name="admin-shipment-detail",
-    ),
-    path(
-        "admin/shipment/transition/<slug:pk>/",
-        shviews.TransitionShipmentStateView.as_view(),
-        name="admin-transition-shipment",
     ),
 ]

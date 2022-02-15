@@ -6,10 +6,11 @@ from distribuidor_dj.apps.shipment.models import Shipment
 
 from django.db.models.query import QuerySet
 from django.views.generic import TemplateView
+from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 
 from .forms import ShipmentsFilterForm
-from .mixins import DashboardPassesTestMixin
+from .mixins import AdminDashboardPassessTest, DashboardPassesTestMixin
 
 
 class Index(DashboardPassesTestMixin, TemplateView):
@@ -20,7 +21,10 @@ class ShipmentsView(DashboardPassesTestMixin, ListView):
     template_name = "dashboard/shipments.html"
     model = Shipment
     paginate_by = 1  # change this later to 10
-    extra_context = {"filter_form": ShipmentsFilterForm()}
+    extra_context = {
+        "filter_form": ShipmentsFilterForm(),
+        "shipment_detail_url": "dashboard:shipment-detail",
+    }
 
     def get_context_data(self):
         ctx = super().get_context_data()
@@ -44,6 +48,11 @@ class ShipmentsView(DashboardPassesTestMixin, ListView):
         return queryset
 
 
+class ShipmentDetail(DetailView):
+    template_name = "shipments/shipment_detail.html"
+    model = Shipment
+
+
 class InvoicesView(DashboardPassesTestMixin, ListView):
     template_name = "dashboard/invoices.html"
     model = Invoice
@@ -52,3 +61,7 @@ class InvoicesView(DashboardPassesTestMixin, ListView):
 
 class SettingsView(DashboardPassesTestMixin, TemplateView):
     template_name = "dashboard/settings.html"
+
+
+class ReportesView(AdminDashboardPassessTest, TemplateView):
+    template_name = "dashboard/reportes.html"
