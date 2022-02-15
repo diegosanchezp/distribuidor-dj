@@ -16,6 +16,11 @@ urlpatterns = [
         name="adminshipments",
     ),
     path(
+        "admin/reportes",
+        views.ReportesView.as_view(),
+        name="reportes",
+    ),
+    path(
         "shipment/<slug:pk>/",
         views.ShipmentDetail.as_view(),
         name="shipment-detail",

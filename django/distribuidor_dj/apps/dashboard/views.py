@@ -10,7 +10,7 @@ from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 
 from .forms import ShipmentsFilterForm
-from .mixins import DashboardPassesTestMixin
+from .mixins import AdminDashboardPassessTest, DashboardPassesTestMixin
 
 
 class Index(DashboardPassesTestMixin, TemplateView):
@@ -61,3 +61,7 @@ class InvoicesView(DashboardPassesTestMixin, ListView):
 
 class SettingsView(DashboardPassesTestMixin, TemplateView):
     template_name = "dashboard/settings.html"
+
+
+class ReportesView(AdminDashboardPassessTest, TemplateView):
+    template_name = "dashboard/reportes.html"
