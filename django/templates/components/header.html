@@ -13,7 +13,7 @@
         <a class="btn btn-ghost btn-sm rounded-btn uppercase" href="{% url "home" %}">
           Home
         </a>
-        <a class="btn btn-ghost btn-sm rounded-btn uppercase">
+        <a class="btn btn-ghost btn-sm rounded-btn uppercase"  href="{% url "dashboard:tracking" %}">
           Tracking
         </a>
       </div>
@@ -48,7 +48,7 @@
           </div>
           <ul tabindex="0" class="p-2 shadow menu dropdown-content bg-base-100 rounded-box w-52">
             <li>
-              <a  href="{% url 'dashboard:settings' %}">Configuracion personal</a>
+              <a  href="{% url 'dashboard:settings' %}">Información de perfil</a>
             </li>
           </ul>
         </div>

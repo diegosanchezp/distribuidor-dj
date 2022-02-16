@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block body %}
+    {% include "components/dashboard/title.html" with underline_text="Deta" underline_subtext="lle de rastreo del envío" %}
+
+    <section class="grid grid-cols-12 gap-x-8 px-6 text-xl pt-7">
+        <section class="w-full bg-neutral rounded-2xl col-span-8 px-6 pt-6 pb-14 shadow-2xl">
+            <p>Tracking <span class="text-bold">#1550058</span></p>
+            <p class="pt-12">Entrega estimada</p>
+            <p class="text-2xl pb-9">Miércoles, 35 de Enero del 2048 a las 9:00am.</p>
+            <div class="divider"></div>
+            <p class="text-2xl text-bold pt-11">En camino</p>
+            <ul class="w-full steps mt-12">
+                <li class="step step-primary">Creado</li>
+                <li class="step step-primary">Enviado</li>
+                <li class="step step-primary-content">Recibido</li>
+            </ul>
+            <p class="pt-11 font-bold">Entrega en</p>
+            <p>Guasdalito, 8060.</p>
+        </section>
+        <section class="w-full max-h-60 bg-neutral rounded-2xl col-start-9 col-end-13 py-8 px-12 shadow-2xl">
+            <section class="flex">
+                <span class="h-4">
+                    <i class="h-4 fa fa-search"></i>
+                </span>
+                <p class="pl-2">Tracking</p>
+            </section>
+            <section class="pt-6">
+                <input type="text" placeholder="username" class="input input-primary input-bordered w-full">
+                <a href="{% url "dashboard:tracking-result" %}">
+                    <button class="mt-4 btn btn-primary">Buscar</button>
+                </a>
+            </section>
+        </section>
+    </section>
+
+{% endblock body %}

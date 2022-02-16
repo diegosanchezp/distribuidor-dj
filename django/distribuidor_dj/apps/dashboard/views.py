@@ -28,3 +28,15 @@ class InvoicesView(DashboardPassesTestMixin, ListView):
 
 class SettingsView(DashboardPassesTestMixin, TemplateView):
     template_name = "dashboard/settings.html"
+
+
+class TrackingView(DashboardPassesTestMixin, TemplateView):
+    template_name = "tracking/index.html"
+
+
+class TrackingResultView(DashboardPassesTestMixin, TemplateView):
+    template_name = "tracking/result.html"
+
+
+class InvoiceDetailView(DashboardPassesTestMixin, TemplateView):
+    template_name = "dashboard/invoice-detail.html"

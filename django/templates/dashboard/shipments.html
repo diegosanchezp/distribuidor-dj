@@ -36,7 +36,9 @@
             <td>{{shipment.state}}</td>
             {# Accion #}
             <th>
-              <button class="btn btn-ghost btn-xs">details</button>
+              <a href="{% url "dashboard:tracking-result" %}">
+                <button class="btn btn-ghost btn-xs">details</button>
+              </a>
             </th>
           </tr>
         {% endfor %}

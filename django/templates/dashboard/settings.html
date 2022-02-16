@@ -1,9 +1,52 @@
 {% extends "base.html" %}
+
 {% block body %}
-  {% include "components/dashboard/title.html" with underline_text="Config" underline_subtext="uraciones" %}
+  {% include "components/dashboard/title.html" with underline_text="Infor" underline_subtext="mación de perfil" %}
 
   {# table #}
-  <div class="overflow-x-auto px-4">
-    Here will be user's settings
-  </div>
+    <section class="grid grid-cols-12 gap-x-8 px-6 py-7 text-xl">
+      <section class="w-full bg-neutral rounded-2xl col-span-full py-8 px-12 shadow-2xl">
+          <p>Nombre de Usuario:  <span class="text-2xl text-bold">gshoes</span></p>
+          <div class="divider max-w-xs"></div>
+          <div class="overflow-x-auto">
+            <table class="table w-full">
+              <thead>
+                <tr>
+                  <td>Nombre de la empresa:</td>
+                  <td>Gshoes</td>
+                </tr>
+                <tr>
+                  <td>Correo:</td>
+                  <td>gshoes@gshoes.com</td>
+                </tr>
+                <tr>
+                  <td>Contraseña:</td>
+                  <td>***********************</td>
+                </tr>
+                <tr>
+                  <td>Número de telefono:</td>
+                  <td>+58 424 688 6086</td>
+                </tr>
+                <tr>
+                  <td>Ciudad:</td>
+                  <td>Socopó</td>
+                </tr>
+                <tr>
+                  <td>Dirección:</td>
+                  <td>Socopó, Barinas, 8060.</td>
+                </tr>
+                <tr>
+                  <td>Estado:</td>
+                  <td>Barinas</td>
+                </tr>
+                <tr>
+                  <td>Código postal:</td>
+                  <td>8060</td>
+                </tr>
+              </thead>
+            </table>
+          </div>
+      </section>
+    </section>
+
 {% endblock %}
