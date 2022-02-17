@@ -32,7 +32,7 @@
               {{ invoice.id }}
             </td>
             {# Fecha #}
-            <td class="flex justify-center items-center gap-x-2">
+            <td class="flex flex-col items-start gap-x-2">
               {% for date in invoice.dates.all %}
                 <p>{{ date.date }}</p>
               {% endfor %}
@@ -44,8 +44,8 @@
             <td>{{invoice.ammount}}</td>
             {# Accion #}
             <th>
-              <a href="{% url "dashboard:invoice-detail" %}">
-                <button class="btn btn-ghost btn-xs">details</button>
+              <a href="{% url "dashboard:invoice-detail" pk=invoice.id %}">
+                <button class="btn btn-ghost btn-xs">Detail</button>
               </a>
             </th>
           </tr>

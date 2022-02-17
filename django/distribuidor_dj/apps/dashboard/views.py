@@ -1,10 +1,13 @@
 """
 Dashboard views
 """
+
 from distribuidor_dj.apps.invoice.models import Invoice
 from distribuidor_dj.apps.shipment.models import Shipment
 
+from django.shortcuts import render
 from django.views.generic import TemplateView
+from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 
 from .mixins import DashboardPassesTestMixin
@@ -29,14 +32,23 @@ class InvoicesView(DashboardPassesTestMixin, ListView):
 class SettingsView(DashboardPassesTestMixin, TemplateView):
     template_name = "dashboard/settings.html"
 
+    def get(self, request, *args, **kwargs):
+        return render(
+            request,
+            self.template_name,
+            {"user": request.user, "request": request},
+        )
+
 
 class TrackingView(DashboardPassesTestMixin, TemplateView):
     template_name = "tracking/index.html"
 
 
-class TrackingResultView(DashboardPassesTestMixin, TemplateView):
+class TrackingResultView(DashboardPassesTestMixin, DetailView):
     template_name = "tracking/result.html"
 
 
-class InvoiceDetailView(DashboardPassesTestMixin, TemplateView):
+class InvoiceDetailView(DashboardPassesTestMixin, DetailView):
     template_name = "dashboard/invoice-detail.html"
+    model = Invoice
+    context_object_name = "invoice"

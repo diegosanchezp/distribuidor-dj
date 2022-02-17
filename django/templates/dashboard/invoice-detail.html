@@ -2,23 +2,35 @@
 {% block body %}
     {% include "components/dashboard/title.html" with underline_text="Deta" underline_subtext="lle de factura" %}
 
-    <section class="grid grid-cols-12 gap-x-8 px-6 text-xl pt-7">
+    <section class="grid grid-cols-12 gap-x-8 px-6 text-xl py-7">
         <section class="w-full bg-neutral rounded-2xl col-span-8 px-6 pt-6 pb-14 shadow-2xl">
-            <p>Factura <span class="text-bold">#213</span></p>
+            <p>Factura <span class="text-bold">{{ invoice.id }}</span></p>
             <p class="pt-9">Correspondiente a </p>
-            <p class="text-2xl pt-6 pb-20">Mes de Enero 2022.</p>
+            {% for date in invoice.dates.all %}
+                <p class="text-2xl pt-6 pb-20">Mes de {{ date.date|date:"F"}} {{ date.date|date:"Y"}}.</p>
+            {% endfor %}
             <div class="divider"></div>
             <section class="flex items-center justify-between">
                 <section class="flex items-center">
+                    {% if invoice.state == "UNPAID" %}
                     <svg height="16" width="16" class="fill-current text-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
                         <path d="M506.3 417l-213.3-364c-16.33-28-57.54-28-73.98 0l-213.2 364C-10.59 444.9 9.849 480 42.74 480h426.6C502.1 480 522.6 445 506.3 417zM232 168c0-13.25 10.75-24 24-24S280 154.8 280 168v128c0 13.25-10.75 24-23.1 24S232 309.3 232 296V168zM256 416c-17.36 0-31.44-14.08-31.44-31.44c0-17.36 14.07-31.44 31.44-31.44s31.44 14.08 31.44 31.44C287.4 401.9 273.4 416 256 416z"/>
                     </svg>
-                    <p class="pl-2">Por pagar</p>
+                    {% elif invoice.state == "PAID" %}
+                    <svg width="16" height="16" class="text-white fill-current" viewBox="0 0 24 24"><path d="M9 21.035l-9-8.638 2.791-2.87 6.156 5.874 12.21-12.436 2.843 2.817z"/></svg>
+                    {% endif %}
+                    <p class="pl-2">{{invoice.state}}</p>
                 </section>
-                <p>Monto Total: 22$</p>
+                <p>Monto Total: ${{invoice.ammount}}</p>
             </section>
             <p class="pt-28 font-bold">Factura vence:</p>
-            <p>28 de Febrero del 2022.</p>
+            <section class="flex flex-col gap-y-2">
+                {% for date in invoice.dates.all %}
+                    {% if date.status == invoice.state %}
+                        <p> {{ date.date|date:"d"}} de {{ date.date|date:"F"}} del {{ date.date|date:"Y"}} </p>
+                    {% endif %}
+                {% endfor %}
+            </section>
         </section>
         <section class="w-full max-h-60 bg-neutral rounded-2xl col-start-9 col-end-13 py-8 px-12 shadow-2xl">
             <section class="flex items-center">

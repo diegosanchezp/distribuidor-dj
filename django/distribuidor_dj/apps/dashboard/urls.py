@@ -10,12 +10,12 @@ urlpatterns = [
     path("settings/", views.SettingsView.as_view(), name="settings"),
     path("tracking/", views.TrackingView.as_view(), name="tracking"),
     path(
-        "tracking-result/",
+        "tracking-result",
         views.TrackingResultView.as_view(),
         name="tracking-result",
     ),
     path(
-        "invoice-detail/",
+        "invoice-detail/<slug:pk>",
         views.InvoiceDetailView.as_view(),
         name="invoice-detail",
     ),
