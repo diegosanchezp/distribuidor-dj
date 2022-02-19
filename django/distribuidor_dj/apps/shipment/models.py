@@ -1,23 +1,15 @@
 import uuid
 from datetime import datetime
-from enum import auto, unique
 from typing import Union
 
 from distribuidor_dj.apps.state.models import StateMachineModel, StatusDate
 from distribuidor_dj.utils import const
-from distribuidor_dj.utils.enum import AutoName
 
 from django.apps import apps
 from django.core.validators import MinValueValidator
 from django.db import models
 from django.db.models import Q
 from django.utils.translation import gettext_lazy as _
-
-
-@unique
-class ShipmentEvents(AutoName):
-    ON_SEND = auto()
-    ON_RECIEVE = auto()
 
 
 class Shipment(StateMachineModel):
