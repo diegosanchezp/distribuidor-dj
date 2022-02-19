@@ -45,7 +45,7 @@ class Shipment(StateMachineModel):
 
     class Events(models.TextChoices):
         """
-        Shipment States enumeration
+        Shipment Events enumeration
         """
 
         ON_SEND = "ON_SEND", _("Enviar")
