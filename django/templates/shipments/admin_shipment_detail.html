@@ -43,10 +43,24 @@
 </section>
 
 <fieldset class="text-center my-8">
-  <legend class="text-lg font-bold">
-    Estatus
-  </legend>
-  <label class="badge badge-info badge-lg" id="shipment_state">{% get_textchoice_label shipment.state statechoices %}</label>
+  <legend class="text-lg font-bold">Estado</legend>
+
+  {% comment %}
+    Use alpinejs to update the shipment state via listening to a custom event
+    https://alpinejs.dev/essentials/events
+
+    Trigger a custom event using
+    https://htmx.org/headers/hx-trigger/
+    https://htmx.org/examples/update-other-content/#events
+  {% endcomment %}
+  <label
+    class="badge badge-info badge-lg"
+    id="shipment_state"
+    x-data="{state: '{% get_textchoice_label shipment.state statechoices %}' }"
+    x-text="state"
+    @updatestate.window="state=$event.detail.state"
+    >
+  </label>
 </fieldset>
 
 <section class="my-8 font-bold">

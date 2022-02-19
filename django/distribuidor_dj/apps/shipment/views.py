@@ -1,6 +1,10 @@
 # Create your views here.
 from distribuidor_dj.apps.dashboard.mixins import AdminDashboardPassessTest
+from distribuidor_dj.apps.dashboard.templatetags.enums_tags import (
+    get_textchoice_label,
+)
 from distribuidor_dj.apps.dashboard.views import ShipmentsView
+from django_htmx.http import trigger_client_event
 
 from django import forms
 from django.db.models.query import QuerySet
@@ -80,6 +84,20 @@ class AdminShipmentDetail(AdminDashboardPassessTest, UpdateView):
         status_date.save()
         shipment.save()
 
-        return self.render_to_response(
+        res = self.render_to_response(
             self.get_context_data(form=self.form_class(instance=shipment))
         )
+        # Trigger a client side event so alpinejs can update the shipment state
+
+        # https://htmx.org/headers/hx-trigger/
+        # https://github.com/adamchainz/django-htmx#django_htmxhttptrigger_client_eventresponse-name--params-after
+        trigger_client_event(
+            response=res,
+            name="updatestate",
+            params={
+                "state": str(
+                    get_textchoice_label(shipment.state, Shipment.States)
+                ),
+            },
+        )
+        return res
