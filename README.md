@@ -111,6 +111,8 @@ Si no quieres que ninguna de las verificaciones corra, en caso de tener un probl
 # NO HAGAS ESTO, a menos que no tengas otra opción
 git commit . -m 'quick fix' --no-verify
 ```
+### Aprender sobre django
+[Páginas web para aprender sobre django](docs/learning-resources/django.md)
 
 ### Crear app de django
 Las apps de django se crean en la carpeta `django/distribuidor-dj/apps`
