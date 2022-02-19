@@ -1,0 +1,21 @@
+@startuml
+/'
+https://www.youtube.com/watch?v=1XKRxeo9414
+Ver minutos 1:00 a 1:34
+'/
+actor Comercio
+participant Distribuidor
+participant "Pasarela de \n pagos" as Gateway
+participant Banco
+
+Comercio -> Distribuidor: seleccionar factura
+Comercio -> Distribuidor: seleccionar banco
+Comercio -> Distribuidor: pagar factura
+Distribuidor -> Gateway: redirección con jwt
+Gateway -> Gateway: Seleccionar información bancaria
+Gateway -> Gateway: Pagar
+Gateway -> Banco: transacción bancaria
+Banco -> Gateway: transacción exitosa
+Gateway -> Distribuidor: redirección página éxito
+Distribuidor -> Comercio: informar pago exitoso
+@enduml
