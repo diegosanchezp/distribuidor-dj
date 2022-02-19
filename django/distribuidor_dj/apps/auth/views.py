@@ -22,7 +22,7 @@ class LoginView(auth_views.LoginView):
     """
 
     template_name = "auth/login.html"
-    next_page = "/accounts/login-proxy"
+    next_page = reverse_lazy("login_proxy")
 
 
 class LoginOutView(RedirectView):
@@ -45,7 +45,7 @@ class LoginProxyView(RedirectView):
         elif self.request.user.groups.filter(name=CLIENT_GROUP_NAME).exists():
             return reverse("home")
         elif self.request.user.is_staff:
-            return reverse("dashboard:adminshipments")
+            return reverse("dashboard:admin-index")
         return super().get_redirect_url(*args, **kwargs)
 
 

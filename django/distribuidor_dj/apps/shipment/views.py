@@ -9,9 +9,14 @@ from django_htmx.http import trigger_client_event
 from django import forms
 from django.db.models.query import QuerySet
 from django.urls.base import reverse_lazy
+from django.views.generic.base import TemplateView
 from django.views.generic.edit import UpdateView
 
 from .models import Shipment
+
+
+class AdminDashIndex(AdminDashboardPassessTest, TemplateView):
+    template_name = "dashboard/index.html"
 
 
 class AdminDashShipmentList(AdminDashboardPassessTest, ShipmentsView):

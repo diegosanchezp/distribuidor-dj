@@ -10,6 +10,7 @@ urlpatterns = [
     path("shipments/", views.ShipmentsView.as_view(), name="shipments"),
     path("invoices/", views.InvoicesView.as_view(), name="invoices"),
     path("settings/", views.SettingsView.as_view(), name="settings"),
+    path("admin/", shviews.AdminDashIndex.as_view(), name="admin-index"),
     path(
         "admin/shipments/",
         shviews.AdminDashShipmentList.as_view(),
