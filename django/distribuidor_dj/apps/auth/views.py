@@ -22,7 +22,7 @@ class LoginView(auth_views.LoginView):
     """
 
     template_name = "auth/login.html"
-    next_page = "/accounts/login-proxy"
+    next_page = reverse_lazy("login_proxy")
 
 
 class LoginOutView(RedirectView):
