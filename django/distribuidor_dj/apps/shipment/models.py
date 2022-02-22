@@ -1,20 +1,15 @@
 import uuid
-from enum import auto, unique
+from datetime import datetime
+from typing import Union
 
 from distribuidor_dj.apps.state.models import StateMachineModel, StatusDate
 from distribuidor_dj.utils import const
-from distribuidor_dj.utils.enum import AutoName
 
 from django.apps import apps
 from django.core.validators import MinValueValidator
 from django.db import models
+from django.db.models import Q
 from django.utils.translation import gettext_lazy as _
-
-
-@unique
-class ShipmentEvents(AutoName):
-    ON_SEND = auto()
-    ON_RECIEVE = auto()
 
 
 class Shipment(StateMachineModel):
@@ -40,14 +35,28 @@ class Shipment(StateMachineModel):
         # reached its target
         # Final state
 
+    class Events(models.TextChoices):
+        """
+        Shipment Events enumeration
+        """
+
+        ON_SEND = "ON_SEND", _("Enviar")
+        ON_RECIEVE = "ON_RECIEVE", _("Recibir")
+
     status_date_relattr = "shipment"
 
+    default_address_q = Q(
+        state__name="Distrito Capital",
+        city="Caracas",
+        street="Calle New York",
+        zipcode=1073,
+    )
     machine = {
         States.SENDED: {
-            ShipmentEvents.ON_RECIEVE: States.RECIEVED,
+            Events.ON_RECIEVE: States.RECIEVED,
         },
         States.CREATED: {
-            ShipmentEvents.ON_SEND: States.SENDED,
+            Events.ON_SEND: States.SENDED,
         },
     }
 
@@ -73,6 +82,7 @@ class Shipment(StateMachineModel):
         # set to null this column if address deleted
         on_delete=models.SET_NULL,
         related_name="shipment_target_addresses",
+        limit_choices_to=~default_address_q,
     )
 
     initial_address = models.ForeignKey(
@@ -81,6 +91,7 @@ class Shipment(StateMachineModel):
         null=True,
         on_delete=models.SET_NULL,
         related_name="shipment_initial_addresses",
+        limit_choices_to=default_address_q,
     )
 
     customer = models.ForeignKey(
@@ -106,6 +117,16 @@ class Shipment(StateMachineModel):
 
     def __str__(self) -> str:
         return f"{self.state} {self.commerce.username}"
+
+    def get_current_status_date(self) -> Union[datetime, None]:
+        """
+        Get the the date of the current status
+        """
+        try:
+            date: ShipmentStatusDate = self.dates.get(status=self.state)
+            return date.date
+        except ShipmentStatusDate.DoesNotExist:
+            return None
 
 
 class ShipmentStatusDate(StatusDate):
@@ -172,15 +193,13 @@ class ProductQuantity(models.Model):
     )
 
 
-class AddressManager(models.Manager):
-    use_in_migrations = True
-
-    def get_by_natural_key(self, state, city, street):
-        return self.get(state=state, city=city, street=street)
-
-
 class Address(models.Model):
-    state = models.TextField(_("Estado"))
+    state = models.ForeignKey(
+        "AddressState",
+        on_delete=models.CASCADE,
+        related_name="addresses",
+        verbose_name=_("Estado"),
+    )
     city = models.TextField(_("Ciudad"))
     street = models.TextField(_("Calle"))
     zipcode = models.TextField(
@@ -188,13 +207,29 @@ class Address(models.Model):
         blank=True,
     )  # optional
 
-    objects = AddressManager()
-
-    def natural_key(self):
-        return (self.state, self.city, self.street)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 
     class Meta:
         unique_together = [["state", "city", "street"]]
 
     def __str__(self) -> str:
         return f"{self.state}, {self.city}, {self.street}"
+
+
+class AddressStateManager(models.Manager):
+    use_in_migrations = True
+
+    def get_by_natural_key(self, name, price):
+        return self.get(name=name, price=price)
+
+
+class AddressState(models.Model):
+    name = models.TextField(_("Estado"), unique=True)
+    price = models.FloatField(_("Precio"), validators=[MinValueValidator(0)])
+    objects = AddressStateManager()
+
+    def natural_key(self):
+        return (self.name, self.price)
+
+    def __str__(self) -> str:
+        return f"{self.name}"

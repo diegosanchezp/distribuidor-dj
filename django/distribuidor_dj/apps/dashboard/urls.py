@@ -1,3 +1,5 @@
+from distribuidor_dj.apps.shipment import views as shviews
+
 from django.urls import path
 
 from . import views
@@ -18,5 +20,26 @@ urlpatterns = [
         "invoice-detail/<slug:pk>",
         views.InvoiceDetailView.as_view(),
         name="invoice-detail",
+    ),
+    path("admin/", shviews.AdminDashIndex.as_view(), name="admin-index"),
+    path(
+        "admin/shipments/",
+        shviews.AdminDashShipmentList.as_view(),
+        name="adminshipments",
+    ),
+    path(
+        "admin/reportes",
+        views.ReportesView.as_view(),
+        name="reportes",
+    ),
+    path(
+        "shipment/<slug:pk>/",
+        views.ShipmentDetail.as_view(),
+        name="shipment-detail",
+    ),
+    path(
+        "admin/shipment/<slug:pk>/",
+        shviews.AdminShipmentDetail.as_view(),
+        name="admin-shipment-detail",
     ),
 ]

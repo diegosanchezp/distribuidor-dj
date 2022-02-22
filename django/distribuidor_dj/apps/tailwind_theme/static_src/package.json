@@ -35,6 +35,7 @@
   },
   "dependencies": {
     "alpinejs": "^3.7.0",
+    "chart.js": "^3.7.1",
     "daisyui": "^1.23.0",
     "htmx.org": "^1.6.1"
   }

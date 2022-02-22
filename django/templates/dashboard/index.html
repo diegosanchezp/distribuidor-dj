@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "dashboard/base.html" %}
 {% block body %}
   {% include "components/dashboard/title.html" with underline_text="Dash" underline_subtext="board" %}
 
@@ -8,7 +8,15 @@
                 <h2 class="card-title">Envios</h2>
                 <p>Revisa toda la información de los envíos creados.</p>
                 <div class="justify-end card-actions">
-                    <a href="{% url "dashboard:shipments" %}" class="btn btn-primary">
+                    <a
+                        href="
+                            {% if request.user.is_staff %}
+                                {% url "dashboard:adminshipments" %}
+                            {% else %}
+                                {% url "dashboard:shipments" %}
+                            {%endif%}
+                        "
+                        class="btn btn-primary">
                         Ver más
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block w-6 h-6 ml-2 stroke-current">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
@@ -22,7 +30,14 @@
                 <h2 class="card-title">Facturas</h2>
                 <p>Revisa toda  la información de las facturas.</p>
                 <div class="justify-end card-actions">
-                    <a href="{% url "dashboard:invoices" %}" class="btn btn-secondary">
+                    <a
+                        href="
+                            {% if request.user.is_staff %}
+                            {% else %}
+                                {% url "dashboard:invoices" %}
+                            {%endif%}
+                        "
+                        class="btn btn-secondary">
                         Ver más
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block w-6 h-6 ml-2 stroke-current">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
@@ -31,19 +46,21 @@
                 </div>
             </div>
         </div>
-        <div class="card shadow-2xl lg:card-side bg-accent text-primary-content">
-            <div class="card-body">
-                <h2 class="card-title">Configuración</h2>
-                <p>Tokens de autenticación y información de perfil.</p>
-                <div class="justify-end card-actions">
-                    <a href="{% url 'dashboard:settings' %}" class="btn btn-accent">
-                        Ver más
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block w-6 h-6 ml-2 stroke-current">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                        </svg>
-                    </a>
+        {% if not request.user.is_staff %}
+            <div class="card shadow-2xl lg:card-side bg-accent text-primary-content">
+                <div class="card-body">
+                    <h2 class="card-title">Configuración</h2>
+                    <p>Tokens de autenticación y información de perfil.</p>
+                    <div class="justify-end card-actions">
+                        <a href="{% url 'dashboard:settings' %}" class="btn btn-accent">
+                            Ver más
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block w-6 h-6 ml-2 stroke-current">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                            </svg>
+                        </a>
+                    </div>
                 </div>
             </div>
-        </div>
+        {% endif %}
     </section>
 {% endblock body %}

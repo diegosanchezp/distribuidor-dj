@@ -2,31 +2,37 @@
 {
     "model": "shipment.product",
     "fields": {
-        "name": "Playstation 5"
+        "name": "Zapatos Skate Adidas"
     }
 },
 {
     "model": "shipment.product",
     "fields": {
-        "name": "Laptop Acer"
+        "name": "Botas negras"
     }
 },
 {
     "model": "shipment.product",
     "fields": {
-        "name": "Laptop Dell"
+        "name": "Zapatos para Motociclista"
     }
 },
 {
     "model": "shipment.product",
     "fields": {
-        "name": "Audifonos Xiaomi"
+        "name": "Franela blanca"
     }
 },
 {
     "model": "shipment.product",
     "fields": {
-        "name": "Telefono Xiaomi"
+        "name": "Chaqueta negra"
+    }
+},
+{
+    "model": "shipment.product",
+    "fields": {
+        "name": "Camisa de vestir"
     }
 }
 ]

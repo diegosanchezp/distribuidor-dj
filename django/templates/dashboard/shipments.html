@@ -1,53 +1,91 @@
-{% extends "base.html" %}
+{% extends "dashboard/base.html" %}
+
+{% load widget_tweaks %}
+{% load enums_tags %}
+
 {% block body %}
   {% include "components/dashboard/title.html" with underline_text="Env" underline_subtext="ios" %}
 
+  {# filter form #}
+  <form class="flex justify-center gap-x-6 my-4" method="GET">
+    <p>Filtrar por</p>
+    {% csrf_token %}
+    <div class="flex flex-col">
+      <label class="text-info" for="{{filter_form.state.id_for_label}}">Estado</label>
+      {% render_field filter_form.state class+="select select-bordered" %}
+    </div>
+    <button class="btn btn-primary" type="submit">Filtrar</button>
+  </form>
   {# table #}
   <div class="overflow-x-auto px-4">
-    <table class="table w-full">
-      <thead>
-        <tr>
-          <th>
-            <label>
-              <input type="checkbox" class="checkbox">
-            </label>
-          </th>
-          <th>Nro. Ref</th>
-          <th>Dirección destino</th>
-          <th>Estatus</th>
-          <th>Accion</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for shipment in page_obj %}
+    {% if page_obj %}
+      <table class="table w-full">
+        <thead>
           <tr>
             <th>
               <label>
                 <input type="checkbox" class="checkbox">
               </label>
             </th>
-            {# Nro.Ref #}
-            <td>
-              {{ shipment.id }}
-            </td>
-            {# Dirección #}
-            <td>{{shipment.target_address}}</td>
-            {# Estatus #}
-            <td>{{shipment.state}}</td>
-            {# Accion #}
-            <th>
-              <a href="{% url "dashboard:tracking-result" %}">
-                <button class="btn btn-ghost btn-xs">details</button>
-              </a>
-            </th>
+            <th>Nro. Ref</th>
+            {% if request.user.is_staff %}
+              <th>Comercio</th>
+            {% endif %}
+            <th>Dirección destino</th>
+            <th>Estatus</th>
+            <th>Accion</th>
           </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {% for shipment in page_obj %}
+            <tr>
+              <th>
+                <label>
+                  <input type="checkbox" class="checkbox">
+                </label>
+              </th>
+              {# Nro.Ref #}
+              <td>
+                <a href="{% url shipment_detail_url pk=shipment.id %}">
+                  {{ shipment.id }}
+                </a>
+              </td>
+              {# Nombre usuario del comercio #}
+              {% if request.user.is_staff %}
+                <td>
+                  {{shipment.commerce.username}}
+                </td>
+              {% endif %}
+              {# Dirección #}
+              <td title="{{shipment.target_address}}">
+                {{shipment.target_address|truncatechars:34}}
+              </td>
+              {# Estatus #}
+              <td>{% get_textchoice_label shipment.state statechoices %}</td>
+              {# Accion #}
+              <th>
+                <a
+                  class="btn btn-ghost btn-xs"
+                  href="{% url shipment_detail_url pk=shipment.id %}">
+                  Ver
+                </a>
+
+              </th>
+            </tr>
+          {% empty %}
+            <p class="text-center text-xl">No hay envios</p>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <p class="text-center text-2xl">No hay envios que mostrar</p>
+    {% endif %}
   </div>
   {# Pagination #}
-  <div class="flex justify-center w-full">
-    {% include "partials/pagination.html" %}
-  </div>
+  {% if page_obj %}
+    <div class="flex justify-center w-full">
+      {% include "partials/pagination.html" %}
+    </div>
+  {% endif %}
   {# pagination #}
 {% endblock %}

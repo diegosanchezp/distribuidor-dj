@@ -1,0 +1,40 @@
+{% load widget_tweaks %}
+
+<form
+    id="action-container"
+    hx-post="{% url "dashboard:admin-shipment-detail" pk=shipment.id %}"
+    hx-swap="outerHTML"
+    hx-target="this"
+  >
+  {{ form.state.as_hidden }}
+  <div class="flex justify-center">
+    {% if action_map %}
+      <button type="submit" name="{{form.action.name}}" id="{{form.action.auto_id}}" class="btn btn-primary" value="{{action_map.stateaction}}">{{action_map.text}}</button>
+    {% endif %}
+  </div>
+
+  {% if shipment.state == "RECIEVED" %}
+
+    <div class="alert my-6">
+      <div class="flex-1">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="#2196f3" class="w-6 h-6 mx-2">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+        <label>¡El envio ha llegado su destino!<label>
+      </div>
+    </div>
+
+  {% endif %}
+  <!-- TODO: render form errors -->
+
+  {% for error in form.state.errors %}
+    <div class="alert alert-error">
+      <div class="flex-1">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="w-6 h-6 mx-2 stroke-current">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"></path>
+        </svg>
+        <label>{{ error }}</label>
+      </div>
+    </div>
+  {% endfor %}
+</form>

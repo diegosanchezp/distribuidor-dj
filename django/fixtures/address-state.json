@@ -1,0 +1,170 @@
+[
+{
+    "model": "shipment.addressstate",
+    "fields": {
+        "name": "Amazonas",
+        "price": 7.0
+    }
+},
+{
+    "model": "shipment.addressstate",
+    "fields": {
+        "name": "Anzoátegui",
+        "price": 5.0
+    }
+},
+{
+    "model": "shipment.addressstate",
+    "fields": {
+        "name": "Apure",
+        "price": 6.0
+    }
+},
+{
+    "model": "shipment.addressstate",
+    "fields": {
+        "name": "Aragua",
+        "price": 2.0
+    }
+},
+{
+    "model": "shipment.addressstate",
+    "fields": {
+        "name": "Barinas",
+        "price": 5.0
+    }
+},
+{
+    "model": "shipment.addressstate",
+    "fields": {
+        "name": "Bolívar",
+        "price": 8.0
+    }
+},
+{
+    "model": "shipment.addressstate",
+    "fields": {
+        "name": "Carabobo",
+        "price": 2.0
+    }
+},
+{
+    "model": "shipment.addressstate",
+    "fields": {
+        "name": "Cojedes",
+        "price": 3.0
+    }
+},
+{
+    "model": "shipment.addressstate",
+    "fields": {
+        "name": "Delta Amacuro",
+        "price": 50.0
+    }
+},
+{
+    "model": "shipment.addressstate",
+    "fields": {
+        "name": "Distrito Capital",
+        "price": 2.0
+    }
+},
+{
+    "model": "shipment.addressstate",
+    "fields": {
+        "name": "Falcón",
+        "price": 5.0
+    }
+},
+{
+    "model": "shipment.addressstate",
+    "fields": {
+        "name": "Guarico",
+        "price": 4.0
+    }
+},
+{
+    "model": "shipment.addressstate",
+    "fields": {
+        "name": "Lara",
+        "price": 5.0
+    }
+},
+{
+    "model": "shipment.addressstate",
+    "fields": {
+        "name": "Mérida",
+        "price": 7.0
+    }
+},
+{
+    "model": "shipment.addressstate",
+    "fields": {
+        "name": "Miranda",
+        "price": 1.0
+    }
+},
+{
+    "model": "shipment.addressstate",
+    "fields": {
+        "name": "Monagas",
+        "price": 3.0
+    }
+},
+{
+    "model": "shipment.addressstate",
+    "fields": {
+        "name": "Nueva Esparta",
+        "price": 5.0
+    }
+},
+{
+    "model": "shipment.addressstate",
+    "fields": {
+        "name": "Portuguesa",
+        "price": 5.0
+    }
+},
+{
+    "model": "shipment.addressstate",
+    "fields": {
+        "name": "Sucre",
+        "price": 5.0
+    }
+},
+{
+    "model": "shipment.addressstate",
+    "fields": {
+        "name": "Táchira",
+        "price": 9.0
+    }
+},
+{
+    "model": "shipment.addressstate",
+    "fields": {
+        "name": "Trujillo",
+        "price": 5.0
+    }
+},
+{
+    "model": "shipment.addressstate",
+    "fields": {
+        "name": "Vargas",
+        "price": 2.0
+    }
+},
+{
+    "model": "shipment.addressstate",
+    "fields": {
+        "name": "Yaracuy",
+        "price": 4.0
+    }
+},
+{
+    "model": "shipment.addressstate",
+    "fields": {
+        "name": "Zulia",
+        "price": 20.0
+    }
+}
+]

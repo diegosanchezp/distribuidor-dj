@@ -1,5 +1,17 @@
 <div class="flex gap-x-4 items-baseline">
-  <a href="{% url "dashboard:index" %}" class="btn btn-square btn-ghost" href="">
+  <a
+    href="
+    {% if not reverse_url %}
+      {% if request.user.is_staff %}
+        {% url "dashboard:admin-index" %}
+      {% else%}
+        {% url "dashboard:index" %}
+      {%endif%}
+    {%else%}
+      {% url reverse_url %}
+    {% endif %}
+    "
+      class="btn btn-square btn-ghost">
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block w-6 h-6 stroke-current text-primary">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
     </svg>

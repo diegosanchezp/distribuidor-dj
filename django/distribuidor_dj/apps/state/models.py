@@ -1,3 +1,4 @@
+import uuid
 from enum import Enum
 from typing import Callable, Optional, Type
 
@@ -16,7 +17,7 @@ class StateMachineModel(models.Model):
     """
 
     # Todo validate that these fields are not none
-    machine: dict[Enum, dict[Enum, Enum]]
+    machine: dict[str, dict[Enum, Enum]]
     status_date_class: Type["StatusDate"]
     status_date_relattr: str
 
@@ -59,6 +60,7 @@ class StateMachineModel(models.Model):
 
 class StatusDate(models.Model):
     status = models.TextField(_("Estatus"))  # string
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     date = models.DateTimeField(
         _("Fecha"),
         auto_now_add=True,
