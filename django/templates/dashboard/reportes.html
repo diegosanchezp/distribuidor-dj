@@ -2,40 +2,71 @@
 {% load static %}
 {% block extrascripts %}
     <script defer src="{% static "chart.js/dist/chart.min.js" %}"></script>
-    <script>
-      window.addEventListener('DOMContentLoaded', (event) => {
-        const labels = [
-          'January',
-          'February',
-          'March',
-          'April',
-          'May',
-          'June',
-        ];
-
-        const data = {
-          labels: labels,
-          datasets: [{
-            label: 'My First dataset',
-            backgroundColor: 'rgb(255, 99, 132)',
-            borderColor: 'rgb(255, 99, 132)',
-            data: [0, 10, 5, 2, 20, 30, 45],
-          }]
-        };
-
-        const config = {
-          type: 'line',
-          data: data,
-          options: {}
-        };
-        const myChart = new Chart(
-          document.getElementById('myChart'),
-          config
-        );
-      });
-    </script>
+    <script defer src="{% static "js/dashboard_reports.js" %}"></script>
 {% endblock %}
 {% block body %}
+    {% include "components/dashboard/title.html" with underline_text="Repo" underline_subtext="rtes" %}
+
+    <h2 class="text-lg">Tipo</h2>
+    <section class="tabs tabs-boxed justify-center">
+        <a class="tab">Envios</a>
+        <a class="tab tab-active">Clientes</a>
+        <a class="tab">Destinos</a>
+        <a class="tab">Facturas</a>
+    </section>
+
+    <h2 class="text-lg">Filtros de fecha</h2>
+
+    <form
+        class="flex flex-col"
+        x-data="{currentTab: 'dia' }"
+        method="GET"
+        >
+        <section class="tabs tabs-boxed gap-x-8 justify-center">
+            {% for radio in form.tipo %}
+                <label for="{{ radio.id_for_label }}" class="flex gap-x-2 cursor-pointer label">
+                    <input
+                        type="{{radio.data.type}}"
+                        @click="currentTab = '{{radio.data.value|stringformat:'s'}}' "
+                        id="{{radio.id_for_label}}"
+                        name="{{form.tipo.name}}"
+                        class="radio checked:bg-blue-500"
+                        value="{{radio.data.value}}"
+                        x-bind:checked="currentTab == '{{radio.data.value}}'"
+                    >
+                    <span class="label-text">{{radio.choice_label}}</span>
+                </label>
+            {% endfor %}
+        </section>
+
+        <section id="date-filters" class="self-center my-2">
+            <template x-if="currentTab == 'dia' ">
+                <div>
+                    <label for="">Escoge el dia</label>
+                    <input class="input input-bordered" name="dia" type="date" min="2022-01-01" max="2023-01-01" value="2022-01-01">
+                </div>
+            </template>
+            <template x-if="currentTab == 'mes' ">
+                <div>
+                    <label for="">Escoge un mes del año actual</label>
+                    <input class="input input-bordered" type="date" min="2022-01-01" max="2023-01-01" value="2022-01-01">
+                </div>
+            </template>
+            <template x-if="currentTab == 'intervalo' ">
+                <section>
+                    <div>
+                        <label for="">Inicio</label>
+                        <input class="input input-bordered" type="date" min="2022-01-01" max="2023-01-01" value="2022-01-01">
+                    </div>
+                    <div>
+                        <label for="">Fin</label>
+                        <input class="input input-bordered" type="date" min="2022-01-01" max="2023-01-01" value="2022-01-01">
+                    </div>
+                </section>
+            </template>
+        </section>
+        <button class="btn btn-primary self-center my-2" type="submit">Aplicar</button>
+    </form>
     <div style="background-color: white;">
       <canvas id="myChart"></canvas>
     </div>
