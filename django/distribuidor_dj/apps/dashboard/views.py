@@ -68,6 +68,7 @@ class SettingsView(DashboardPassesTestMixin, TemplateView):
 class ReportesView(AdminDashboardPassessTest, FormView):
     template_name = "dashboard/reportes.html"
     form_class = dash_forms.BaseDateFilterForm  # Root form class
+    extra_context = {"datechoices": dash_forms.BaseDateFilterFormChoices}
 
     def get(self, request, *args, **kwargs):
 

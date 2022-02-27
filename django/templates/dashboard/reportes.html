@@ -40,19 +40,19 @@
         </section>
 
         <section id="date-filters" class="self-center my-2">
-            <template x-if="currentTab == 'dia' ">
+            <template x-if="currentTab == '{{datechoices.DIA.value}}' ">
                 <div>
                     <label for="">Escoge el dia</label>
                     <input class="input input-bordered" name="dia" type="date" min="2022-01-01" max="2023-01-01" value="2022-01-01">
                 </div>
             </template>
-            <template x-if="currentTab == 'mes' ">
+            <template x-if="currentTab == '{{datechoices.MES.value}}' ">
                 <div>
                     <label for="">Escoge un mes del año actual</label>
                     <input class="input input-bordered" type="date" min="2022-01-01" max="2023-01-01" value="2022-01-01">
                 </div>
             </template>
-            <template x-if="currentTab == 'intervalo' ">
+            <template x-if="currentTab == '{{datechoices.INTERVALO.value}}' ">
                 <section>
                     <div>
                         <label for="">Inicio</label>
