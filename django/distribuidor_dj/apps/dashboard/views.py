@@ -78,8 +78,11 @@ class ReportesView(AdminDashboardPassessTest, FormView):
     extra_context = {"datechoices": dash_forms.BaseDateFilterFormChoices}
 
     def get(self, request, *args, **kwargs):
+        # TODO: define default chart to render when no query params
 
         # No query params do normal get flow
+        # if (not len(self.request.GET) > 0
+        #         and not self.request.htmx):
         if not len(self.request.GET) > 0:
             return super().get(request, *args, **kwargs)
 
@@ -94,7 +97,10 @@ class ReportesView(AdminDashboardPassessTest, FormView):
         if not actual_form.is_valid():
             return self.form_invalid(form=actual_form)
 
-        self.make_querys()
+        # queryset = self.get_query()
+        # Convert query to json
+
+        # This should be an htmx response
         return self.render_to_response(self.get_context_data(form=actual_form))
 
     def get_context_data(self, **kwargs):
@@ -107,14 +113,18 @@ class ReportesView(AdminDashboardPassessTest, FormView):
             ctx["range_form"] = dash_forms.ChartDateRangeFilterForm()
         return ctx
 
-    def make_querys(self):
+    def get_query(self):
         pass
 
     # Querys
-    def get_shipments_by_status(self, tipo: str):
-
+    def get_shipments_by_status(self, form):
+        tipo = form.cleaned_data.get("tipo")
         # TODO refactor if's tipo, into dicts ?
         if tipo == BaseDateFilterFormChoices.DIA:
-            Shipment.objects.filter(
-                status=Shipment.States.RECIEVED, dates__date__range=[]
-            )
+            # Order shipments
+            # today_date = datetime.today()
+            # q1 = ShipmentStatusDate.objects.filter(
+            #     status=Shipment.States.RECIEVED,
+            #     date__lte=today_date,
+            # ).order_by("date")
+            pass

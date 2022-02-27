@@ -41,10 +41,16 @@
 
         <section id="date-filters" class="self-center my-2">
             <template x-if="currentTab == '{{datechoices.DIA.value}}' ">
-                <div>
-                    <label for="">Escoge el dia</label>
-                    <input class="input input-bordered" name="dia" type="date" min="2022-01-01" max="2023-01-01" value="2022-01-01">
+                <div class="flex flex-col">
+                    <label class="" for="">
+                        <p>
+                            Escoge un dia entre {{day_form.min_date|date:"d/m/Y"}}
+                            y {{day_form.max_date|date:"d/m/Y"}}
+                        </p>
+                    </label>
+                    <input class="input self-center input-bordered" name="{{day_form.dia.name}}" type="date" min="{{day_form.fields.dia.widget.attrs.min}}" max="{{day_form.fields.dia.widget.attrs.max}}" value="{{day_form.fields.dia.initial}}">
                 </div>
+                {{form.dia.errors}}
             </template>
             <template x-if="currentTab == '{{datechoices.MES.value}}' ">
                 <div>
