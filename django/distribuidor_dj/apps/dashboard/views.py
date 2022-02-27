@@ -67,27 +67,36 @@ class SettingsView(DashboardPassesTestMixin, TemplateView):
 
 class ReportesView(AdminDashboardPassessTest, FormView):
     template_name = "dashboard/reportes.html"
+
     form_class = dash_forms.BaseDateFilterForm  # Root form class
+    form_classes = {
+        BaseDateFilterFormChoices.DIA: dash_forms.ChartDateDayFilterForm,
+        BaseDateFilterFormChoices.MES: dash_forms.ChartDateMonthFilterForm,
+        BaseDateFilterFormChoices.INTERVALO: dash_forms.ChartDateRangeFilterForm,  # noqa: E501, E261
+    }
+
     extra_context = {"datechoices": dash_forms.BaseDateFilterFormChoices}
 
     def get(self, request, *args, **kwargs):
 
-        if len(self.request.GET) > 0:
-            f = self.form_class(data=self.request.GET)
-            # breakpoint()
-            if f.is_valid():
-                actual_form_class = self.get_child_form(f)
-                actual_form = actual_form_class(data=self.request.GET)
-                if actual_form.is_valid():
-                    self.make_querys()
-                    self.render_to_response(
-                        self.get_context_data(form=actual_form)
-                    )
-            else:
-                return self.form_invalid(form=f)
-        return super().get(request, *args, **kwargs)
+        # No query params do normal get flow
+        if not len(self.request.GET) > 0:
+            return super().get(request, *args, **kwargs)
 
-    # TODO refactor if's tipo, into dicts
+        f = self.form_class(data=self.request.GET)
+        if not f.is_valid():
+            return self.form_invalid(form=f)
+
+        # Get the child form class and construct the form
+        child_form_class = self.form_classes[f.cleaned_data.get("tipo")]
+        actual_form = child_form_class(data=self.request.GET)
+
+        if not actual_form.is_valid():
+            return self.form_invalid(form=actual_form)
+
+        self.make_querys()
+        return self.render_to_response(self.get_context_data(form=actual_form))
+
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
         if "day_form" not in kwargs:
@@ -101,18 +110,10 @@ class ReportesView(AdminDashboardPassessTest, FormView):
     def make_querys(self):
         pass
 
-    def get_child_form(self, parent_form):
-        tipo = parent_form.cleaned_data.get("tipo")
-        if tipo == BaseDateFilterFormChoices.DIA:
-            return dash_forms.ChartDateDayFilterForm
-        elif tipo == BaseDateFilterFormChoices.MES:
-            return dash_forms.ChartDateMonthFilterForm
-        elif tipo == BaseDateFilterFormChoices.INTERVALO:
-            return dash_forms.ChartDateRangeFilterForm
-
     # Querys
     def get_shipments_by_status(self, tipo: str):
 
+        # TODO refactor if's tipo, into dicts ?
         if tipo == BaseDateFilterFormChoices.DIA:
             Shipment.objects.filter(
                 status=Shipment.States.RECIEVED, dates__date__range=[]
