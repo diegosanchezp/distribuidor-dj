@@ -2,17 +2,35 @@
 {% block body %}
     {% include "components/dashboard/title.html" with underline_text="Deta" underline_subtext="lle de rastreo del envío" %}
 
-    <section class="grid grid-cols-12 gap-x-8 px-6 text-xl pt-7">
+    <section class="grid grid-cols-12 gap-x-8 px-6 text-xl py-7">
         <section class="w-full bg-neutral rounded-2xl col-span-8 px-6 pt-6 pb-14 shadow-2xl">
-            <p>Tracking <span class="text-bold">#1550058</span></p>
+            <p>Tracking <span class="text-bold">#{{shipment.id}}</span></p>
             <p class="pt-12">Entrega estimada</p>
-            <p class="text-2xl pb-9">Miércoles, 35 de Enero del 2048 a las 9:00am.</p>
+            {% if shipment.id|stringformat:"s" == "03d21ddb-8523-4750-88c2-3c781069a6ee" %}
+                <p class="text-2xl pb-9">Viernes, 04 de Marzo del 2022 a las 1:00pm</p>
+            {% elif shipment.id|stringformat:"s" == "34062eb9-79cd-4a51-a407-7029bd260a0c"  %}
+                <p class="text-2xl pb-9">Lunes, 07 de Marzo del 2022 a las 1:00pm</p>
+            {% endif %}
+                {% for date in shipment.dates.all %}
+                    <p> {{ date.date|date:"A"}}, {{ date.date|date:"d"}} de {{ date.date|date:"F"}} del {{ date.date|date:"Y"}} a las {{ date.date|date:"I"}}{{ date.date|date:"p"}}</p>
+                {% endfor %}
             <div class="divider"></div>
-            <p class="text-2xl text-bold pt-11">En camino</p>
+            <p class="text-2xl text-bold pt-11">Estado</p>
             <ul class="w-full steps mt-12">
                 <li class="step step-primary">Creado</li>
-                <li class="step step-primary">Enviado</li>
-                <li class="step step-primary-content">Recibido</li>
+                {% if shipment.status == "SENDED" %}
+
+                    <li class="step step-primary">Enviado</li>
+                    <li class="step step-primary-content">Recibido</li>
+                {% elif shipment.status == "RECIEVED"  %}
+
+                    <li class="step step-primary">Enviado</li>
+                    <li class="step step-primary">Recibido</li>
+                {% else %}
+
+                    <li class="step step-primary-content">Enviado</li>
+                    <li class="step step-primary-content">Recibido</li>
+                {% endif %}
             </ul>
             <p class="pt-11 font-bold">Entrega en</p>
             <p>Guasdalito, 8060.</p>
@@ -24,12 +42,14 @@
                 </span>
                 <p class="pl-2">Tracking</p>
             </section>
-            <section class="pt-6">
-                <input type="text" placeholder="username" class="input input-primary input-bordered w-full">
-                <a href="{% url "dashboard:tracking-result" %}">
-                    <button class="mt-4 btn btn-primary">Buscar</button>
-                </a>
-            </section>
+            <form method="GET" class="pt-6">
+                {% csrf_token %}
+                {{ form.tracking_id }}
+                {% for error in form.tracking_id.errors %}
+                    <p class="text-base text-error pt-4">{{ error }}</p>
+                {% endfor %}
+                <button class="mt-4 btn btn-primary" type="submit">Buscar</button>
+            </form>
         </section>
     </section>
 

@@ -23,12 +23,16 @@
 {% endblock %}
 
 {% block body %}
-  <section class="bg-fixed wall-img flex flex-col justify-center items-center pt-40">
+  <section class="bg-fixed wall-img flex flex-col justify-center items-center pt-32">
     <div class="hero-title mb-8">
       <p class="text-2xl hero-title-shadow">El futuro es hoy, rastrea tu envio</p>
     </div>
-    <form>
-      <input class="input input-bordered" placeholder="Número de rastreo" type="text">
+    <form method="GET" class="flex justify-center items-center gap-x-6">
+      {% csrf_token %}
+      {{ form.tracking_id }}
+      {% for error in form.tracking_id.errors %}
+          <p class="text-base text-error pt-4">{{ error }}</p>
+      {% endfor %}
       <button class="btn btn-primary" type="submit">Buscar</button>
     </form>
   </section>

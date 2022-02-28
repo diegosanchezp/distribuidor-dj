@@ -72,14 +72,6 @@ class SettingsView(DashboardPassesTestMixin, TemplateView):
         )
 
 
-class TrackingView(DashboardPassesTestMixin, TemplateView):
-    template_name = "tracking/index.html"
-
-
-class TrackingResultView(DashboardPassesTestMixin, DetailView):
-    template_name = "tracking/result.html"
-
-
 class InvoiceDetailView(DashboardPassesTestMixin, DetailView):
     template_name = "dashboard/invoice-detail.html"
     model = Invoice

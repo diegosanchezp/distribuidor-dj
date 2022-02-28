@@ -3,20 +3,25 @@
   {% include "components/dashboard/title.html" with underline_text="Rast" underline_subtext="reo del envío" %}
 
     <section class="grid grid-cols-12 gap-x-8 px-6 text-xl pt-7">
-        <section class="w-full max-h-72 bg-neutral rounded-2xl col-start-4 col-end-10 py-8 px-12 shadow-2xl">
+        <section class="w-full max-h-80 bg-neutral rounded-2xl col-start-4 col-end-10 py-8 px-12 shadow-2xl">
             <section class="flex">
                 <span class="h-4">
                     <i class="h-4 fa fa-search"></i>
                 </span>
                 <p class="pl-2">Tracking</p>
             </section>
-            <section class="pt-6">
-                <input type="text" placeholder="username" class="input input-primary input-bordered w-full">
+            <form method="GET" class="pt-6">
+                {% csrf_token %}
+                {{ form.tracking_id }}
+                {% for error in form.tracking_id.errors %}
+                    <p class="text-base text-error pt-3">{{ error }}</p>
+                {% endfor %}
+                {% if notFound %}
+                    <p class="text-base text-error pt-3">{{ notFoundMessage }}</p>
+                {% endif %}
                 <p class="py-5 pb-4 text-sm">Busca la información de tu envío</p>
-                <a href="{% url "dashboard:tracking-result"  %}">
-                    <button class="mt-4 btn btn-primary">Buscar</button>
-                </a>
-            </section>
+                <button type="submit" class="mt-4 btn btn-primary">Buscar</button>
+            </form>
         </section>
     </section>
 

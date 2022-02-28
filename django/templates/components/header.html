@@ -13,7 +13,7 @@
         <a class="btn btn-ghost btn-sm rounded-btn uppercase" href="{% url "home" %}">
           Home
         </a>
-        <a class="btn btn-ghost btn-sm rounded-btn uppercase"  href="{% url "dashboard:tracking" %}">          Tracking
+        <a class="btn btn-ghost btn-sm rounded-btn uppercase"  href="{% url "tracking" %}">Tracking
         </a>
 
         {% if request.user.is_authenticated %}
