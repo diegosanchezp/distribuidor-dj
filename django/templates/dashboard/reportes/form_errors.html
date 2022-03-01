@@ -1,0 +1,14 @@
+{# Form Errors #}
+<div class="form-errors">
+  <template x-for="[field, errors] in Object.entries({{errors}})">
+    <div>
+      <p x-text="field"></p>
+      <div>
+        <template x-for="error in errors">
+          <p x-text="error"></p>
+        </template>
+      </div>
+    </div>
+  </template>
+</div>
+</div>

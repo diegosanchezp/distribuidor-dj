@@ -19,8 +19,15 @@
 
     {% include "dashboard/reportes/reportes_form.html" %}
 
-    <div id="chartData"></div>
+    <section class="flex justify-center">
+        <div style="width: 700px;">
+            <canvas id="despachadasPendientes"></canvas>
+        </div>
+    </section>
     <div style="background-color: white;">
-      <canvas id="myChart"></canvas>
+      <canvas id="clientesOrdenados"></canvas>
+    </div>
+    <div style="background-color: white;">
+      <canvas id="facturasVigentes"></canvas>
     </div>
 {% endblock %}

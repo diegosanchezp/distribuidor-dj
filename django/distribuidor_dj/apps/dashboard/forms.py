@@ -71,15 +71,18 @@ class ChartDateDayFilterForm(BaseDateFilterForm):
         super().__init__(*args, **kwargs)
         dia_field = self.fields["dia"]  # alias
         # Get valid dates
-        today_date = timezone.now()
+        self.today_date = timezone.now()
 
-        dates = ShipmentStatusDate.objects.filter(
+        # Obtener todos las las fechas
+        # de los envios realizados hasta el dia de hoy
+        # ordenadas de menos reciente hasta mas reciente
+        self.dates = ShipmentStatusDate.objects.filter(
             status=Shipment.States.CREATED,
-            date__lte=today_date,
+            date__lte=self.today_date,
         ).order_by("date")
 
-        self.min_date = dates.first().date.date()
-        self.max_date = dates.last().date.date()
+        self.min_date = self.dates.first().date.date()
+        self.max_date = self.dates.last().date.date()
 
         # Set validators
         dia_field.validators = [
@@ -97,6 +100,7 @@ class ChartDateDayFilterForm(BaseDateFilterForm):
             }
         )
 
+        # Set default form state
         dia_field.initial = max_date
 
 
