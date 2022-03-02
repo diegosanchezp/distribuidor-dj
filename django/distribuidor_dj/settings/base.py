@@ -41,9 +41,14 @@ INSTALLED_APPS = [
     "distribuidor_dj.apps.tailwind_theme.apps.Tailwind_themeConfig",
     # Forms
     "widget_tweaks",
+    # CORS
+    "corsheaders",
 ]
 
+
 MIDDLEWARE = [
+    # CORS, hould be placed as high as possible
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -140,3 +145,6 @@ STATIC_SRC = (
 )
 NODE_PACKAGE_JSON = str(STATIC_SRC / "package.json")
 NODE_MODULES_ROOT = str(STATIC_SRC / "node_modules")
+
+# https://pypi.org/project/django-cors-headers/
+CORS_ALLOW_ALL_ORIGINS = True
