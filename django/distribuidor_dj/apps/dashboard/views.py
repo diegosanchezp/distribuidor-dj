@@ -1,10 +1,12 @@
 """
 Dashboard views
 """
+
 from distribuidor_dj.apps.invoice.models import Invoice
 from distribuidor_dj.apps.shipment.models import Shipment
 
 from django.db.models.query import QuerySet
+from django.shortcuts import render
 from django.views.generic import TemplateView
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
@@ -61,6 +63,19 @@ class InvoicesView(DashboardPassesTestMixin, ListView):
 
 class SettingsView(DashboardPassesTestMixin, TemplateView):
     template_name = "dashboard/settings.html"
+
+    def get(self, request, *args, **kwargs):
+        return render(
+            request,
+            self.template_name,
+            {"user": request.user, "request": request},
+        )
+
+
+class InvoiceDetailView(DashboardPassesTestMixin, DetailView):
+    template_name = "dashboard/invoice-detail.html"
+    model = Invoice
+    context_object_name = "invoice"
 
 
 class ReportesView(AdminDashboardPassessTest, TemplateView):
