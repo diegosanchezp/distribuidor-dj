@@ -14,6 +14,9 @@ DATABASES = {"default": dj_database_url.config(conn_max_age=600)}  # noqa F405
 
 STATICFILES_STORAGE = "distribuidor_dj.storage.WhiteNoiseStaticFilesStorage"
 
+# https://stackoverflow.com/questions/70508568/django-csrf-trusted-origins-not-working-as-expected
+CSRF_TRUSTED_ORIGINS = ["https://distribuidor-dj.herokuapp.com"]
+
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
