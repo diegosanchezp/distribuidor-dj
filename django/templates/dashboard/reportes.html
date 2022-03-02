@@ -7,27 +7,45 @@
 {% block body %}
     {% include "components/dashboard/title.html" with underline_text="Repo" underline_subtext="rtes" %}
 
-    <h2 class="text-lg">Tipo</h2>
-    <section class="tabs tabs-boxed justify-center">
-        <a class="tab">Envios</a>
-        <a class="tab tab-active">Clientes</a>
-        <a class="tab">Destinos</a>
-        <a class="tab">Facturas</a>
-    </section>
+    <section x-data="{currentChart: 'envios'}">
+        <h2 class="text-lg">Tipo</h2>
+        <section class="tabs tabs-boxed justify-center">
+            <a
+                @click="currentChart = 'envios'"
+                x-bind:class="currentChart == 'envios' ? 'tab tab-active':'tab'">
+                Envios
+            </a>
+            <a
+                @click="currentChart = 'clientes'"
+                x-bind:class="currentChart == 'clientes' ? 'tab tab-active':'tab' ">Clientes</a>
+            <a
+                @click="currentChart = 'destinos'"
+                x-bind:class="currentChart == 'destinos' ? 'tab tab-active':'tab'">
+                Destinos
+            </a>
+            <a
+                @click="currentChart = 'facturas'"
+                x-bind:class="currentChart == 'facturas' ? 'tab tab-active':'tab'" >
+                Facturas</a>
+        </section>
 
-    <h2 class="text-lg">Filtros de fecha</h2>
+        <h2 class="text-lg">Filtros de fecha</h2>
 
-    {% include "dashboard/reportes/reportes_form.html" %}
+        {% include "dashboard/reportes/reportes_form.html" %}
 
-    <section class="flex justify-center">
-        <div style="width: 700px;">
-            <canvas id="despachadasPendientes"></canvas>
+        <section class="flex justify-center">
+            <div x-show="currentChart == 'envios'" style="width: 700px;">
+                <h2 class="text-lg text-center">Solicitudes Despachadas/Pendientes y tiempo de despacho/pendiente</h2>
+                <canvas id="despachadasPendientes"></canvas>
+            </div>
+        </section>
+        <div x-show="currentChart == 'clientes'" style="background-color: white;">
+            <h2 class="text-lg text-center">Clientes ordenados con la cantidad de solicitudes realizadas</h2>
+          <canvas id="clientesOrdenados"></canvas>
+        </div>
+        <div x-show="currentChart == 'facturas'" style="background-color: white;">
+          <canvas id="facturasVigentes"></canvas>
         </div>
     </section>
-    <div style="background-color: white;">
-      <canvas id="clientesOrdenados"></canvas>
-    </div>
-    <div style="background-color: white;">
-      <canvas id="facturasVigentes"></canvas>
-    </div>
+
 {% endblock %}
