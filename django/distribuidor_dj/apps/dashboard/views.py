@@ -1,6 +1,7 @@
 """
 Dashboard views
 """
+
 from distribuidor_dj.apps.invoice.models import Invoice
 from distribuidor_dj.apps.shipment.models import Shipment
 from django_htmx.http import trigger_client_event
@@ -8,6 +9,7 @@ from django_htmx.http import trigger_client_event
 from django.db.models.query import QuerySet
 from django.http import HttpResponse
 from django.http.response import JsonResponse
+from django.shortcuts import render
 from django.utils import timezone
 from django.views.generic import TemplateView
 from django.views.generic.detail import DetailView
@@ -67,6 +69,19 @@ class InvoicesView(DashboardPassesTestMixin, ListView):
 
 class SettingsView(DashboardPassesTestMixin, TemplateView):
     template_name = "dashboard/settings.html"
+
+    def get(self, request, *args, **kwargs):
+        return render(
+            request,
+            self.template_name,
+            {"user": request.user, "request": request},
+        )
+
+
+class InvoiceDetailView(DashboardPassesTestMixin, DetailView):
+    template_name = "dashboard/invoice-detail.html"
+    model = Invoice
+    context_object_name = "invoice"
 
 
 # Querys

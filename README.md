@@ -154,3 +154,12 @@ Con el siguiente comando puedes borrar la base de datos y cargar los datos respa
 # Borrar base de datos y cargar datos respaldados
 python django/setup_dev.py --reset-db
 ```
+
+## Comandos para servidor de producción heroku
+```bash
+# Conectarse al dyno de heroku
+heroku run bash
+# Crear admin
+python django/manage.py createsuperuser --username dev --email dev@dev.com --settings distribuidor_dj.settings.production
+
+```

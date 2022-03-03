@@ -20,6 +20,8 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
 
+from .apps.home import views
+
 urlpatterns = [
     path("", home_view, name="home"),
     path("admin/", admin.site.urls),
@@ -28,5 +30,11 @@ urlpatterns = [
     path(
         "dashboard/",
         include("distribuidor_dj.apps.dashboard.urls", namespace="dashboard"),
+    ),
+    path("tracking/", views.tracking_view, name="tracking"),
+    path(
+        "tracking-result",
+        views.tracking_result_view,
+        name="tracking-result",
     ),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

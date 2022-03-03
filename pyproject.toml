@@ -25,11 +25,13 @@ gunicorn = "^20.1.0"
 whitenoise = "^5.3.0"
 django-heroku = "^0.3.1"
 django-widget-tweaks = "^1.4.12"
+django-cors-headers = "^3.11.0"
 
 [tool.poetry.dev-dependencies]
 pre-commit = "^2.16.0"
 django-stubs = "^1.9.0"
 djangorestframework-stubs = "^1.4.0"
+autopep8 = "^1.6.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
