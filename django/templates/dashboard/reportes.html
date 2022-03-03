@@ -12,6 +12,7 @@
         pieWidth: '700px',
     }">
         <h2 class="text-lg">Tipo</h2>
+        {# Tabs for charts #}
         <section class="tabs tabs-boxed justify-center">
             <a
                 @click="currentChart = 'envios'"
@@ -42,18 +43,78 @@
                 <canvas id="despachadasPendientes"></canvas>
             </div>
         </section>
+
         <div x-show="currentChart == 'clientes'" >
             <h2 class="text-lg text-center">Clientes ordenados con la cantidad de solicitudes realizadas</h2>
             <div style="background-color: white;" style="width: 500px;">
-              <canvas id="clientesOrdenados"></canvas>
+                <canvas id="clientesOrdenados"></canvas>
             </div>
         </div>
-        <section class="flex justify-center">
-        <div x-show="currentChart == 'facturas'" x-bind:style="`width: ${pieWidth}`">
-            <h2 class="text-lg text-center">Facturas vigentes/vencidas por cobrar.</h2>
-            <canvas id="facturasVigentes"></canvas>
+
+        {# Destinos #}
+        <div x-show="currentChart == 'destinos'" >
+            <h2 class="text-lg text-center">Destinos ordenados por su cantidad de solicitudes. </h2>
+            <div style="background-color: white;" style="width: 500px;">
+                <canvas id="destinosOrdenados"></canvas>
+            </div>
         </div>
-        </section>
+
+        {# Nested Tabs for factura charts #}
+        <div
+            x-data="{
+                currentFacturaFiltro: 'vencidasVigentes',
+            }"
+        >
+            <section class="tabs tabs-boxed justify-center" x-show="currentChart == 'facturas' ">
+                <a
+                    @click="currentFacturaFiltro = 'vencidasVigentes'"
+                    x-bind:class="currentFacturaFiltro == 'vencidasVigentes' ? 'tab tab-active':'tab'">
+                    Vencidas/vigentes
+                </a>
+                <a
+                    @click="currentFacturaFiltro = 'ordenadas'"
+                    x-bind:class="currentFacturaFiltro  == 'ordenadas' ? 'tab tab-active':'tab'">
+                    Ordenadas
+                </a>
+            </section>
+
+
+            {# Los dos filtros de las facturas #}
+            <section id="filtros-facturas"
+                 x-show="currentChart == 'facturas'">
+                <article class="flex justify-center" x-show="currentFacturaFiltro == 'vencidasVigentes'">
+                    <div x-bind:style="`width: ${pieWidth}`">
+                        <h2 class="text-lg text-center">Facturas vigentes/vencidas por cobrar.</h2>
+                        <canvas id="facturasVigentes"></canvas>
+                    </div>
+                </article>
+
+                {# Tablita de facturas ordenadas #}
+                <article class="" x-show="currentFacturaFiltro == 'ordenadas'">
+                    <div class="overflow-x-auto">
+                        <h2 class="text-lg text-center">Facturas ordenadas por tiempo de cancelación</h2>
+                        <table class="table w-full">
+                            <!-- head -->
+                            <thead>
+                                <tr>
+                                    <th>Id Factura</th>
+                                    <th>Tiempo de Cancelación</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- row 1 -->
+                                <tr>
+                                    <th>417c8acd-1f8f-41e2-903e-67ad5c583cd2</th>
+                                    <td>21/2/2022</td>
+                                </tr>
+                                <!-- row 2 -->
+                            </tbody>
+                        </table>
+</div>
+                </article>
+            </section>
+
+        </div>
     </section>
 
 {% endblock %}

@@ -3,7 +3,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
   const despachadasPendientesId = "despachadasPendientes"
   const clientesOrdenadosId="clientesOrdenados"
-
+  const destinosOrdenadosId="destinosOrdenados"
   const facturasVigentesId="facturasVigentes"
   const pieLabelsStyles={
       color: "#ffffff",
@@ -46,6 +46,32 @@ window.addEventListener('DOMContentLoaded', () => {
         labels: [
           "gshoes",
           "jjclothes",
+        ],
+        datasets: [{
+          data: [2,10],
+          backgroundColor: [
+            'rgba(255, 99, 132, 0.2)',
+            'rgba(255, 159, 64, 0.2)',
+          ],
+        }],
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    }
+  );
+  const destinosOrdenados = new Chart(
+    document.getElementById(destinosOrdenadosId),
+    {
+      type: "bar",
+      data: {
+        labels: [
+          "Amazonas",
+          "Anzoátegui",
         ],
         datasets: [{
           data: [2,10],
