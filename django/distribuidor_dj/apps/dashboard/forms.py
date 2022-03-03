@@ -110,5 +110,5 @@ class ChartDateMonthFilterForm(BaseDateFilterForm):
 
 
 class ChartDateRangeFilterForm(BaseDateFilterForm):
-    inital_date = forms.DateField(validators=[])
+    initial_date = forms.DateField(validators=[])
     end_date = forms.DateField(validators=[])
