@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block body %}
+    {% include "components/dashboard/title.html" with underline_text="Deta" underline_subtext="lle de rastreo del envío" %}
+
+    <section class="grid grid-cols-12 gap-x-8 px-6 text-xl py-7">
+        <section class="w-full bg-neutral rounded-2xl col-span-8 px-6 pt-6 pb-14 shadow-2xl">
+            <p>Tracking <span class="text-bold">#{{shipment.id}}</span></p>
+            <p class="pt-12">Entrega estimada</p>
+            {% for date in shipment.dates.all %}
+                {% if date.status == shipment.state %}
+                    <p> {{ date.date|date:"l"}}, {{ date.date|date:"d"}} de {{ date.date|date:"F"}} del {{ date.date|date:"Y"}} a las {{ date.date|date:"g"}}{{ date.date|date:"A"}}</p>
+                {% endif %}
+            {% endfor %}
+            <div class="divider"></div>
+            <p class="text-2xl text-bold pt-11">Estado</p>
+            <ul class="w-full steps mt-12">
+                <li class="step step-primary">Creado</li>
+                {% if shipment.state == "SENDED" %}
+
+                    <li class="step step-primary">Enviado</li>
+                    <li class="step step-primary-content">Recibido</li>
+                {% elif shipment.state == "RECIEVED"  %}
+
+                    <li class="step step-primary">Enviado</li>
+                    <li class="step step-primary">Recibido</li>
+                {% else %}
+
+                    <li class="step step-primary-content">Enviado</li>
+                    <li class="step step-primary-content">Recibido</li>
+                {% endif %}
+            </ul>
+            <p class="pt-11 font-bold">Entrega en</p>
+            <p>{{ shipment.target_address }}</p>
+        </section>
+        <section class="w-full max-h-60 bg-neutral rounded-2xl col-start-9 col-end-13 py-8 px-12 shadow-2xl">
+            <section class="flex">
+                <span class="h-4">
+                    <i class="h-4 fa fa-search"></i>
+                </span>
+                <p class="pl-2">Tracking</p>
+            </section>
+            <form method="GET" class="pt-6">
+                {% csrf_token %}
+                {{ form.tracking_id }}
+                {% for error in form.tracking_id.errors %}
+                    <p class="text-base text-error pt-4">{{ error }}</p>
+                {% endfor %}
+                <button class="mt-4 btn btn-primary" type="submit">Buscar</button>
+            </form>
+        </section>
+    </section>
+
+{% endblock body %}
