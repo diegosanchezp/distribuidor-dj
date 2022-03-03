@@ -65,6 +65,7 @@
                 currentFacturaFiltro: 'vencidasVigentes',
             }"
         >
+            {# BEGIN TABS #}
             <section class="tabs tabs-boxed justify-center" x-show="currentChart == 'facturas' ">
                 <a
                     @click="currentFacturaFiltro = 'vencidasVigentes'"
@@ -77,7 +78,7 @@
                     Ordenadas
                 </a>
             </section>
-
+            {# BEGIN TABS #}
 
             {# Los dos filtros de las facturas #}
             <section id="filtros-facturas"

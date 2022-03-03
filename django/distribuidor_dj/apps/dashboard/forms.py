@@ -43,9 +43,9 @@ class BaseDateFilterForm(forms.Form):
     tipo = forms.ChoiceField(
         choices=BaseDateFilterFormChoices.choices, widget=forms.RadioSelect
     )
-    chart_type = forms.ChoiceField(
-        choices=ChartTypeChoices.choices,
-    )
+    # chart_type = forms.ChoiceField(
+    #     choices=ChartTypeChoices.choices,
+    # )
 
 
 class DateRangeValidator:
