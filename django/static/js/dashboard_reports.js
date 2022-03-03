@@ -2,6 +2,15 @@
 window.addEventListener('DOMContentLoaded', () => {
 
   const despachadasPendientesId = "despachadasPendientes"
+  const clientesOrdenadosId="clientesOrdenados"
+
+  const facturasVigentesId="facturasVigentes"
+  const pieLabelsStyles={
+      color: "#ffffff",
+      font: {
+        size: 20,
+      }
+  }
   const chartDespachadasPendientes = new Chart(
     document.getElementById(despachadasPendientesId),
     {
@@ -23,29 +32,68 @@ window.addEventListener('DOMContentLoaded', () => {
         aspectRatio: 1,
         plugins: {
           legend: {
-            labels: {
-              color: "#ffffff",
-              font: {
-                size: 20,
-              }
-            }
+            labels: pieLabelsStyles,
           },
         }
       }
     }
   );
+  const chartClientesOrdenados = new Chart(
+    document.getElementById(clientesOrdenadosId),
+    {
+      type: "bar",
+      data: {
+        labels: [
+          "gshoes",
+          "jjclothes",
+        ],
+        datasets: [{
+          data: [2,10],
+          backgroundColor: [
+            'rgba(255, 99, 132, 0.2)',
+            'rgba(255, 159, 64, 0.2)',
+          ],
+        }],
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    }
+  );
+  const chartFacturasVigentes = new Chart(
+    document.getElementById(facturasVigentesId),
+    {
+      type: "pie",
+      data: {
+        labels: [
+          'Facturas vigentes',
+          'Facturas vencidas por cobrar.',
+        ],
+        datasets: [{
+          data: [2, 10], // TOOD: grab default data from somewhere else
+          backgroundColor: [
+            'rgb(255, 99, 132)',
+            'rgb(54, 162, 235)',
+          ],
+        }],
+      },
 
-  // document.body.addEventListener('htmx:beforeSwap', (evt)=>{
-  //   if(evt.detail.xhr.status==200){
-  //     evt.detail.shouldSwap = false;
-  //   }
-  //   if(evt.detail.xhr.status === 400 ){
-  //     // https://htmx.org/docs/#events
-  //     evt.detail.shouldSwap = true;
-  //     // set isError to false to avoid error logging in console
-  //     evt.detail.isError = false;
-  //   }
-  // });
+      options: {
+        aspectRatio: 1,
+        plugins: {
+          legend: {
+            labels: pieLabelsStyles,
+          },
+        }
+      }
+
+    }
+  );
+
   document.body.addEventListener("createnewchart",(evt)=>{
 
     // Update chart

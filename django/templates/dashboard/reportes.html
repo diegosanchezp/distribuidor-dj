@@ -7,7 +7,10 @@
 {% block body %}
     {% include "components/dashboard/title.html" with underline_text="Repo" underline_subtext="rtes" %}
 
-    <section x-data="{currentChart: 'envios'}">
+    <section x-data="{
+        currentChart: 'envios',
+        pieWidth: '700px',
+    }">
         <h2 class="text-lg">Tipo</h2>
         <section class="tabs tabs-boxed justify-center">
             <a
@@ -34,18 +37,23 @@
         {% include "dashboard/reportes/reportes_form.html" %}
 
         <section class="flex justify-center">
-            <div x-show="currentChart == 'envios'" style="width: 700px;">
+            <div x-show="currentChart == 'envios'" x-bind:style="`width: ${pieWidth}`">
                 <h2 class="text-lg text-center">Solicitudes Despachadas/Pendientes y tiempo de despacho/pendiente</h2>
                 <canvas id="despachadasPendientes"></canvas>
             </div>
         </section>
-        <div x-show="currentChart == 'clientes'" style="background-color: white;">
+        <div x-show="currentChart == 'clientes'" >
             <h2 class="text-lg text-center">Clientes ordenados con la cantidad de solicitudes realizadas</h2>
-          <canvas id="clientesOrdenados"></canvas>
+            <div style="background-color: white;" style="width: 500px;">
+              <canvas id="clientesOrdenados"></canvas>
+            </div>
         </div>
-        <div x-show="currentChart == 'facturas'" style="background-color: white;">
-          <canvas id="facturasVigentes"></canvas>
+        <section class="flex justify-center">
+        <div x-show="currentChart == 'facturas'" x-bind:style="`width: ${pieWidth}`">
+            <h2 class="text-lg text-center">Facturas vigentes/vencidas por cobrar.</h2>
+            <canvas id="facturasVigentes"></canvas>
         </div>
+        </section>
     </section>
 
 {% endblock %}
