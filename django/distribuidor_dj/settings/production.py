@@ -15,7 +15,6 @@ DATABASES = {"default": dj_database_url.config(conn_max_age=600)}  # noqa F405
 CSRF_TRUSTED_ORIGINS = [
     "https://distribuidor-dj.herokuapp.com",
     "https://*.herokuapp.com",
-    "distribuidor-dj.herokuapp.com",
 ]
 
 # Danger
