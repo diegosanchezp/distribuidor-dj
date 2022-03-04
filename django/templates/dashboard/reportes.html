@@ -7,115 +7,126 @@
 {% block body %}
     {% include "components/dashboard/title.html" with underline_text="Repo" underline_subtext="rtes" %}
 
-    <section x-data="{
-        currentChart: 'envios',
-        pieWidth: '700px',
-    }">
-        <h2 class="text-lg">Tipo</h2>
-        {# Tabs for charts #}
-        <section class="tabs tabs-boxed justify-center">
-            <a
-                @click="currentChart = 'envios'"
-                x-bind:class="currentChart == 'envios' ? 'tab tab-active':'tab'">
-                Envios
-            </a>
-            <a
-                @click="currentChart = 'clientes'"
-                x-bind:class="currentChart == 'clientes' ? 'tab tab-active':'tab' ">Clientes</a>
-            <a
-                @click="currentChart = 'destinos'"
-                x-bind:class="currentChart == 'destinos' ? 'tab tab-active':'tab'">
-                Destinos
-            </a>
-            <a
-                @click="currentChart = 'facturas'"
-                x-bind:class="currentChart == 'facturas' ? 'tab tab-active':'tab'" >
-                Facturas</a>
-        </section>
 
-        <h2 class="text-lg">Filtros de fecha</h2>
-
-        {% include "dashboard/reportes/reportes_form.html" %}
-
-        <section class="flex justify-center">
-            <div x-show="currentChart == 'envios'" x-bind:style="`width: ${pieWidth}`">
-                <h2 class="text-lg text-center">Solicitudes Despachadas/Pendientes y tiempo de despacho/pendiente</h2>
-                <canvas id="despachadasPendientes"></canvas>
-            </div>
-        </section>
-
-        <div x-show="currentChart == 'clientes'" >
-            <h2 class="text-lg text-center">Clientes ordenados con la cantidad de solicitudes realizadas</h2>
-            <div style="background-color: white;" style="width: 500px;">
-                <canvas id="clientesOrdenados"></canvas>
-            </div>
-        </div>
-
-        {# Destinos #}
-        <div x-show="currentChart == 'destinos'" >
-            <h2 class="text-lg text-center">Destinos ordenados por su cantidad de solicitudes. </h2>
-            <div style="background-color: white;" style="width: 500px;">
-                <canvas id="destinosOrdenados"></canvas>
-            </div>
-        </div>
-
-        {# Nested Tabs for factura charts #}
-        <div
-            x-data="{
-                currentFacturaFiltro: 'vencidasVigentes',
-            }"
-        >
-            {# BEGIN TABS #}
-            <section class="tabs tabs-boxed justify-center" x-show="currentChart == 'facturas' ">
+    <form
+      class="flex flex-col"
+      x-data="formComponent('{{datechoices.DIA.value}}')"
+      data-initial-tab="{{datechoices.DIA.value}}"
+      method="GET"
+      id="chart-form"
+      hx-swap="none"
+      hx-get
+      >
+        <section x-data="{
+            currentChart: 'envios',
+            pieWidth: '700px',
+        }">
+            <h2 class="text-lg">Tipo</h2>
+            {# Tabs for charts #}
+            <input type="hidden" name="{{form.chart_type.name}}" x-bind:value="currentChart">
+            <section class="tabs tabs-boxed justify-center">
                 <a
-                    @click="currentFacturaFiltro = 'vencidasVigentes'"
-                    x-bind:class="currentFacturaFiltro == 'vencidasVigentes' ? 'tab tab-active':'tab'">
-                    Vencidas/vigentes
+                    @click="currentChart = 'envios'"
+                    x-bind:class="currentChart == 'envios' ? 'tab tab-active':'tab'">
+                    Envios
                 </a>
                 <a
-                    @click="currentFacturaFiltro = 'ordenadas'"
-                    x-bind:class="currentFacturaFiltro  == 'ordenadas' ? 'tab tab-active':'tab'">
-                    Ordenadas
+                    @click="currentChart = 'clientes'"
+                    x-bind:class="currentChart == 'clientes' ? 'tab tab-active':'tab' ">Clientes</a>
+                <a
+                    @click="currentChart = 'destinos'"
+                    x-bind:class="currentChart == 'destinos' ? 'tab tab-active':'tab'">
+                    Destinos
                 </a>
-            </section>
-            {# BEGIN TABS #}
-
-            {# Los dos filtros de las facturas #}
-            <section id="filtros-facturas"
-                 x-show="currentChart == 'facturas'">
-                <article class="flex justify-center" x-show="currentFacturaFiltro == 'vencidasVigentes'">
-                    <div x-bind:style="`width: ${pieWidth}`">
-                        <h2 class="text-lg text-center">Facturas vigentes/vencidas por cobrar.</h2>
-                        <canvas id="facturasVigentes"></canvas>
-                    </div>
-                </article>
-
-                {# Tablita de facturas ordenadas #}
-                <article class="" x-show="currentFacturaFiltro == 'ordenadas'">
-                    <div class="overflow-x-auto">
-                        <h2 class="text-lg text-center">Facturas ordenadas por tiempo de cancelación</h2>
-                        <table class="table w-full">
-                            <!-- head -->
-                            <thead>
-                                <tr>
-                                    <th>Id Factura</th>
-                                    <th>Tiempo de Cancelación</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <!-- row 1 -->
-                                <tr>
-                                    <th>417c8acd-1f8f-41e2-903e-67ad5c583cd2</th>
-                                    <td>21/2/2022</td>
-                                </tr>
-                                <!-- row 2 -->
-                            </tbody>
-                        </table>
-</div>
-                </article>
+                <a
+                    @click="currentChart = 'facturas'"
+                    x-bind:class="currentChart == 'facturas' ? 'tab tab-active':'tab'" >
+                    Facturas</a>
             </section>
 
-        </div>
-    </section>
+            <h2 class="text-lg">Filtros de fecha</h2>
 
+            {% include "dashboard/reportes/reportes_form.html" %}
+
+            <section class="flex justify-center">
+                <div x-show="currentChart == 'envios'" x-bind:style="`width: ${pieWidth}`">
+                    <h2 class="text-lg text-center">Solicitudes Despachadas/Pendientes y tiempo de despacho/pendiente</h2>
+                    <canvas id="despachadasPendientes"></canvas>
+                </div>
+            </section>
+
+            <div x-show="currentChart == 'clientes'" >
+                <h2 class="text-lg text-center">Clientes ordenados con la cantidad de solicitudes realizadas</h2>
+                <div style="background-color: white;" style="width: 500px;">
+                    <canvas id="clientesOrdenados"></canvas>
+                </div>
+            </div>
+
+            {# Destinos #}
+            <div x-show="currentChart == 'destinos'" >
+                <h2 class="text-lg text-center">Destinos ordenados por su cantidad de solicitudes. </h2>
+                <div style="background-color: white;" style="width: 500px;">
+                    <canvas id="destinosOrdenados"></canvas>
+                </div>
+            </div>
+
+            {# Nested Tabs for factura charts #}
+            <div
+                x-data="{
+                    currentFacturaFiltro: 'vencidasVigentes',
+                }"
+            >
+                {# BEGIN TABS #}
+                <section class="tabs tabs-boxed justify-center" x-show="currentChart == 'facturas' ">
+                    <a
+                        @click="currentFacturaFiltro = 'vencidasVigentes'"
+                        x-bind:class="currentFacturaFiltro == 'vencidasVigentes' ? 'tab tab-active':'tab'">
+                        Vencidas/vigentes
+                    </a>
+                    <a
+                        @click="currentFacturaFiltro = 'ordenadas'"
+                        x-bind:class="currentFacturaFiltro  == 'ordenadas' ? 'tab tab-active':'tab'">
+                        Ordenadas
+                    </a>
+                </section>
+                {# BEGIN TABS #}
+
+                {# Los dos filtros de las facturas #}
+                <section id="filtros-facturas"
+                     x-show="currentChart == 'facturas'">
+                    <article class="flex justify-center" x-show="currentFacturaFiltro == 'vencidasVigentes'">
+                        <div x-bind:style="`width: ${pieWidth}`">
+                            <h2 class="text-lg text-center">Facturas vigentes/vencidas por cobrar.</h2>
+                            <canvas id="facturasVigentes"></canvas>
+                        </div>
+                    </article>
+
+                    {# Tablita de facturas ordenadas #}
+                    <article class="" x-show="currentFacturaFiltro == 'ordenadas'">
+                        <div class="overflow-x-auto">
+                            <h2 class="text-lg text-center">Facturas ordenadas por tiempo de cancelación</h2>
+                            <table class="table w-full">
+                                <!-- head -->
+                                <thead>
+                                    <tr>
+                                        <th>Id Factura</th>
+                                        <th>Tiempo de Cancelación</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- row 1 -->
+                                    <tr>
+                                        <th>417c8acd-1f8f-41e2-903e-67ad5c583cd2</th>
+                                        <td>21/2/2022</td>
+                                    </tr>
+                                    <!-- row 2 -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </article>
+                </section>
+
+            </div>
+        </section>
+    </form>
 {% endblock %}
