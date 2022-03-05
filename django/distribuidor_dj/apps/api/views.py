@@ -1,5 +1,9 @@
+import json
+import logging
 from typing import OrderedDict
 
+from cryptography.fernet import Fernet
+from distribuidor_dj.apps.invoice.models import Invoice
 from distribuidor_dj.apps.shipment.models import (
     Address,
     AddressState,
@@ -9,9 +13,62 @@ from distribuidor_dj.apps.shipment.models import (
     ShipmentStatusDate,
 )
 from distribuidor_dj.utils import const
-from rest_framework import serializers, viewsets
+from rest_framework import serializers, status, viewsets
+from rest_framework.parsers import BaseParser
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
+from django.conf import settings
 from django.contrib.auth import get_user_model
+
+logger = logging.getLogger(__name__)
+
+
+class PlainTextParser(BaseParser):
+    """
+    Plain text parser.
+    https://www.django-rest-framework.org/api-guide/parsers/
+    """
+
+    media_type = "text/plain"
+
+    def parse(self, stream, media_type=None, parser_context=None):
+        """
+        Simply return a string representing the body of the request.
+        """
+
+        return stream.read()
+
+
+class PaymentsAPI(APIView):
+    """
+    This endpoint can only be executed in production
+    https://bank.vittorioadesso.com/payways/docs
+    """
+
+    parser_classes = [PlainTextParser]
+
+    def post(self, request, format=None):
+        private_key: str = settings.PGT_PRIVATE_KEY
+        secret = Fernet(key=private_key.encode(encoding="utf8"))
+        message_str = secret.decrypt(request.data).decode("utf8")
+        message: dict[str, str] = json.loads(message_str)
+
+        if message["status"] == "DENIED":
+            # return error response
+            return Response(message, status=status.HTTP_409_CONFLICT)
+
+        if message["status"] == "APPROVED":
+            # Marcar el invoice como pagado
+            invoice = Invoice.objects.get(id=message["order"])
+            invoice.transition(Invoice.Events.ON_PAY)
+            invoice.save()
+
+            logger.debug(msg="Success, bank contacted")
+            logger.debug("Decripted info %s", message_str)
+            return Response(status=status.HTTP_200_OK)
+
+        pass
 
 
 class ProductQuantitySerializer(serializers.ModelSerializer):

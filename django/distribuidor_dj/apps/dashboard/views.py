@@ -19,6 +19,10 @@ class Index(DashboardPassesTestMixin, TemplateView):
     template_name = "dashboard/index.html"
 
 
+class Payments(TemplateView):
+    template_name = "dashboard/payments.html"
+
+
 class ShipmentsView(DashboardPassesTestMixin, ListView):
     template_name = "dashboard/shipments.html"
     model = Shipment
