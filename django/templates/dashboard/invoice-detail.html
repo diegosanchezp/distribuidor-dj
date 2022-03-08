@@ -42,10 +42,8 @@
         {# Formularios para pago de facturas #}
         {% if invoice.state == "UNPAID" %}
             <section
-                x-data="{
-                    currentForm: '',
-                    }"
-                class="w-full max-h-60 bg-neutral rounded-2xl col-start-9 col-end-13 py-8 px-12 shadow-2xl"
+                x-data="selectionForm"
+                class="w-full bg-neutral rounded-2xl col-start-9 col-end-13 py-8 px-12 shadow-2xl"
                 >
 
                 {# Formulario de seleccion de bancos #}
@@ -62,19 +60,17 @@
                         <p class="pl-2">Pagar factura</p>
                     </section>
 
-                    <select name="bank" class="my-4 select select-bordered select-primary w-full max-w-xs">
+                    <select @change="currentForm=$event.target.value" name="bank" class="my-4 select select-bordered select-primary w-full max-w-xs">
                         <option disabled="disabled" selected="selected">Escoge el banco para hacer el pago</option>
-                        <option value="dakiti">Dakiti</option>
-                        <option value="degva">DEGVA bank</option>
+                        <option value="dakitiForm">Dakiti</option>
+                        <option value="degvaForm">DEGVA bank</option>
                     </select>
-                    {# Boton de pagar #}
-                    <button type="submit" class="btn btn-primary">Pagar</button>
                 </form>
 
                 {# DEGVA #}
                 {# https://bank.vittorioadesso.com/payways/docs #}
                 <form
-                    style="display: none;"
+                    x-show="currentForm === 'degvaForm'"
                     method="GET"
                     action="https://bank.vittorioadesso.com/paygateway"
                     id="degvaForm"
@@ -93,9 +89,25 @@
                     <input type="hidden" name="amount" value="{{invoice.ammount}}">
                     <input type="hidden" name="num" value="1">
 
+                    {# Boton de pagar #}
+                    <div class="flex justify-center">
+                        <button type="submit" class="btn btn-primary">Pagar</button>
+                    </div>
                 </form>
                 {# Dakiti #}
-                <form>
+                <form
+                    id="dakitiForm"
+                    x-show="currentForm === 'dakitiForm'"
+                    class="flex flex-col items-center"
+                    @submit.prevent="dakitiSubmit"
+                >
+                    <p>Indica los datos de tu tarjeta</p>
+
+                    <input class="input input-bordered my-2" type="number" placeholder="numero tarjeta">
+                    <input class="input input-bordered my-2" type="number" placeholder="numero cvc">
+                    <input class="input input-bordered my-2" type="text" placeholder="fecha de expiracion">
+                    {# Boton de pagar #}
+                    <button type="submit" class="btn btn-primary">Pagar</button>
                 </form>
             </section>
         {% endif %}
