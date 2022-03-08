@@ -26,7 +26,7 @@ class Payments(TemplateView):
 class ShipmentsView(DashboardPassesTestMixin, ListView):
     template_name = "dashboard/shipments.html"
     model = Shipment
-    paginate_by = 1  # change this later to 10
+    paginate_by = 10  # change this later to 10
     extra_context = {
         "filter_form": ShipmentsFilterForm(),
         "shipment_detail_url": "dashboard:shipment-detail",
@@ -62,7 +62,7 @@ class ShipmentDetail(DetailView):
 class InvoicesView(DashboardPassesTestMixin, ListView):
     template_name = "dashboard/invoices.html"
     model = Invoice
-    paginate_by = 1  # change this later to 10
+    paginate_by = 10
 
 
 class SettingsView(DashboardPassesTestMixin, TemplateView):
