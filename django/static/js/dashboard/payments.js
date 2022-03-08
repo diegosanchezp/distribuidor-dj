@@ -1,30 +1,21 @@
 window.addEventListener('DOMContentLoaded', (event) => {
-  const form = document.getElementById("pay-form");
-  form.addEventListener("submit", (e)=>{
+  const bankSelectionForm = document.getElementById("select-banks-form");
+  const degvaForm = document.getElementById("degvaForm");
+
+  bankSelectionForm.addEventListener("submit", (e)=>{
     // on form submission, prevent default
     e.preventDefault();
-    const formData = new FormData(form);
+    const SelectionFormData = new FormData(bankSelectionForm);
 
-    const selectedBank = formData.get("bank");
+    const selectedBank = SelectionFormData.get("bank");
 
     if(selectedBank === "degva"){
-      const bankUrl = new URL("/paygateway","https://bank.vittorioadesso.com");
-
-      bankUrl.searchParams.append("key", formData.get("public_key"));
-      bankUrl.searchParams.append("order",formData.get("invoice_id"));
-      bankUrl.searchParams.append("reason",formData.get("reason"));
-      bankUrl.searchParams.append("logotype", formData.get("logotype"));
-      bankUrl.searchParams.append("name", formData.get("reason"));
-      bankUrl.searchParams.append("amount", parseFloat(formData.get("invoice_ammount")));
-      bankUrl.searchParams.append("num", 1);
-
-      // Redirect the user to the payment gateway
-      window.location.replace(bankUrl);
+      degvaForm.submit();
     }
 
     if(selectedBank === "dakiti"){
       // Probably do a fetch
-      console.log(selectedBank)
+      console.log(selectedBank);
     }
   });
 
