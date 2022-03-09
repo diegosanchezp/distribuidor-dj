@@ -31,9 +31,21 @@ class BaseDateFilterFormChoices(models.TextChoices):
     INTERVALO = "intervalo", "Intérvalo"
 
 
+class ChartTypeChoices(models.TextChoices):
+    ENVIOS = "envios", "Envios"
+    CLIENTES = "clientes", "Clientes"
+    DESTINOS = "destinos", "Destinos"
+    FACTURAS_VG_VC = "factura", "Vencidas/vigentes"
+    FACTURAS_ORD = "ordenadas", "Ordenadas"
+
+
 class BaseDateFilterForm(forms.Form):
     tipo = forms.ChoiceField(
         choices=BaseDateFilterFormChoices.choices, widget=forms.RadioSelect
+    )
+    chart_type = forms.ChoiceField(
+        choices=ChartTypeChoices.choices,
+        initial=ChartTypeChoices.ENVIOS,
     )
 
 
@@ -102,6 +114,24 @@ class ChartDateDayFilterForm(BaseDateFilterForm):
 
         # Set default form state
         dia_field.initial = max_date
+
+
+class MonthChoices(models.TextChoices):
+    JAN = "jan", "Enero"
+    FEB = "feb", "Febrero"
+    MARCH = "march", "Marzo"
+    APRIL = "april", "Abril"
+    MAY = "may", "Mayo"
+    JUN = "jun", "Junio"
+    JULY = "july", "Julio"
+    AUG = "august", "Agosto"
+    SEP = "sep", "Septiembre"
+    OCT = (
+        "oct",
+        "Octubre",
+    )
+    NOV = "nov", "Noviembre"
+    DEC = "dev", "Diciembre"
 
 
 class ChartDateMonthFilterForm(BaseDateFilterForm):

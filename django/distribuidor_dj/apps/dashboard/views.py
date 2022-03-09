@@ -332,7 +332,12 @@ class ReportesView(AdminDashboardPassessTest, FormView):
 
         f = self.form_class(data=self.request.GET)
         if not f.is_valid():
-            return self.form_invalid(form=f)
+            return JsonResponse(
+                data={
+                    "form": f.errors,
+                },
+                status=400,
+            )
 
         # Get the child form class and construct the form
         child_form_config = self.forms_config[f.cleaned_data.get("tipo")]
