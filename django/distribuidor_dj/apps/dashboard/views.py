@@ -2,16 +2,20 @@
 Dashboard views
 """
 
+import requests
 from distribuidor_dj.apps.invoice.models import Invoice
 from distribuidor_dj.apps.shipment.models import Shipment
 
+from django.conf import settings
 from django.db.models.query import QuerySet
+from django.http.response import JsonResponse
 from django.shortcuts import render
 from django.views.generic import TemplateView
 from django.views.generic.detail import DetailView
+from django.views.generic.edit import FormMixin, UpdateView
 from django.views.generic.list import ListView
 
-from .forms import ShipmentsFilterForm
+from .forms import DakitiForm, ShipmentsFilterForm
 from .mixins import AdminDashboardPassessTest, DashboardPassesTestMixin
 
 
@@ -76,10 +80,57 @@ class SettingsView(DashboardPassesTestMixin, TemplateView):
         )
 
 
-class InvoiceDetailView(DashboardPassesTestMixin, DetailView):
+class InvoiceDetailView(DashboardPassesTestMixin, UpdateView):
     template_name = "dashboard/invoice-detail.html"
     model = Invoice
     context_object_name = "invoice"
+    form_class = DakitiForm
+    extra_context = {"states": Invoice.States}
+
+    def get_form_kwargs(self):
+        return FormMixin.get_form_kwargs(self)
+
+    def form_valid(self, form):
+        invoice: "Invoice" = self.object
+
+        # Api key de prueba
+        # "apiKey": "71b86b25305c5ae6028e0d6060658e3d9862a06d",
+        res_data = form.cleaned_data | {
+            # Api key real la de mi usuario juridico
+            "apiKey": settings.DAKITI_API_KEY,
+            "monto": invoice.ammount,
+            "descripcion": f"Pago Factura {invoice.id}",
+            "nombre": self.request.user.username,
+        }
+
+        payment_res = requests.post(
+            url="https://dakiti-back.herokuapp.com/api/testcards",
+            json=res_data,
+        )
+        # Todo refactor this horrible code
+
+        # Foward error messages
+        if payment_res.status_code == 400:
+            if res_json := payment_res.json():
+                message = {"error": res_json.get("message")}
+            else:
+                message = {
+                    "error": "Servicio de pagos de Dakiti no disponible",
+                }
+            return JsonResponse(data=message, status=payment_res.status_code)
+
+        if payment_res.status_code == 200:
+            res_json = payment_res.json()
+            # Update the invoice state to payed
+            status_date = invoice.transition_set_date(Invoice.Events.ON_PAY)
+            status_date.save()
+            invoice.save()
+            return JsonResponse(
+                data={
+                    "success": res_json.get("message"),
+                },
+                status=payment_res.status_code,
+            )
 
 
 class ReportesView(AdminDashboardPassessTest, TemplateView):

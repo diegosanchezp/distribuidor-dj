@@ -12,6 +12,7 @@ SECRET_KEY = env("SECRET_KEY")  # noqa F405
 
 DATABASES = {"default": dj_database_url.config(conn_max_age=600)}  # noqa F405
 PGT_PRIVATE_KEY = env("PGT_PRIVATE_KEY")  # noqa F405
+DAKITI_API_KEY = env("DAKITI_API_KEY")  # noqa F405
 
 # https://stackoverflow.com/questions/70508568/django-csrf-trusted-origins-not-working-as-expected
 CSRF_TRUSTED_ORIGINS = [
