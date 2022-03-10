@@ -90,6 +90,14 @@ class InvoiceDetailView(DashboardPassesTestMixin, UpdateView):
     def get_form_kwargs(self):
         return FormMixin.get_form_kwargs(self)
 
+    def get_object(self, queryset=None):
+        if order := self.request.GET.get("order"):
+            if queryset is None:
+                queryset = self.get_queryset()
+            invoice = Invoice.objects.get(id=order)
+            return invoice
+        return super().get_object(queryset)
+
     def form_valid(self, form):
         invoice: "Invoice" = self.object
 

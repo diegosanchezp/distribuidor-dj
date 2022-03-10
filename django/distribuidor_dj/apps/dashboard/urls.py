@@ -16,6 +16,11 @@ urlpatterns = [
         views.InvoiceDetailView.as_view(),
         name="invoice-detail",
     ),
+    path(
+        "invoice-detail/",
+        views.InvoiceDetailView.as_view(),
+        name="invoice-detail-query",
+    ),
     path("admin/", shviews.AdminDashIndex.as_view(), name="admin-index"),
     path(
         "admin/shipments/",

@@ -37,6 +37,7 @@ class PlainTextParser(BaseParser):
         Simply return a string representing the body of the request.
         """
 
+        logger.debug("Media type %s", media_type)
         return stream.read()
 
 
