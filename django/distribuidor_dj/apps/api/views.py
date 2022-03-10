@@ -61,7 +61,8 @@ class PaymentsAPI(APIView):
         if message["status"] == "APPROVED":
             # Marcar el invoice como pagado
             invoice = Invoice.objects.get(id=message["order"])
-            invoice.transition(Invoice.Events.ON_PAY)
+            status_date = invoice.transition_set_date(Invoice.Events.ON_PAY)
+            status_date.save()
             invoice.save()
 
             logger.debug(msg="Success, bank contacted")
