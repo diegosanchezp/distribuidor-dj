@@ -156,6 +156,8 @@ document.addEventListener('alpine:init', () => {
       this.open = ! this.open
     },
     input: {
+      // Si hay un error un error en la respuesta de htmx, renderizar
+      // errores del formulario
       ["@htmx:response-error.window"](){
         resData = JSON.parse(this.$event.detail.xhr.response)
         this.diaErrors = resData["day_form"] || {}
