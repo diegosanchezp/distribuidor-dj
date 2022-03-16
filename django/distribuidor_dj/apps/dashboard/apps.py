@@ -10,6 +10,9 @@ class DashboardConfig(AppConfig):
     def ready(self):
         from django_q.cluster import Cluster
 
-        if os.environ.get("RUN_MAIN", None) != "true":
+        if (
+            os.environ.get("RUN_MAIN", None) != "true"
+            and not os.environ.get("BUILDING", False) == "true"
+        ):
             q = Cluster()
             q.start()
