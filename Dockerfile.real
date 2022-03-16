@@ -17,6 +17,9 @@ ENV PYTHONDONTWRITEBYTECODE=1
 # Prevents Python from buffering stdout and stderr
 ENV PYTHONUNBUFFERED=1
 
+# Prevents qcluster from executing on collectstatic
+ENV BUILDING=true
+
 WORKDIR /distribuidor-dj
 COPY --from=jsbuild /usr/src/distribuidor-dj .
 RUN pip install -r requirements.txt
