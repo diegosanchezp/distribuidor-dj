@@ -21,6 +21,7 @@ class Invoice(StateMachineModel):
         """
 
         PAID = "PAID", _("Pagado")
+        OVERDUE = "OVERDUE", _("Vencida")
         UNPAID = "UNPAID", _("No pagado")
 
     class Events(models.TextChoices):
@@ -29,13 +30,18 @@ class Invoice(StateMachineModel):
         """
 
         ON_PAY = "ON_PAY", _("Pagar")
+        ON_OVERDUE = "ON_OVERDUE", _("Marcar como vencida")
 
     status_date_relattr = "invoice"
 
     machine = {
         States.UNPAID: {
             Events.ON_PAY: States.PAID,
-        }
+            Events.ON_OVERDUE: States.OVERDUE,
+        },
+        States.OVERDUE: {
+            Events.ON_PAY: States.PAID,
+        },
     }
 
     state = models.TextField(

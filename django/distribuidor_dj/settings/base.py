@@ -43,6 +43,8 @@ INSTALLED_APPS = [
     "widget_tweaks",
     # CORS
     "corsheaders",
+    # multiprocessing task queue for Django
+    "django_q",
 ]
 
 
@@ -148,3 +150,9 @@ NODE_MODULES_ROOT = str(STATIC_SRC / "node_modules")
 
 # https://pypi.org/project/django-cors-headers/
 CORS_ALLOW_ALL_ORIGINS = True
+
+Q_CLUSTER = {
+    "orm": "default",  # should use django's ORM and database as a broker.
+    "timeout": 30,
+    "retry": 60,
+}
