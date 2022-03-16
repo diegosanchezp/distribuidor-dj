@@ -18,7 +18,8 @@ ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
 # Prevents qcluster from executing on collectstatic
-ENV BUILDING=true
+ARG building
+ENV BUILDING=$building
 
 WORKDIR /distribuidor-dj
 COPY --from=jsbuild /usr/src/distribuidor-dj .

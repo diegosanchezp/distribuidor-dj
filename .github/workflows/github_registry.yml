@@ -49,6 +49,8 @@ jobs:
           builder: ${{ steps.buildx.outputs.name }}
           push: true
           tags: ghcr.io/diegosanchezp/distribuidor-dj:latest
+          build-args: |
+            building=true
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache
       -
