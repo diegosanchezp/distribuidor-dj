@@ -1,0 +1,19 @@
+[
+{
+    "model": "django_q.schedule",
+    "fields": {
+        "name": "check_invoices",
+        "func": "distribuidor_dj.bg_tasks.check_invoices",
+        "hook": null,
+        "args": "()",
+        "kwargs": "{}",
+        "schedule_type": "H",
+        "minutes": null,
+        "repeats": -1,
+        "next_run": "2022-03-17T23:27:21.979Z",
+        "cron": null,
+        "task": null,
+        "cluster": null
+    }
+}
+]
