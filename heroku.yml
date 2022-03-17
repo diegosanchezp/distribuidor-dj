@@ -16,5 +16,5 @@ release:
 run:
   worker:
     command:
-      python django/manage.py qcluster
+      - python django/manage.py qcluster
     image: web
