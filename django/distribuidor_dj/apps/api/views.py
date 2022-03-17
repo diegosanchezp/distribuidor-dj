@@ -1,5 +1,6 @@
 from typing import OrderedDict
 
+from distribuidor_dj.apps.invoice.models import Invoice, InvoiceStatusDate
 from distribuidor_dj.apps.shipment.models import (
     Address,
     AddressState,
@@ -84,7 +85,7 @@ class ShipmentSerializer(serializers.ModelSerializer):
             **validated_data.pop("target_address")
         )
 
-        shipment = Shipment.objects.create(
+        shipment: "Shipment" = Shipment.objects.create(
             initial_address=initial_address,
             target_address=target_address,
             **validated_data
@@ -94,6 +95,7 @@ class ShipmentSerializer(serializers.ModelSerializer):
         ShipmentStatusDate.objects.create(
             shipment=shipment, status=shipment.state
         )
+
         pqs = []
         for product_dict in products_dict:
             product, _ = Product.objects.get_or_create(
@@ -109,6 +111,18 @@ class ShipmentSerializer(serializers.ModelSerializer):
             )
 
         ProductQuantity.objects.bulk_create(pqs)
+
+        # Create invoice
+        invoice = Invoice.objects.create(
+            shipment=shipment,
+            commerce=validated_data["commerce"],
+            ammount=target_address.state.price,
+        )
+
+        InvoiceStatusDate.objects.create(
+            invoice=invoice,
+            status=invoice.state,
+        )
 
         return shipment
 
