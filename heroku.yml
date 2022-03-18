@@ -13,3 +13,8 @@ release:
   image: web
   command:
     - bash release-tasks.sh
+run:
+  worker:
+    command:
+      - python django/manage.py qcluster
+    image: web
