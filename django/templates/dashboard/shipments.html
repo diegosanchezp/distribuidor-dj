@@ -6,6 +6,17 @@
 {% block body %}
   {% include "components/dashboard/title.html" with underline_text="Env" underline_subtext="ios" %}
 
+  {# Error handling #}
+
+  <section class="flex flex-col items-center">
+    {% for message in messages %}
+      <div class="w-auto alert alert-{{message.tags|default:"error"}}">
+        <div class="flex-1">
+          <label>{{message}}</label>
+        </div>
+      </div>
+    {% endfor %}
+  </section>
   {# filter form #}
   <form class="flex justify-center gap-x-6 my-4" method="GET">
     <p>Filtrar por</p>

@@ -4,7 +4,7 @@
 
 
 {% block body %}
-  {% include "components/dashboard/title.html" with underline_text="Detalle" underline_subtext=" de factura" reverse_url="dashboard:adminshipments" %}
+  {% include "components/dashboard/title.html" with underline_text="Detalle" underline_subtext=" de envio" reverse_url="dashboard:adminshipments" %}
   <section class="flex flex-col justify-center items-center">
     <p class="text-center text-xl my-2">Envio <br/> </p>
     <p class="badge badge-sm">{{ shipment.id }}</p>
@@ -34,7 +34,25 @@
   </div>
 </section>
 
-<fieldset class="text-center my-8">
+<section class="text-center my-8">
+  <legend class="text-lg font-bold">Factura</legend>
+  <div class="flex justify-center gap-x-6 items-center">
+    <a
+      class="badge badge-sm"
+      href="{% url "dashboard:invoice-detail" pk=shipment.invoice.id %}"
+      >{{ shipment.id }}
+    </a>
+    <a
+      href="{% url "dashboard:invoice-detail" pk=shipment.invoice.id %}"
+      class="btn btn-sm btn-outline btn-info"
+      >
+      Ver detalle
+    </a>
+  </div>
+
+</section>
+
+<section class="text-center my-8">
   <legend class="text-lg font-bold">Comercio</legend>
 
   <label
@@ -42,7 +60,7 @@
     >
     {{shipment.commerce.username}}
   </label>
-</fieldset>
+</section>
 
 <section class="my-8">
   <h2 class="my-2 text-lg font-bold">Direcciones</h2>
@@ -52,7 +70,7 @@
   </ul>
 </section>
 
-<fieldset class="text-center my-8">
+<section class="text-center my-8">
   <legend class="text-lg font-bold">Estado</legend>
 
   {% comment %}
@@ -71,10 +89,13 @@
     @updatestate.window="state=$event.detail.state"
     >
   </label>
-</fieldset>
-
-<section class="my-8 font-bold">
-  <h2 class="text-lg">Acciones</h2>
-  {% include "shipments/admin/state_transition.html" %}
 </section>
+
+{% if request.user.is_staff %}
+  <section class="my-8 font-bold">
+    <h2 class="text-lg">Acciones</h2>
+    {% include "shipments/admin/state_transition.html" %}
+  </section>
+{% endif %}
+
 {% endblock %}
