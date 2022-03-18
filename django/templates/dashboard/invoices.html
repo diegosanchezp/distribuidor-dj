@@ -2,6 +2,18 @@
 {% block body %}
   {% include "components/dashboard/title.html" with underline_text="Fac" underline_subtext="turas" %}
 
+  {# Error handling #}
+
+  <section class="flex flex-col items-center my-3">
+    {% for message in messages %}
+      <div class="w-auto alert alert-{{message.tags|default:"error"}}">
+        <div class="flex-1">
+          <label>{{message}}</label>
+        </div>
+      </div>
+    {% endfor %}
+  </section>
+
   {# table #}
   <div class="overflow-x-auto px-4">
     <table class="table w-full">

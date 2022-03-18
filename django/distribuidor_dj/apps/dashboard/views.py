@@ -16,7 +16,12 @@ from django.views.generic.edit import FormMixin, UpdateView
 from django.views.generic.list import ListView
 
 from .forms import DakitiForm, ShipmentsFilterForm
-from .mixins import AdminDashboardPassessTest, DashboardPassesTestMixin
+from .mixins import (
+    AdminDashboardPassessTest,
+    DashboardPassesTestMixin,
+    InvoiceDetailTest,
+    ShipmentDetailTest,
+)
 
 
 class Index(DashboardPassesTestMixin, TemplateView):
@@ -58,15 +63,24 @@ class ShipmentsView(DashboardPassesTestMixin, ListView):
         return queryset
 
 
-class ShipmentDetail(DetailView):
-    template_name = "shipments/shipment_detail.html"
+class ShipmentDetail(ShipmentDetailTest, DetailView):
+    template_name = "shipments/admin_shipment_detail.html"
+    slug_field = "id"
     model = Shipment
+    extra_context = {
+        "statechoices": Shipment.States,
+    }
 
 
 class InvoicesView(DashboardPassesTestMixin, ListView):
     template_name = "dashboard/invoices.html"
     model = Invoice
     paginate_by = 10
+
+    def get_queryset(self) -> "QuerySet[Invoice]":
+        queryset = super().get_queryset()
+        queryset = queryset.filter(commerce=self.request.user)
+        return queryset
 
 
 class SettingsView(DashboardPassesTestMixin, TemplateView):
@@ -80,7 +94,7 @@ class SettingsView(DashboardPassesTestMixin, TemplateView):
         )
 
 
-class InvoiceDetailView(DashboardPassesTestMixin, UpdateView):
+class InvoiceDetailView(InvoiceDetailTest, UpdateView):
     template_name = "dashboard/invoice-detail.html"
     model = Invoice
     context_object_name = "invoice"
