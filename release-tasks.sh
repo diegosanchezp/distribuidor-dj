@@ -1,2 +1,2 @@
 python django/manage.py migrate --noinput --settings distribuidor_dj.settings.production
-python django/manage.py --settings distribuidor_dj.settings.production loaddata django/fixtures/{address-state.json,address.json,bg_task.json}
+python django/manage.py loaddata --settings distribuidor_dj.settings.production django/fixtures/{address-state.json,address.json,bg_task.json}
