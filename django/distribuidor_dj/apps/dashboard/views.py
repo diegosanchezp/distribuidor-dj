@@ -2,10 +2,12 @@
 Dashboard views
 """
 
+import requests
 from distribuidor_dj.apps.invoice.models import Invoice
 from distribuidor_dj.apps.shipment.models import Shipment
 from django_htmx.http import trigger_client_event
 
+from django.conf import settings
 from django.db.models.query import QuerySet
 from django.http import HttpResponse
 from django.http.response import JsonResponse
@@ -13,22 +15,31 @@ from django.shortcuts import render
 from django.utils import timezone
 from django.views.generic import TemplateView
 from django.views.generic.detail import DetailView
-from django.views.generic.edit import FormView
+from django.views.generic.edit import FormMixin, FormView, UpdateView
 from django.views.generic.list import ListView
 
 from . import forms as dash_forms
-from .forms import BaseDateFilterFormChoices, ShipmentsFilterForm
-from .mixins import AdminDashboardPassessTest, DashboardPassesTestMixin
+from .forms import BaseDateFilterFormChoices, DakitiForm, ShipmentsFilterForm
+from .mixins import (
+    AdminDashboardPassessTest,
+    DashboardPassesTestMixin,
+    InvoiceDetailTest,
+    ShipmentDetailTest,
+)
 
 
 class Index(DashboardPassesTestMixin, TemplateView):
     template_name = "dashboard/index.html"
 
 
+class Payments(TemplateView):
+    template_name = "dashboard/payments.html"
+
+
 class ShipmentsView(DashboardPassesTestMixin, ListView):
     template_name = "dashboard/shipments.html"
     model = Shipment
-    paginate_by = 1  # change this later to 10
+    paginate_by = 10  # change this later to 10
     extra_context = {
         "filter_form": ShipmentsFilterForm(),
         "shipment_detail_url": "dashboard:shipment-detail",
@@ -56,15 +67,24 @@ class ShipmentsView(DashboardPassesTestMixin, ListView):
         return queryset
 
 
-class ShipmentDetail(DetailView):
-    template_name = "shipments/shipment_detail.html"
+class ShipmentDetail(ShipmentDetailTest, DetailView):
+    template_name = "shipments/admin_shipment_detail.html"
+    slug_field = "id"
     model = Shipment
+    extra_context = {
+        "statechoices": Shipment.States,
+    }
 
 
 class InvoicesView(DashboardPassesTestMixin, ListView):
     template_name = "dashboard/invoices.html"
     model = Invoice
-    paginate_by = 1  # change this later to 10
+    paginate_by = 10
+
+    def get_queryset(self) -> "QuerySet[Invoice]":
+        queryset = super().get_queryset()
+        queryset = queryset.filter(commerce=self.request.user)
+        return queryset
 
 
 class SettingsView(DashboardPassesTestMixin, TemplateView):
@@ -78,10 +98,65 @@ class SettingsView(DashboardPassesTestMixin, TemplateView):
         )
 
 
-class InvoiceDetailView(DashboardPassesTestMixin, DetailView):
+class InvoiceDetailView(InvoiceDetailTest, UpdateView):
     template_name = "dashboard/invoice-detail.html"
     model = Invoice
     context_object_name = "invoice"
+    form_class = DakitiForm
+    extra_context = {"states": Invoice.States}
+
+    def get_form_kwargs(self):
+        return FormMixin.get_form_kwargs(self)
+
+    def get_object(self, queryset=None):
+        if order := self.request.GET.get("order"):
+            if queryset is None:
+                queryset = self.get_queryset()
+            invoice = Invoice.objects.get(id=order)
+            return invoice
+        return super().get_object(queryset)
+
+    def form_valid(self, form):
+        invoice: "Invoice" = self.object
+
+        # Api key de prueba
+        # "apiKey": "71b86b25305c5ae6028e0d6060658e3d9862a06d",
+        res_data = form.cleaned_data | {
+            # Api key real la de mi usuario juridico
+            "apiKey": settings.DAKITI_API_KEY,
+            "monto": invoice.ammount,
+            "descripcion": f"Pago Factura {invoice.id}",
+            "nombre": self.request.user.username,
+        }
+
+        payment_res = requests.post(
+            url="https://dakiti-back.herokuapp.com/api/testcards",
+            json=res_data,
+        )
+        # Todo refactor this horrible code
+
+        # Foward error messages
+        if payment_res.status_code == 400:
+            if res_json := payment_res.json():
+                message = {"error": res_json.get("message")}
+            else:
+                message = {
+                    "error": "Servicio de pagos de Dakiti no disponible",
+                }
+            return JsonResponse(data=message, status=payment_res.status_code)
+
+        if payment_res.status_code == 200:
+            res_json = payment_res.json()
+            # Update the invoice state to payed
+            status_date = invoice.transition_set_date(Invoice.Events.ON_PAY)
+            status_date.save()
+            invoice.save()
+            return JsonResponse(
+                data={
+                    "success": res_json.get("message"),
+                },
+                status=payment_res.status_code,
+            )
 
 
 # Querys

@@ -7,6 +7,7 @@ from . import views
 app_name = "dashboard"
 urlpatterns = [
     path("", views.Index.as_view(), name="index"),
+    path("payments/", views.Payments.as_view(), name="payments"),
     path("shipments/", views.ShipmentsView.as_view(), name="shipments"),
     path("invoices/", views.InvoicesView.as_view(), name="invoices"),
     path("settings/", views.SettingsView.as_view(), name="settings"),
@@ -14,6 +15,11 @@ urlpatterns = [
         "invoice-detail/<slug:pk>",
         views.InvoiceDetailView.as_view(),
         name="invoice-detail",
+    ),
+    path(
+        "invoice-detail/",
+        views.InvoiceDetailView.as_view(),
+        name="invoice-detail-query",
     ),
     path("admin/", shviews.AdminDashIndex.as_view(), name="admin-index"),
     path(

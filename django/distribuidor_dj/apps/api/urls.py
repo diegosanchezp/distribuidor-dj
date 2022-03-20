@@ -7,7 +7,7 @@ from rest_framework import routers
 
 from django.urls import path
 
-from .views import AddressStateViewSet, ShipmentViewSet
+from .views import AddressStateViewSet, PaymentsAPI, ShipmentViewSet
 
 router = routers.SimpleRouter()
 
@@ -27,6 +27,7 @@ urlpatterns = [
         SpectacularRedocView.as_view(url_name="schema"),
         name="redoc",
     ),
+    path("payments/back/", PaymentsAPI.as_view(), name="payments-api"),
 ]
 
 urlpatterns += router.urls

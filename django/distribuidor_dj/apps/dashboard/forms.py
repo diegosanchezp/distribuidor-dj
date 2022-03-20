@@ -142,3 +142,10 @@ class ChartDateMonthFilterForm(BaseDateFilterForm):
 class ChartDateRangeFilterForm(BaseDateFilterForm):
     initial_date = forms.DateField(validators=[])
     end_date = forms.DateField(validators=[])
+
+
+# TODO
+class DakitiForm(forms.Form):
+    card = forms.CharField()
+    cvc = forms.CharField()
+    expirationDate = forms.CharField()

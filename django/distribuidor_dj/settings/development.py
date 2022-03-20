@@ -53,3 +53,7 @@ STATICFILES_DIRS = [str(BASE_DIR / "static")]  # noqa F405
 # https://overiq.com/django-1-10/handling-media-files-in-django/
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")  # noqa F405
 MEDIA_URL = "/media/"
+
+# Dakiti bank
+# https://dakiti-back.herokuapp.com/doc/
+DAKITI_API_KEY = env("DAKITI_API_KEY")  # noqa F405
