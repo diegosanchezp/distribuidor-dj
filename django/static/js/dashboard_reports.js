@@ -5,6 +5,7 @@ window.addEventListener('DOMContentLoaded', () => {
   const clientesOrdenadosId="clientesOrdenados"
   const destinosOrdenadosId="destinosOrdenados"
   const facturasVigentesId="facturasVigentes"
+  const facturasOrdenadasFechaCancelacionId = "facturasOrdenadasFechaCancelacion"
   const pieLabelsStyles={
       color: "#ffffff",
       font: {
@@ -120,14 +121,25 @@ window.addEventListener('DOMContentLoaded', () => {
     }
   );
 
+  const facturasOrdenadasFechaCancelacionTable = document.getElementById(facturasOrdenadasFechaCancelacionId);
+
   document.body.addEventListener("createnewchart",(evt)=>{
 
     // Update chart
     const data = evt.detail;
+    console.log(evt.detail.chartName)
 
     if (evt.detail.chartName === despachadasPendientesId){
       chartDespachadasPendientes.data.datasets[0].data = data.data;
       chartDespachadasPendientes.update()
+    }
+    if (evt.detail.chartName === facturasVigentesId){
+      chartFacturasVigentes.data.datasets[0].data = data.data;
+      chartFacturasVigentes.update()
+    }
+    if (evt.detail.chartName === facturasOrdenadasFechaCancelacionId){
+      console.log(facturasOrdenadasFechaCancelacionTable)
+      console.log(data)
     }
   });
 });
@@ -144,6 +156,8 @@ document.addEventListener('alpine:init', () => {
       this.open = ! this.open
     },
     input: {
+      // Si hay un error un error en la respuesta de htmx, renderizar
+      // errores del formulario
       ["@htmx:response-error.window"](){
         resData = JSON.parse(this.$event.detail.xhr.response)
         this.diaErrors = resData["day_form"] || {}

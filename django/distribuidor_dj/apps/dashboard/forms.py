@@ -35,7 +35,7 @@ class ChartTypeChoices(models.TextChoices):
     ENVIOS = "envios", "Envios"
     CLIENTES = "clientes", "Clientes"
     DESTINOS = "destinos", "Destinos"
-    FACTURAS_VG_VC = "factura", "Vencidas/vigentes"
+    FACTURAS_VG_VC = "vencidasVigentes", "Vencidas/vigentes"
     FACTURAS_ORD = "ordenadas", "Ordenadas"
 
 

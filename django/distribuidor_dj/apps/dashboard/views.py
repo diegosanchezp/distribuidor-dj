@@ -2,6 +2,8 @@
 Dashboard views
 """
 
+from datetime import timedelta
+
 import requests
 from distribuidor_dj.apps.invoice.models import Invoice
 from distribuidor_dj.apps.shipment.models import Shipment
@@ -19,7 +21,12 @@ from django.views.generic.edit import FormMixin, FormView, UpdateView
 from django.views.generic.list import ListView
 
 from . import forms as dash_forms
-from .forms import BaseDateFilterFormChoices, DakitiForm, ShipmentsFilterForm
+from .forms import (
+    BaseDateFilterFormChoices,
+    ChartTypeChoices,
+    DakitiForm,
+    ShipmentsFilterForm,
+)
 from .mixins import (
     AdminDashboardPassessTest,
     DashboardPassesTestMixin,
@@ -280,8 +287,7 @@ def facturas_vigentes_vencidas_dia(form):
             state=Invoice.States.UNPAID,
             dates__status=Invoice.States.UNPAID,
             # casts the datetime as date
-            dates__date__date__gte=timezone.now(),
-            dates__date__date=fecha_especificada,
+            dates__date__date__range=[timezone.now(), fecha_especificada],
         ).count()
 
         # Obtener numero facturas vencidas pendientes por cobrar
@@ -290,8 +296,7 @@ def facturas_vigentes_vencidas_dia(form):
             state=Invoice.States.UNPAID,
             dates__status=Invoice.States.UNPAID,
             # casts the datetime as date
-            dates__date__date__lt=timezone.now(),
-            dates__date__date=fecha_especificada,
+            dates__date__date__range=[fecha_especificada, timezone.now()],
         ).count()
 
         # Hacer calculos de porcentajes
@@ -316,7 +321,7 @@ def facturas_vigentes_vencidas_mes(form):
             dates__status=Invoice.States.UNPAID,
             # casts the datetime as date
             dates__date__month__gte=month,
-            dates__date__year__gte=timezone.now().year,
+            dates__date__year__gte=timezone.now().year - 1,
             dates__date__date__gte=timezone.now(),
         ).count()
 
@@ -327,7 +332,7 @@ def facturas_vigentes_vencidas_mes(form):
             dates__status=Invoice.States.UNPAID,
             # casts the datetime as date
             dates__date__month=month,
-            dates__date__year=timezone.now().year,
+            dates__date__year=timezone.now().year - 1,
             dates__date__date__lt=timezone.now(),
         ).count()
 
@@ -359,7 +364,10 @@ def facturas_vigentes_vencidas_rango(form):
             state=Invoice.States.UNPAID,
             dates__status=Invoice.States.UNPAID,
             # casts the datetime as date
-            dates__date__range=[initial_date, timezone.now()],
+            dates__date__range=[
+                initial_date,
+                timezone.now() - timedelta(days=1),
+            ],
         ).count()
 
         # Hacer calculos de porcentajes
@@ -371,28 +379,134 @@ def facturas_vigentes_vencidas_rango(form):
         return (p_vigentes, p_vencidas)
 
 
+def facturas_ordenadas_fecha_cancelacion_dia(form):
+    if form.is_valid():
+        fecha_especificada = form.cleaned_data["dia"]
+        ordenadas = Invoice.objects.filter(
+            state=Invoice.States.PAID,
+            dates__status=Invoice.States.PAID,
+            dates__date__date=fecha_especificada,
+        ).order_by("dates")
+
+        ordenadas = list(ordenadas)
+
+        return ordenadas
+
+
+def facturas_ordenadas_fecha_cancelacion_mes(form):
+    if form.is_valid():
+        month = form.cleaned_data["month"]
+        ordenadas = Invoice.objects.filter(
+            state=Invoice.States.PAID,
+            dates__status=Invoice.States.PAID,
+            dates__date__month=month,
+            dates__date__year=timezone.now().year,
+        ).order_by("dates")
+
+        ordenadas = list(ordenadas)
+
+        return ordenadas
+
+
+def facturas_ordenadas_fecha_cancelacion_rango(form):
+    if form.is_valid():
+        initial_date = form.cleaned_data["initial_date"]
+        end_date = form.cleaned_data["end_date"]
+        ordenadas = Invoice.objects.filter(
+            state=Invoice.States.PAID,
+            dates__status=Invoice.States.PAID,
+            dates__date__range=[initial_date, end_date],
+        ).order_by("dates")
+
+        ordenadas = list(ordenadas)
+
+        return ordenadas
+
+
 class ReportesView(AdminDashboardPassessTest, FormView):
     template_name = "dashboard/reportes.html"
 
     form_class = dash_forms.BaseDateFilterForm  # Root form class
     forms_config = {
-        BaseDateFilterFormChoices.DIA: {
-            "class": dash_forms.ChartDateDayFilterForm,
-            "name": "day_form",
-            "query": solicitudes_despachadas_pendientes_dia,
-            "chartName": "despachadasPendientes",
+        ChartTypeChoices.ENVIOS: {
+            BaseDateFilterFormChoices.DIA: {
+                "class": dash_forms.ChartDateDayFilterForm,
+                "name": "day_form",
+                "query": solicitudes_despachadas_pendientes_dia,
+                "chartName": "despachadasPendientes",
+            },
+            BaseDateFilterFormChoices.MES: {
+                "class": dash_forms.ChartDateMonthFilterForm,
+                "name": "month_form",
+                "query": solicitudes_despachadas_pendientes_mes,
+                "chartName": "despachadasPendientes",
+            },
+            BaseDateFilterFormChoices.INTERVALO: {
+                "class": dash_forms.ChartDateRangeFilterForm,  # noqa: E501, E261
+                "name": "range_form",
+                "query": solicitudes_despachadas_pendientes_rango,
+                "chartName": "despachadasPendientes",
+            },
         },
-        BaseDateFilterFormChoices.MES: {
-            "class": dash_forms.ChartDateMonthFilterForm,
-            "name": "month_form",
-            "query": solicitudes_despachadas_pendientes_mes,
-            "chartName": "despachadasPendientes",
+        ChartTypeChoices.FACTURAS_VG_VC: {
+            BaseDateFilterFormChoices.DIA: {
+                "class": dash_forms.ChartDateDayFilterForm,
+                "name": "day_form",
+                "query": facturas_vigentes_vencidas_dia,
+                "chartName": "facturasVigentes",
+            },
+            BaseDateFilterFormChoices.MES: {
+                "class": dash_forms.ChartDateMonthFilterForm,
+                "name": "month_form",
+                "query": facturas_vigentes_vencidas_mes,
+                "chartName": "facturasVigentes",
+            },
+            BaseDateFilterFormChoices.INTERVALO: {
+                "class": dash_forms.ChartDateRangeFilterForm,  # noqa: E501, E261
+                "name": "range_form",
+                "query": facturas_vigentes_vencidas_rango,
+                "chartName": "facturasVigentes",
+            },
         },
-        BaseDateFilterFormChoices.INTERVALO: {
-            "class": dash_forms.ChartDateRangeFilterForm,  # noqa: E501, E261
-            "name": "range_form",
-            "query": solicitudes_despachadas_pendientes_rango,
-            "chartName": "despachadasPendientes",
+        ChartTypeChoices.FACTURAS_VG_VC: {
+            BaseDateFilterFormChoices.DIA: {
+                "class": dash_forms.ChartDateDayFilterForm,
+                "name": "day_form",
+                "query": facturas_vigentes_vencidas_dia,
+                "chartName": "facturasVigentes",
+            },
+            BaseDateFilterFormChoices.MES: {
+                "class": dash_forms.ChartDateMonthFilterForm,
+                "name": "month_form",
+                "query": facturas_vigentes_vencidas_mes,
+                "chartName": "facturasVigentes",
+            },
+            BaseDateFilterFormChoices.INTERVALO: {
+                "class": dash_forms.ChartDateRangeFilterForm,  # noqa: E501, E261
+                "name": "range_form",
+                "query": facturas_vigentes_vencidas_rango,
+                "chartName": "facturasVigentes",
+            },
+        },
+        ChartTypeChoices.FACTURAS_ORD: {
+            BaseDateFilterFormChoices.DIA: {
+                "class": dash_forms.ChartDateDayFilterForm,
+                "name": "day_form",
+                "query": facturas_ordenadas_fecha_cancelacion_dia,
+                "chartName": "facturasOrdenadasFechaCancelacion",
+            },
+            BaseDateFilterFormChoices.MES: {
+                "class": dash_forms.ChartDateMonthFilterForm,
+                "name": "month_form",
+                "query": facturas_ordenadas_fecha_cancelacion_mes,
+                "chartName": "facturasOrdenadasFechaCancelacion",
+            },
+            BaseDateFilterFormChoices.INTERVALO: {
+                "class": dash_forms.ChartDateRangeFilterForm,  # noqa: E501, E261
+                "name": "range_form",
+                "query": facturas_ordenadas_fecha_cancelacion_rango,
+                "chartName": "facturasOrdenadasFechaCancelacion",
+            },
         },
     }
 
@@ -415,7 +529,9 @@ class ReportesView(AdminDashboardPassessTest, FormView):
             )
 
         # Get the child form class and construct the form
-        child_form_config = self.forms_config[f.cleaned_data.get("tipo")]
+        child_form_config = self.forms_config[
+            f.cleaned_data.get("chart_type")
+        ][f.cleaned_data.get("tipo")]
 
         actual_form = child_form_config["class"](
             data=self.request.GET
@@ -433,6 +549,48 @@ class ReportesView(AdminDashboardPassessTest, FormView):
                 status=400,
             )
             return res
+
+        if f.cleaned_data.get("chart_type") == ChartTypeChoices.FACTURAS_ORD:
+            query_data = child_form_config["query"](actual_form)
+            response = HttpResponse()
+            response.write(
+                """
+                <table
+                    id="facturasOrdenadasFechaCancelacion"
+                    class="table w-full"
+                >
+                    <thead>
+                        <tr>
+                            <th class="w-1/2">Id Factura</th>
+                            <th class="w-1/2">Tiempo de Cancelación</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            """
+            )
+            for data in query_data:
+                response.write(
+                    f"""
+                    <tr>
+                        <th>{data.id}</th>
+                    """
+                )
+                for date in data.dates.all():
+                    if date.status == Invoice.States.PAID:
+                        response.write(
+                            f"""
+                            <td>{date.date.strftime("%d-%m-%Y")}</td>
+                        """
+                        )
+
+            response.write(
+                """
+                        </tr>
+                    </tbody>
+                </table>
+            """
+            )
+            return response
 
         query_data = child_form_config["query"](actual_form)
 
