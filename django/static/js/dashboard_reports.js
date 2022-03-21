@@ -146,7 +146,7 @@ window.addEventListener('DOMContentLoaded', () => {
     const data = evt.detail;
     console.log(evt.detail.chartName)
 
-    chart = chartJsMap[evt.detail.chartName].chart;
+    const chart = chartJsMap[evt.detail.chartName].chart;
 
     chart.data.datasets[0].data = data.data;
 
