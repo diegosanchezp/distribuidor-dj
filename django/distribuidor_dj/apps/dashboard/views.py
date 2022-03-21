@@ -192,7 +192,7 @@ class ReportesView(AdminDashboardPassessTest, FormView):
                 "chartName": "despachadasPendientes",
             },
         },
-        ChartTypeChoices.FACTURAS_VG_VC: {
+        ChartTypeChoices.CLIENTES: {
             BaseDateFilterFormChoices.DIA: {
                 "class": dash_forms.ChartDateDayFilterForm,
                 "name": "day_form",
@@ -212,7 +212,7 @@ class ReportesView(AdminDashboardPassessTest, FormView):
                 "chartName": "facturasVigentes",
             },
         },
-        ChartTypeChoices.FACTURAS_VG_VC: {
+        ChartTypeChoices.DESTINOS: {
             BaseDateFilterFormChoices.DIA: {
                 "class": dash_forms.ChartDateDayFilterForm,
                 "name": "day_form",
@@ -254,7 +254,10 @@ class ReportesView(AdminDashboardPassessTest, FormView):
         },
     }
 
-    extra_context = {"datechoices": dash_forms.BaseDateFilterFormChoices}
+    extra_context = {
+        "datechoices": dash_forms.BaseDateFilterFormChoices,
+        "chartIds": dash_forms.ChartTypeChoices,
+    }
 
     def get(self, request, *args, **kwargs):
         # TODO: define default chart to render when no query params

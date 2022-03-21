@@ -28,21 +28,21 @@
             <input type="hidden" name="{{form.chart_type.name}}" x-bind:value="currentChart">
             <section class="tabs tabs-boxed justify-center">
                 <a
-                    @click="currentChart = 'envios'"
-                    x-bind:class="currentChart == 'envios' ? 'tab tab-active':'tab'">
+                    @click="currentChart = '{{chartIds.ENVIOS}}'"
+                    x-bind:class="currentChart == '{{chartIds.ENVIOS}}' ? 'tab tab-active':'tab'">
                     Envios
                 </a>
                 <a
-                    @click="currentChart = 'clientes'"
-                    x-bind:class="currentChart == 'clientes' ? 'tab tab-active':'tab' ">Clientes</a>
+                    @click="currentChart = '{{chartIds.CLIENTES}}'"
+                    x-bind:class="currentChart == '{{chartIds.CLIENTES}}' ? 'tab tab-active':'tab' ">Clientes</a>
                 <a
-                    @click="currentChart = 'destinos'"
-                    x-bind:class="currentChart == 'destinos' ? 'tab tab-active':'tab'">
+                    @click="currentChart = '{{chartIds.DESTINOS}}'"
+                    x-bind:class="currentChart == '{{chartIds.DESTINOS}}' ? 'tab tab-active':'tab'">
                     Destinos
                 </a>
                 <a
-                    @click="currentChart = 'vencidasVigentes'"
-                    x-bind:class="currentChart == 'vencidasVigentes' || currentChart == 'ordenadas' ? 'tab tab-active':'tab'" >
+                    @click="currentChart = '{{chartIds.FACTURAS_VG_VC}}'"
+                    x-bind:class="currentChart == '{{chartIds.FACTURAS_VG_VC}}' || currentChart == '{{chartIds.FACTURAS_ORD}}' ? 'tab tab-active':'tab'" >
                     Facturas</a>
             </section>
 
@@ -60,43 +60,43 @@
             {% include "dashboard/reportes/reportes_form.html" %}
 
             <section class="flex justify-center">
-                <div x-show="currentChart == 'envios'" x-bind:style="`width: ${pieWidth}`">
+                <div x-show="currentChart == '{{chartIds.ENVIOS}}'" x-bind:style="`width: ${pieWidth}`">
                     <h2 class="text-lg text-center">Solicitudes Despachadas/Pendientes y tiempo de despacho/pendiente</h2>
-                    <canvas id="despachadasPendientes"></canvas>
+                    <canvas id="{{chartIds.ENVIOS}}"></canvas>
                 </div>
             </section>
 
-            <div x-show="currentChart == 'clientes'" >
+            <div x-show="currentChart == '{{chartIds.CLIENTES}}'" >
                 <h2 class="text-lg text-center">Clientes ordenados con la cantidad de solicitudes realizadas</h2>
                 <div style="background-color: white;" style="width: 500px;">
-                    <canvas id="clientesOrdenados"></canvas>
+                    <canvas id="{{chartIds.CLIENTES}}"></canvas>
                 </div>
             </div>
 
             {# Destinos #}
-            <div x-show="currentChart == 'destinos'" >
+            <div x-show="currentChart == '{{chartIds.DESTINOS}}'" >
                 <h2 class="text-lg text-center">Destinos ordenados por su cantidad de solicitudes. </h2>
                 <div style="background-color: white;" style="width: 500px;">
-                    <canvas id="destinosOrdenados"></canvas>
+                    <canvas id="{{chartIds.DESTINOS}}"></canvas>
                 </div>
             </div>
 
             {# Nested Tabs for factura charts #}
             <div
                 x-data="{
-                    currentFacturaFiltro: 'vencidasVigentes',
+                    currentFacturaFiltro: '{{chartIds.FACTURAS_VG_VC}}',
                 }"
             >
                 {# BEGIN TABS #}
-                <section class="tabs tabs-boxed justify-center" x-show="currentChart == 'vencidasVigentes' || currentChart == 'ordenadas' ">
+                <section class="tabs tabs-boxed justify-center" x-show="currentChart == '{{chartIds.FACTURAS_VG_VC}}' || currentChart == '{{chartIds.FACTURAS_ORD}}' ">
                     <a
-                        @click="currentChart = 'vencidasVigentes'"
-                        x-bind:class="currentChart == 'vencidasVigentes' ? 'tab tab-active':'tab'">
+                        @click="currentChart = '{{chartIds.FACTURAS_VG_VC}}'"
+                        x-bind:class="currentChart == '{{chartIds.FACTURAS_VG_VC}}' ? 'tab tab-active':'tab'">
                         Vencidas/vigentes
                     </a>
                     <a
-                        @click="currentChart = 'ordenadas'"
-                        x-bind:class="currentChart  == 'ordenadas' ? 'tab tab-active':'tab'">
+                        @click="currentChart = '{{chartIds.FACTURAS_ORD}}'"
+                        x-bind:class="currentChart  == '{{chartIds.FACTURAS_ORD}}' ? 'tab tab-active':'tab'">
                         Ordenadas
                     </a>
                 </section>
@@ -104,16 +104,16 @@
 
                 {# Los dos filtros de las facturas #}
                 <section id="filtros-facturas"
-                     x-show="currentChart == 'vencidasVigentes' || currentChart == 'ordenadas'">
-                    <article class="flex justify-center" x-show="currentChart == 'vencidasVigentes'">
+                     x-show="currentChart == '{{chartIds.FACTURAS_VG_VC}}' || currentChart == '{{chartIds.FACTURAS_ORD}}'">
+                    <article class="flex justify-center" x-show="currentChart == '{{chartIds.FACTURAS_VG_VC}}'">
                         <div x-bind:style="`width: ${pieWidth}`">
                             <h2 class="text-lg text-center">Facturas vigentes/vencidas por cobrar.</h2>
-                            <canvas id="facturasVigentes"></canvas>
+                            <canvas id="{{chartIds.FACTURAS_VG_VC}}"></canvas>
                         </div>
                     </article>
 
                     {# Tablita de facturas ordenadas #}
-                    <article class="" x-show="currentChart == 'ordenadas'">
+                    <article class="" x-show="currentChart == '{{chartIds.FACTURAS_ORD}}'">
                         <div class="overflow-x-auto">
                             <h2 class="text-lg text-center">Facturas ordenadas por tiempo de cancelación</h2>
                             <table id="facturasOrdenadasFechaCancelacion" class="table w-full">

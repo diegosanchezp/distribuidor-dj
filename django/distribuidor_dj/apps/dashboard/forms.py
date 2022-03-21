@@ -32,9 +32,9 @@ class BaseDateFilterFormChoices(models.TextChoices):
 
 
 class ChartTypeChoices(models.TextChoices):
-    ENVIOS = "envios", "Envios"
-    CLIENTES = "clientes", "Clientes"
-    DESTINOS = "destinos", "Destinos"
+    ENVIOS = "despachadasPendientes", "Envios"
+    CLIENTES = "clientesOrdenados", "Clientes"
+    DESTINOS = "destinosOrdenados", "Destinos"
     FACTURAS_VG_VC = "vencidasVigentes", "Vencidas/vigentes"
     FACTURAS_ORD = "ordenadas", "Ordenadas"
 

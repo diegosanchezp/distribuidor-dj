@@ -2,149 +2,156 @@
 const despachadasPendientesId = "despachadasPendientes"
 const clientesOrdenadosId="clientesOrdenados"
 const destinosOrdenadosId="destinosOrdenados"
-const facturasVigentesId="facturasVigentes"
+const facturasVigentesId="vencidasVigentes"
 const facturasOrdenadasFechaCancelacionId = "facturasOrdenadasFechaCancelacion"
 
 window.addEventListener('DOMContentLoaded', () => {
   const { jsPDF } = window.jspdf;
 
-  const despachadasPendientesCanvas = document.getElementById(despachadasPendientesId)
   const pieLabelsStyles={
       color: "#ffffff",
       font: {
         size: 20,
       }
   }
-  const chartDespachadasPendientes = new Chart(
-    despachadasPendientesCanvas,
-    {
-      type: 'pie',
-      data: {
-        labels: [
-          'Solicitudes Pendientes',
-          'Solicitudes Despachadas',
-        ],
-        datasets: [{
-          data: [2, 10], // TOOD: grab default data from somewhere else
-          backgroundColor: [
-            'rgb(255, 99, 132)',
-            'rgb(54, 162, 235)',
-          ],
-        }],
-      },
-      options: {
-        aspectRatio: 1,
-        plugins: {
-          legend: {
-            labels: pieLabelsStyles,
-          },
-        }
-      }
-    }
-  );
-  const chartClientesOrdenados = new Chart(
-    document.getElementById(clientesOrdenadosId),
-    {
-      type: "bar",
-      data: {
-        labels: [
-          "gshoes",
-          "jjclothes",
-        ],
-        datasets: [{
-          data: [2,10],
-          backgroundColor: [
-            'rgba(255, 99, 132, 0.2)',
-            'rgba(255, 159, 64, 0.2)',
-          ],
-        }],
-      },
-      options: {
-        scales: {
-          y: {
-            beginAtZero: true
-          }
-        }
-      }
-    }
-  );
-  const destinosOrdenados = new Chart(
-    document.getElementById(destinosOrdenadosId),
-    {
-      type: "bar",
-      data: {
-        labels: [
-          "Amazonas",
-          "Anzoátegui",
-        ],
-        datasets: [{
-          data: [2,10],
-          backgroundColor: [
-            'rgba(255, 99, 132, 0.2)',
-            'rgba(255, 159, 64, 0.2)',
-          ],
-        }],
-      },
-      options: {
-        scales: {
-          y: {
-            beginAtZero: true
-          }
-        }
-      }
-    }
-  );
-  const chartFacturasVigentes = new Chart(
-    document.getElementById(facturasVigentesId),
-    {
-      type: "pie",
-      data: {
-        labels: [
-          'Facturas vigentes',
-          'Facturas vencidas por cobrar.',
-        ],
-        datasets: [{
-          data: [2, 10], // TOOD: grab default data from somewhere else
-          backgroundColor: [
-            'rgb(255, 99, 132)',
-            'rgb(54, 162, 235)',
-          ],
-        }],
-      },
-
-      options: {
-        aspectRatio: 1,
-        plugins: {
-          legend: {
-            labels: pieLabelsStyles,
-          },
-        }
-      }
-
-    }
-  );
 
   const facturasOrdenadasFechaCancelacionTable = document.getElementById(facturasOrdenadasFechaCancelacionId);
+
   const chartJsMap = {
-    envios: {
-      chart: chartDespachadasPendientes,
-      id: despachadasPendientesId,
-      canvas: despachadasPendientesCanvas,
-    }
+    // chartDespachadasPendientes
+    [despachadasPendientesId]: {
+      chart: new Chart(
+        document.getElementById(despachadasPendientesId),
+        {
+          type: 'pie',
+          data: {
+            labels: [
+              'Solicitudes Pendientes',
+              'Solicitudes Despachadas',
+            ],
+            datasets: [{
+              data: [2, 10], // TOOD: grab default data from somewhere else
+              backgroundColor: [
+                'rgb(255, 99, 132)',
+                'rgb(54, 162, 235)',
+              ],
+            }],
+          },
+          options: {
+            aspectRatio: 1,
+            plugins: {
+              legend: {
+                labels: pieLabelsStyles,
+              },
+            }
+          }
+        }
+      ),
+      title: "Solicitudes Despachadas/Pendientes",
+    },
+    [clientesOrdenadosId]: {
+      chart: new Chart(
+        document.getElementById(clientesOrdenadosId),
+        {
+          type: "bar",
+          data: {
+            labels: [
+              "gshoes",
+              "jjclothes",
+            ],
+            datasets: [{
+              data: [2,10],
+              backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(255, 159, 64, 0.2)',
+              ],
+            }],
+          },
+          options: {
+            scales: {
+              y: {
+                beginAtZero: true
+              }
+            }
+          }
+        }
+      ),
+      title: "",
+    },
+    [destinosOrdenadosId]: {
+      chart: new Chart(
+        document.getElementById(destinosOrdenadosId),
+        {
+          type: "bar",
+          data: {
+            labels: [
+              "Amazonas",
+              "Anzoátegui",
+            ],
+            datasets: [{
+              data: [2,10],
+              backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(255, 159, 64, 0.2)',
+              ],
+            }],
+          },
+          options: {
+            scales: {
+              y: {
+                beginAtZero: true
+              }
+            }
+          }
+        }
+      ),
+      title: "",
+    },
+    [facturasVigentesId]: {
+      chart: new Chart(
+        document.getElementById(facturasVigentesId),
+        {
+          type: "pie",
+          data: {
+            labels: [
+              'Facturas vigentes',
+              'Facturas vencidas por cobrar.',
+            ],
+            datasets: [{
+              data: [2, 10], // TOOD: grab default data from somewhere else
+              backgroundColor: [
+                'rgb(255, 99, 132)',
+                'rgb(54, 162, 235)',
+              ],
+            }],
+          },
+
+          options: {
+            aspectRatio: 1,
+            plugins: {
+              legend: {
+                labels: pieLabelsStyles,
+              },
+            }
+          }
+
+        }
+      ),
+      title: "",
+    },
   }
+  // This event is triggered by htmx get response
   document.body.addEventListener("createnewchart",(evt)=>{
     // Update chart
     const data = evt.detail;
     console.log(evt.detail.chartName)
 
-    if (evt.detail.chartName === despachadasPendientesId){
-      chartDespachadasPendientes.data.datasets[0].data = data.data;
-      chartDespachadasPendientes.update()
-    }
-    if (evt.detail.chartName === facturasVigentesId){
-      chartFacturasVigentes.data.datasets[0].data = data.data;
-      chartFacturasVigentes.update()
-    }
+    chart = chartJsMap[evt.detail.chartName].chart;
+
+    chart.data.datasets[0].data = data.data;
+
+    chart.update();
+
     if (evt.detail.chartName === facturasOrdenadasFechaCancelacionId){
       console.log(facturasOrdenadasFechaCancelacionTable)
       console.log(data)
@@ -154,7 +161,7 @@ window.addEventListener('DOMContentLoaded', () => {
   // This event is triggered by the alpinejs component
   document.body.addEventListener("generatepdf", (evt)=>{
     const chart = chartJsMap[evt.detail.currentChart].chart;
-    const canvas = chartJsMap[evt.detail.currentChart].canvas;
+    const canvas = chart.canvas;
 
     // Reconfigure chart for PDF display
     chart.config.options.plugins.title = {
@@ -210,7 +217,6 @@ window.addEventListener('DOMContentLoaded', () => {
       }
     };
     doc.save("chart.pdf");
-    console.log(evt.detail.currentChart);
   });
 
 });
@@ -223,7 +229,7 @@ document.addEventListener('alpine:init', () => {
     diaErrors: {},
     mesErrors: {},
     rangeErrors: {},
-    currentChart: "envios",
+    currentChart: despachadasPendientesId,
     input: {
       // Si hay un error un error en la respuesta de htmx, renderizar
       // errores del formulario
