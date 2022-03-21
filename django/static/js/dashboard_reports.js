@@ -1,11 +1,14 @@
-// TODO: put this in a js file
-window.addEventListener('DOMContentLoaded', () => {
 
-  const despachadasPendientesId = "despachadasPendientes"
-  const clientesOrdenadosId="clientesOrdenados"
-  const destinosOrdenadosId="destinosOrdenados"
-  const facturasVigentesId="facturasVigentes"
-  const facturasOrdenadasFechaCancelacionId = "facturasOrdenadasFechaCancelacion"
+const despachadasPendientesId = "despachadasPendientes"
+const clientesOrdenadosId="clientesOrdenados"
+const destinosOrdenadosId="destinosOrdenados"
+const facturasVigentesId="facturasVigentes"
+const facturasOrdenadasFechaCancelacionId = "facturasOrdenadasFechaCancelacion"
+
+window.addEventListener('DOMContentLoaded', () => {
+  const { jsPDF } = window.jspdf;
+
+  const despachadasPendientesCanvas = document.getElementById(despachadasPendientesId)
   const pieLabelsStyles={
       color: "#ffffff",
       font: {
@@ -13,7 +16,7 @@ window.addEventListener('DOMContentLoaded', () => {
       }
   }
   const chartDespachadasPendientes = new Chart(
-    document.getElementById(despachadasPendientesId),
+    despachadasPendientesCanvas,
     {
       type: 'pie',
       data: {
@@ -122,9 +125,14 @@ window.addEventListener('DOMContentLoaded', () => {
   );
 
   const facturasOrdenadasFechaCancelacionTable = document.getElementById(facturasOrdenadasFechaCancelacionId);
-
+  const chartJsMap = {
+    envios: {
+      chart: chartDespachadasPendientes,
+      id: despachadasPendientesId,
+      canvas: despachadasPendientesCanvas,
+    }
+  }
   document.body.addEventListener("createnewchart",(evt)=>{
-
     // Update chart
     const data = evt.detail;
     console.log(evt.detail.chartName)
@@ -142,6 +150,69 @@ window.addEventListener('DOMContentLoaded', () => {
       console.log(data)
     }
   });
+
+  // This event is triggered by the alpinejs component
+  document.body.addEventListener("generatepdf", (evt)=>{
+    const chart = chartJsMap[evt.detail.currentChart].chart;
+    const canvas = chartJsMap[evt.detail.currentChart].canvas;
+
+    // Reconfigure chart for PDF display
+    chart.config.options.plugins.title = {
+      display: true,
+      text: "Custom Chart Title",
+      color: "black",
+    }
+    chart.config.options.plugins.legend.labels = {
+      color: "black",
+      font: {
+        size: 12,
+      },
+    }
+
+    // Start PDF creation with jsPDF
+    const doc = new jsPDF(
+      // Set page size to letter
+      {format: "letter"}
+    );
+    doc.setFontSize(15);
+
+    // The width is in milimeters (mm)
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const pageHeight = doc.internal.pageSize.getHeight();
+
+    // Scale down the chart
+    chart.resize(350,350);
+    chart.update();
+
+
+    // Convert canvas height and width to mm
+    // 1px = 0.2645833333mm
+    const canvasWidthMM = (canvas.width *0.2645833333);
+    const canvasHeightMM = (canvas.height *0.2645833333);
+
+    // Calculate margins to center the chart
+    const marginWidth = (pageWidth - canvasWidthMM) / 2;
+
+    let offsetHeight = 30 + canvasHeightMM;
+
+    doc.addImage(chart.canvas, "PNG", marginWidth , 10);
+    if(chart.config.type === "pie"){
+      // Insert chart numeric data below de chart
+      const data = chart.data.datasets[0].data;
+      for(let i=0; i<chart.data.labels.length; i++){
+        const label = chart.data.labels[i];
+        offsetHeight+= (i*10);
+        doc.text(
+          `${label}: ${data[i]}`,
+          10,
+          offsetHeight,
+        )
+      }
+    };
+    doc.save("chart.pdf");
+    console.log(evt.detail.currentChart);
+  });
+
 });
 
 // WARNING: esto no puede estar en dentro del DOMContentLoaded
@@ -152,9 +223,7 @@ document.addEventListener('alpine:init', () => {
     diaErrors: {},
     mesErrors: {},
     rangeErrors: {},
-    toggle() {
-      this.open = ! this.open
-    },
+    currentChart: "envios",
     input: {
       // Si hay un error un error en la respuesta de htmx, renderizar
       // errores del formulario
@@ -164,6 +233,14 @@ document.addEventListener('alpine:init', () => {
         this.mesErrors = resData["month_form"] || {}
         this.rangeErrors = resData["range_form"] || {}
       }
+    },
+    generateGraphPDF(){
+      // Dispatch a custom event, we dont have access to the canvas element
+      // in this alpine component
+      this.$dispatch('generatepdf', { currentChart: this.currentChart });
+    },
+    createNewChart(){
+      console.log("NEW CHART")
     }
   }));
 });

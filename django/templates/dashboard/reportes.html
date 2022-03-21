@@ -3,6 +3,7 @@
 {% block extrascripts %}
     <script defer src="{% static "chart.js/dist/chart.min.js" %}"></script>
     <script src="{% static "js/dashboard_reports.js" %}"></script>
+    <script src="{% static "jspdf/dist/jspdf.umd.js" %}"></script>
 {% endblock %}
 {% block body %}
     {% include "components/dashboard/title.html" with underline_text="Repo" underline_subtext="rtes" %}
@@ -14,12 +15,12 @@
       data-initial-tab="{{datechoices.DIA.value}}"
       method="GET"
       id="chart-form"
+      @createnewchart="createNewChart"
       hx-target="#facturasOrdenadasFechaCancelacion"
       hx-swap="innerHTML show:top"
       hx-get
       >
         <section x-data="{
-            currentChart: 'envios',
             pieWidth: '700px',
         }">
             <h2 class="text-lg">Tipo</h2>
@@ -45,7 +46,16 @@
                     Facturas</a>
             </section>
 
-            <h2 class="text-lg">Filtros de fecha</h2>
+            <div class="flex justify-between">
+                <h2 class="text-lg">Filtros de fecha</h2>
+                <button
+                    class="btn btn-secondary"
+                    @click="generateGraphPDF"
+                    type="button"
+                >
+                    Descargar como PDF
+                </button>
+            </div>
 
             {% include "dashboard/reportes/reportes_form.html" %}
 
