@@ -2,7 +2,7 @@
 Forms of the dashboard
 """
 
-from distribuidor_dj.apps.shipment.models import Shipment, ShipmentStatusDate
+from distribuidor_dj.apps.shipment.models import Shipment
 
 from django import forms
 from django.core import validators
@@ -75,73 +75,24 @@ class DateRangeValidator:
 
 
 class ChartDateDayFilterForm(BaseDateFilterForm):
-    dia = forms.DateField()
-    # the format that html5 date input accepts
-    date_format = "%Y-%m-%d"
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        dia_field = self.fields["dia"]  # alias
-        # Get valid dates
-        self.today_date = timezone.now()
-
-        # Obtener todos las las fechas
-        # de los envios realizados hasta el dia de hoy
-        # ordenadas de menos reciente hasta mas reciente
-        self.dates = ShipmentStatusDate.objects.filter(
-            status=Shipment.States.CREATED,
-            date__lte=self.today_date,
-        ).order_by("date")
-
-        self.min_date = self.dates.first().date.date()
-        self.max_date = self.dates.last().date.date()
-
-        # Set validators
-        dia_field.validators = [
-            DateRangeValidator(
-                min_date=self.min_date,
-                max_date=self.max_date,
-            )
-        ]
-
-        max_date = self.max_date.strftime(self.date_format)
-        dia_field.widget.attrs.update(
-            {
-                "min": self.min_date.strftime(self.date_format),
-                "max": max_date,
-            }
-        )
-
-        # Set default form state
-        dia_field.initial = max_date
-
-
-class MonthChoices(models.TextChoices):
-    JAN = "jan", "Enero"
-    FEB = "feb", "Febrero"
-    MARCH = "march", "Marzo"
-    APRIL = "april", "Abril"
-    MAY = "may", "Mayo"
-    JUN = "jun", "Junio"
-    JULY = "july", "Julio"
-    AUG = "august", "Agosto"
-    SEP = "sep", "Septiembre"
-    OCT = (
-        "oct",
-        "Octubre",
+    dia = forms.DateField(
+        initial=timezone.now(),
     )
-    NOV = "nov", "Noviembre"
-    DEC = "dev", "Diciembre"
 
 
 class ChartDateMonthFilterForm(BaseDateFilterForm):
-    month = forms.IntegerField()
-    pass
+    month = forms.IntegerField(min_value=1, max_value=12)
 
 
 class ChartDateRangeFilterForm(BaseDateFilterForm):
     initial_date = forms.DateField(validators=[])
     end_date = forms.DateField(validators=[])
+
+    def clean(self):
+        initial_date = self.cleaned_data.get("initial_date")
+        end_date = self.cleaned_data.get("end_date")
+        if initial_date >= end_date:
+            raise ValidationError("Fecha inicio mayor que fecha fin")
 
 
 # TODO

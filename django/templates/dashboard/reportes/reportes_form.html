@@ -21,11 +21,10 @@
         <div class="flex flex-col items-center">
           <label class="" for="{{day_form.dia.id_for_label}}">
             <p>
-              Escoge un dia entre {{day_form.min_date|date:"d/m/Y"}}
-              y {{day_form.max_date|date:"d/m/Y"}}
+              Escoge un dia
             </p>
           </label>
-          <input class="input self-center input-bordered" id="{{day_form.dia.id_for_label}}" name="{{day_form.dia.name}}" type="date" min="{{day_form.fields.dia.widget.attrs.min}}" max="{{day_form.fields.dia.widget.attrs.max}}" value="{{day_form.fields.dia.initial}}">
+          <input class="input self-center input-bordered" id="{{day_form.dia.id_for_label}}" name="{{day_form.dia.name}}" type="date" value="{{day_form.fields.dia.initial}}">
         </div>
 
         {# Form Errors #}
@@ -62,11 +61,11 @@
         <div class="flex justify-center items-center gap-x-4">
           <div>
             <label for="">Inicio</label>
-            <input class="input input-bordered" type="date" name="initial_date" min="2022-01-01" max="2023-01-01" value="2022-01-01">
+            <input class="input input-bordered" type="date" name="initial_date" min="2022-01-01">
           </div>
           <div>
             <label for="">Fin</label>
-            <input class="input input-bordered" type="date" name="end_date" min="2022-01-01" max="2023-01-01" value="2022-01-01">
+            <input class="input input-bordered" type="date" name="end_date">
           </div>
           {# Form Errors #}
           {% include "dashboard/reportes/form_errors.html" with errors="rangeErrors" %}

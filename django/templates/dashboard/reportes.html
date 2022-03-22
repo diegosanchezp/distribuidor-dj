@@ -4,6 +4,7 @@
 {% block extrascripts %}
     <script defer src="{% static "chart.js/dist/chart.min.js" %}"></script>
     <script src="{% static "js/dashboard_reports.js" %}"></script>
+    {# Para renderizar los graficos de chart.js a pdf #}
     <script src="{% static "jspdf/dist/jspdf.umd.js" %}"></script>
 {% endblock %}
 

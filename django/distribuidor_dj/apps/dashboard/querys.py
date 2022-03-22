@@ -48,16 +48,20 @@ def solicitudes_despachadas_pendientes_dia(form):
 
 
 def solicitudes_despachadas_pendientes_mes(form):
+    """
+    Solicitudes Despachadas/Pendientes
+    """
     if form.is_valid():
         month = form.cleaned_data["month"]
+        last_year = timezone.now().year - 1
         # Obtener numero solictudes pendientes por despachar
-        # en el mes/añi especificado de tiempo
+        # en el mes/año especificado de tiempo
         n_pendientes = Shipment.objects.filter(
             state=Shipment.States.CREATED,
             dates__status=Shipment.States.CREATED,
             # casts the datetime as date
             dates__date__month=month,
-            dates__date__year=timezone.now().year,
+            dates__date__year=last_year,
         ).count()
 
         # Obtener numero solictudes despachadas
@@ -67,7 +71,7 @@ def solicitudes_despachadas_pendientes_mes(form):
             dates__status=Shipment.States.SENDED,
             # casts the datetime as date
             dates__date__month=month,
-            dates__date__year=timezone.now().year,
+            dates__date__year=last_year,
         ).count()
 
         # Hacer calculos de porcentajes
