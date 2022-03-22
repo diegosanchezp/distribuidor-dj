@@ -12,6 +12,7 @@ from django.conf import settings
 from django.db.models.query import QuerySet
 from django.http import HttpResponse
 from django.http.response import JsonResponse
+from django.shortcuts import render
 from django.views.generic import TemplateView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import FormMixin, FormView, UpdateView
@@ -297,50 +298,15 @@ class ReportesView(AdminDashboardPassessTest, FormView):
             )
             return res
 
-        if f.cleaned_data.get("chart_type") == ChartTypeChoices.FACTURAS_ORD:
-            query_data = child_form_config["query"](actual_form)
-            response = HttpResponse()
-            response.write(
-                """
-                <table
-                    id="facturasOrdenadasFechaCancelacion"
-                    class="table w-full"
-                >
-                    <thead>
-                        <tr>
-                            <th class="w-1/2">Id Factura</th>
-                            <th class="w-1/2">Tiempo de Cancelación</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-            """
-            )
-            for data in query_data:
-                response.write(
-                    f"""
-                    <tr>
-                        <th>{data.id}</th>
-                    """
-                )
-                for date in data.dates.all():
-                    if date.status == Invoice.States.PAID:
-                        response.write(
-                            f"""
-                            <td>{date.date.strftime("%d-%m-%Y")}</td>
-                        """
-                        )
-
-            response.write(
-                """
-                        </tr>
-                    </tbody>
-                </table>
-            """
-            )
-            return response
-
         query_data = child_form_config["query"](actual_form)
 
+        if f.cleaned_data.get("chart_type") == ChartTypeChoices.FACTURAS_ORD:
+            response = render(
+                self.request,
+                template_name="dashboard/reportes/tabla_facturas.html",
+                context={"facturas": query_data},
+            )
+            return response
         # queryset = self.get_query()
         # Convert query to json
 

@@ -1,0 +1,19 @@
+<table
+  id="facturasOrdenadasFechaCancelacion"
+  class="table w-full"
+  >
+  <thead>
+    <tr>
+      <th class="w-1/2">Id Factura</th>
+      <th class="w-1/2">Tiempo de Cancelación en días</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for factura in facturas %}
+    <tr>
+      <td>{{factura.id}}</td>
+      <td>{{factura.tiempo_cancelacion}}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
