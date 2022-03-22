@@ -93,9 +93,11 @@ window.addEventListener('DOMContentLoaded', () => {
             labels: [
               "Amazonas",
               "Anzoátegui",
+              "Zulia",
+              "Tachira",
             ],
             datasets: [{
-              data: [2,10],
+              data: [2,10,11,14],
               backgroundColor: [
                 'rgba(255, 99, 132, 0.2)',
                 'rgba(255, 159, 64, 0.2)',
@@ -103,6 +105,7 @@ window.addEventListener('DOMContentLoaded', () => {
             }],
           },
           options: {
+            indexAxis: 'y',
             scales: {
               y: {
                 beginAtZero: true
@@ -140,13 +143,12 @@ window.addEventListener('DOMContentLoaded', () => {
               },
               title: {
                 ...titleStyles,
-                text: "",
+                text: "Facturas vigentes/vencidas por cobrar.",
               },
             }
           }
         }
       ),
-      title: "Facturas vigentes/vencidas por cobrar.",
     },
   }
   // This event is triggered by htmx get response
@@ -210,25 +212,27 @@ window.addEventListener('DOMContentLoaded', () => {
     // Calculate margins to center the chart
     const marginWidth = (pageWidth - canvasWidthMM) / 2;
 
-    let offsetHeight = 30 + canvasHeightMM;
+    let offsetHeight = 10 + canvasHeightMM;
 
     doc.addImage(chart.canvas, "PNG", marginWidth , 10);
-    if(chart.config.type === "pie"){
-      // Insert chart numeric data below de chart
-      const data = chart.data.datasets[0].data;
-      for(let i=0; i<chart.data.labels.length; i++){
-        const label = chart.data.labels[i];
-        offsetHeight+= (i*10);
-        doc.text(
-          `${label}: ${data[i]}`,
-          10,
-          offsetHeight,
-        )
-      }
-    };
+    // Insert chart numeric data below de chart
+    const data = chart.data.datasets[0].data;
+    for(let i=0; i<chart.data.labels.length; i++){
+      const label = chart.data.labels[i];
+      offsetHeight+= (i+10);
+      doc.text(
+    `${label}: ${data[i]}`,
+    10,
+        offsetHeight,
+      )
+    }
     doc.save("chart.pdf");
   });
 
+  // Generate a pdf using the browser
+  document.body.addEventListener("genBrowserPDF", (evt)=>{
+    window.print();
+  });
 });
 
 // WARNING: esto no puede estar en dentro del DOMContentLoaded
@@ -253,7 +257,12 @@ document.addEventListener('alpine:init', () => {
     generateGraphPDF(){
       // Dispatch a custom event, we dont have access to the canvas element
       // in this alpine component
+      if (this.currentChart === "ordenadas"){
+        this.$dispatch('genBrowserPDF', { currentChart: this.currentChart });
+        return
+      }
       this.$dispatch('generatepdf', { currentChart: this.currentChart });
+
     },
     createNewChart(){
       console.log("NEW CHART")

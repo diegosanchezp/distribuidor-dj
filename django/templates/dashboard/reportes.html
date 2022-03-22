@@ -1,13 +1,26 @@
 {% extends "dashboard/base.html" %}
 {% load static %}
+
 {% block extrascripts %}
     <script defer src="{% static "chart.js/dist/chart.min.js" %}"></script>
     <script src="{% static "js/dashboard_reports.js" %}"></script>
     <script src="{% static "jspdf/dist/jspdf.umd.js" %}"></script>
 {% endblock %}
-{% block body %}
-    {% include "components/dashboard/title.html" with underline_text="Repo" underline_subtext="rtes" %}
 
+{% block extrastyles %}
+    <style>
+        @media print {
+            #main-header, #main-footer, #generateGraphPDFButton,
+            #main-tabs, #reportes_form, #arrow-back{
+                display: none;
+            }
+        }
+    </style>
+{% endblock %}
+{% block body %}
+    <div id="arrow-back">
+        {% include "components/dashboard/title.html" with underline_text="Repo" underline_subtext="rtes" %}
+    </div>
 
     <form
       class="flex flex-col px-6"
@@ -26,7 +39,7 @@
             <h2 class="text-lg">Tipo</h2>
             {# Tabs for charts #}
             <input type="hidden" name="{{form.chart_type.name}}" x-bind:value="currentChart">
-            <section class="tabs tabs-boxed justify-center">
+            <section class="tabs tabs-boxed justify-center" id="main-tabs">
                 <a
                     @click="currentChart = '{{chartIds.ENVIOS}}'"
                     x-bind:class="currentChart == '{{chartIds.ENVIOS}}' ? 'tab tab-active':'tab'">
@@ -46,10 +59,11 @@
                     Facturas</a>
             </section>
 
-            <div class="flex justify-between">
+            <div id="generateGraphPDFButton" class="flex justify-between my-3">
                 <h2 class="text-lg">Filtros de fecha</h2>
                 <button
                     class="btn btn-secondary"
+
                     @click="generateGraphPDF"
                     type="button"
                 >
@@ -57,7 +71,9 @@
                 </button>
             </div>
 
-            {% include "dashboard/reportes/reportes_form.html" %}
+            <div id="reportes_form">
+                {% include "dashboard/reportes/reportes_form.html" %}
+            </div>
 
             <section class="flex justify-center">
                 <div x-show="currentChart == '{{chartIds.ENVIOS}}'" x-bind:style="`width: ${pieWidth}`">
@@ -66,7 +82,7 @@
             </section>
 
             <div x-show="currentChart == '{{chartIds.CLIENTES}}'" >
-                <h2 class="text-lg text-center"></h2>
+                <h2 class="text-lg text-center">Clientes ordenados con la cantidad de solicitudes realizadas</h2>
                 <div style="background-color: white;" style="width: 500px;">
                     <canvas id="{{chartIds.CLIENTES}}"></canvas>
                 </div>
@@ -138,10 +154,4 @@
             </div>
         </section>
     </form>
-    <template id="pdfTemplate">
-        <section>
-            <h2>Test</h2>
-            <img>
-        </section>
-    </template>
 {% endblock %}
