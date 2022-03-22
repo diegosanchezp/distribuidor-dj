@@ -61,13 +61,12 @@
 
             <section class="flex justify-center">
                 <div x-show="currentChart == '{{chartIds.ENVIOS}}'" x-bind:style="`width: ${pieWidth}`">
-                    <h2 class="text-lg text-center">Solicitudes Despachadas/Pendientes y tiempo de despacho/pendiente</h2>
                     <canvas id="{{chartIds.ENVIOS}}"></canvas>
                 </div>
             </section>
 
             <div x-show="currentChart == '{{chartIds.CLIENTES}}'" >
-                <h2 class="text-lg text-center">Clientes ordenados con la cantidad de solicitudes realizadas</h2>
+                <h2 class="text-lg text-center"></h2>
                 <div style="background-color: white;" style="width: 500px;">
                     <canvas id="{{chartIds.CLIENTES}}"></canvas>
                 </div>
@@ -107,7 +106,6 @@
                      x-show="currentChart == '{{chartIds.FACTURAS_VG_VC}}' || currentChart == '{{chartIds.FACTURAS_ORD}}'">
                     <article class="flex justify-center" x-show="currentChart == '{{chartIds.FACTURAS_VG_VC}}'">
                         <div x-bind:style="`width: ${pieWidth}`">
-                            <h2 class="text-lg text-center">Facturas vigentes/vencidas por cobrar.</h2>
                             <canvas id="{{chartIds.FACTURAS_VG_VC}}"></canvas>
                         </div>
                     </article>
@@ -140,4 +138,10 @@
             </div>
         </section>
     </form>
+    <template id="pdfTemplate">
+        <section>
+            <h2>Test</h2>
+            <img>
+        </section>
+    </template>
 {% endblock %}

@@ -13,8 +13,11 @@ window.addEventListener('DOMContentLoaded', () => {
       font: {
         size: 20,
       }
-  }
-
+  };
+  const titleStyles={
+    ...pieLabelsStyles,
+    display: true,
+  };
   const facturasOrdenadasFechaCancelacionTable = document.getElementById(facturasOrdenadasFechaCancelacionId);
 
   const chartJsMap = {
@@ -43,11 +46,14 @@ window.addEventListener('DOMContentLoaded', () => {
               legend: {
                 labels: pieLabelsStyles,
               },
+              title: {
+                ...titleStyles,
+                text: "Solicitudes Despachadas/Pendientes"
+              },
             }
           }
         }
       ),
-      title: "Solicitudes Despachadas/Pendientes",
     },
     [clientesOrdenadosId]: {
       chart: new Chart(
@@ -72,11 +78,11 @@ window.addEventListener('DOMContentLoaded', () => {
               y: {
                 beginAtZero: true
               }
-            }
+            },
           }
         }
       ),
-      title: "",
+      title: "Clientes ordenados con la cantidad de solicitudes realizadas"
     },
     [destinosOrdenadosId]: {
       chart: new Chart(
@@ -105,7 +111,7 @@ window.addEventListener('DOMContentLoaded', () => {
           }
         }
       ),
-      title: "",
+      title: "Destinos ordenados por su cantidad de solicitudes.",
     },
     [facturasVigentesId]: {
       chart: new Chart(
@@ -132,12 +138,15 @@ window.addEventListener('DOMContentLoaded', () => {
               legend: {
                 labels: pieLabelsStyles,
               },
+              title: {
+                ...titleStyles,
+                text: "",
+              },
             }
           }
-
         }
       ),
-      title: "",
+      title: "Facturas vigentes/vencidas por cobrar.",
     },
   }
   // This event is triggered by htmx get response
@@ -162,26 +171,28 @@ window.addEventListener('DOMContentLoaded', () => {
   document.body.addEventListener("generatepdf", (evt)=>{
     const chart = chartJsMap[evt.detail.currentChart].chart;
     const canvas = chart.canvas;
-
-    // Reconfigure chart for PDF display
-    chart.config.options.plugins.title = {
-      display: true,
-      text: "Custom Chart Title",
-      color: "black",
-    }
-    chart.config.options.plugins.legend.labels = {
-      color: "black",
-      font: {
-        size: 12,
-      },
-    }
-
-    // Start PDF creation with jsPDF
+    const title = chartJsMap[evt.detail.currentChart].title;
     const doc = new jsPDF(
       // Set page size to letter
       {format: "letter"}
     );
     doc.setFontSize(15);
+
+    // Reconfigure chart for PDF display
+    if(chart.config.type === "pie"){
+      chart.config.options.plugins.title.color = "black";
+      chart.config.options.plugins.legend.labels = {
+        color: "black",
+        font: {
+          size: 12,
+        },
+      }
+    }else{
+      // Bar chart doens't have top title, we to add one manually
+      doc.text(`${title}`, 10,10);
+    }
+
+    // Start PDF creation with jsPDF
 
     // The width is in milimeters (mm)
     const pageWidth = doc.internal.pageSize.getWidth();
@@ -190,7 +201,6 @@ window.addEventListener('DOMContentLoaded', () => {
     // Scale down the chart
     chart.resize(350,350);
     chart.update();
-
 
     // Convert canvas height and width to mm
     // 1px = 0.2645833333mm
