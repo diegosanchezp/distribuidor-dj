@@ -169,15 +169,17 @@ window.addEventListener('DOMContentLoaded', () => {
     // Update chart
     const data = evt.detail; // JSON
 
+    const chart = chartJsMap[data.chartName].chart;
+
     if (evt.detail.chartName === destinosOrdenadosId){
       let colors = []
       data.data.totales_destinos.forEach(() => {
         colors.push(colorHEX())
       })
-      chartDestinosOrdenados.data.datasets[0].backgroundColor = colors
-      chartDestinosOrdenados.data.labels = data.data.destinos.map(destino => destino.state__name);
-      chartDestinosOrdenados.data.datasets[0].data = data.data.totales_destinos;
-      chartDestinosOrdenados.update()
+      chart.data.datasets[0].backgroundColor = colors
+      chart.data.labels = data.data.destinos.map(destino => destino.state__name);
+      chart.data.datasets[0].data = data.data.totales_destinos;
+      chart.update()
 			return
     }
     if (evt.detail.chartName === clientesOrdenadosId){
@@ -185,13 +187,12 @@ window.addEventListener('DOMContentLoaded', () => {
       data.data.totales_clientes.forEach(() => {
         colors.push(colorHEX())
       })
-      chartClientesOrdenados.data.datasets[0].backgroundColor = colors
-      chartClientesOrdenados.data.labels = data.data.clientes.map(cliente => cliente.username);
-      chartClientesOrdenados.data.datasets[0].data = data.data.totales_clientes;
-      chartClientesOrdenados.update()
+      chart.data.datasets[0].backgroundColor = colors
+      chart.data.labels = data.data.clientes.map(cliente => cliente.username);
+      chart.data.datasets[0].data = data.data.totales_clientes;
+      chart.update()
 			return
     }
-    const chart = chartJsMap[data.chartName].chart;
     chart.data.datasets[0].data = data.data;
     chart.update();
   });
