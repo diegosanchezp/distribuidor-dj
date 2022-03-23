@@ -154,19 +154,10 @@ window.addEventListener('DOMContentLoaded', () => {
   // This event is triggered by htmx get response
   document.body.addEventListener("createnewchart",(evt)=>{
     // Update chart
-    const data = evt.detail;
-    console.log(evt.detail.chartName)
-
-    const chart = chartJsMap[evt.detail.chartName].chart;
-
+    const data = evt.detail; // JSON
+    const chart = chartJsMap[data.chartName].chart;
     chart.data.datasets[0].data = data.data;
-
     chart.update();
-
-    if (evt.detail.chartName === facturasOrdenadasFechaCancelacionId){
-      console.log(facturasOrdenadasFechaCancelacionTable)
-      console.log(data)
-    }
   });
 
   // This event is triggered by the alpinejs component
@@ -233,6 +224,7 @@ window.addEventListener('DOMContentLoaded', () => {
   document.body.addEventListener("genBrowserPDF", (evt)=>{
     window.print();
   });
+
 });
 
 // WARNING: esto no puede estar en dentro del DOMContentLoaded
@@ -243,6 +235,7 @@ document.addEventListener('alpine:init', () => {
     diaErrors: {},
     mesErrors: {},
     rangeErrors: {},
+    currentChartIsEmpty: false,
     currentChart: despachadasPendientesId,
     input: {
       // Si hay un error un error en la respuesta de htmx, renderizar
@@ -252,6 +245,19 @@ document.addEventListener('alpine:init', () => {
         this.diaErrors = resData["day_form"] || {}
         this.mesErrors = resData["month_form"] || {}
         this.rangeErrors = resData["range_form"] || {}
+
+        // Clear previous messages
+        this.currentChartIsEmpty = false;
+      }
+    },
+    form: {
+      ["@htmx:before-request"](evt){
+        // Clear any errors before the new request is made
+        this.diaErrors = {};
+        this.mesErrors = {}
+        this.rangeErrors = {}
+        // Clear previous messages
+        this.currentChartIsEmpty = false;
       }
     },
     generateGraphPDF(){
@@ -264,8 +270,8 @@ document.addEventListener('alpine:init', () => {
       this.$dispatch('generatepdf', { currentChart: this.currentChart });
 
     },
-    createNewChart(){
-      console.log("NEW CHART")
+    createNewChart(evt){
+      this.currentChartIsEmpty = evt.detail.empty;
     }
   }));
 });

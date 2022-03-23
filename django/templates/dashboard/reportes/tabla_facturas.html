@@ -14,6 +14,9 @@
       <td>{{factura.id}}</td>
       <td>{{factura.tiempo_cancelacion}}</td>
     </tr>
+    {% empty %}
+      <td>-</td>
+      <td>-</td>
     {% endfor %}
   </tbody>
 </table>

@@ -193,7 +193,7 @@ class ReportesView(AdminDashboardPassessTest, FormView):
                 "chartName": "despachadasPendientes",
             },
         },
-        ChartTypeChoices.CLIENTES: {
+        ChartTypeChoices.FACTURAS_VG_VC: {
             BaseDateFilterFormChoices.DIA: {
                 "class": dash_forms.ChartDateDayFilterForm,
                 "name": "day_form",
@@ -277,9 +277,10 @@ class ReportesView(AdminDashboardPassessTest, FormView):
             )
 
         # Get the child form class and construct the form
-        child_form_config = self.forms_config[
-            f.cleaned_data.get("chart_type")
-        ][f.cleaned_data.get("tipo")]
+        chart_type = f.cleaned_data.get("chart_type")
+        child_form_config = self.forms_config[chart_type][
+            f.cleaned_data.get("tipo")
+        ]
 
         actual_form = child_form_config["class"](
             data=self.request.GET
@@ -287,7 +288,6 @@ class ReportesView(AdminDashboardPassessTest, FormView):
         )
 
         if not actual_form.is_valid():
-
             data = {
                 child_form_config["name"]: actual_form.errors,
             }
@@ -298,9 +298,9 @@ class ReportesView(AdminDashboardPassessTest, FormView):
             )
             return res
 
-        query_data = child_form_config["query"](actual_form)
+        query_data: list = child_form_config["query"](actual_form)
 
-        if f.cleaned_data.get("chart_type") == ChartTypeChoices.FACTURAS_ORD:
+        if chart_type == ChartTypeChoices.FACTURAS_ORD:
             response = render(
                 self.request,
                 template_name="dashboard/reportes/tabla_facturas.html",
@@ -311,14 +311,23 @@ class ReportesView(AdminDashboardPassessTest, FormView):
         # Convert query to json
 
         # This should be an htmx response
-
+        empty = (
+            chart_type
+            in [
+                ChartTypeChoices.ENVIOS,
+                ChartTypeChoices.CLIENTES,
+                ChartTypeChoices.FACTURAS_VG_VC,
+            ]
+            and sum(query_data) == 0
+        )
         res = HttpResponse()
         trigger_client_event(
             response=res,
             name="createnewchart",
             params={
                 "data": query_data,
-                "chartName": child_form_config["chartName"],
+                "chartName": chart_type,
+                "empty": empty,
             },
         )
         return res
