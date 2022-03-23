@@ -12,7 +12,7 @@
     {% for factura in facturas %}
     <tr>
       <td>{{factura.id}}</td>
-      <td>{{factura.tiempo_cancelacion}}</td>
+      <td>{{factura.tiempo_cancelacion.days}}</td>
     </tr>
     {% empty %}
       <td>-</td>

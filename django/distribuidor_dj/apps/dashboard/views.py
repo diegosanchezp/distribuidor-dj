@@ -469,10 +469,7 @@ class ReportesView(AdminDashboardPassessTest, FormView):
                 context={"facturas": query_data},
             )
             return response
-        # queryset = self.get_query()
-        # Convert query to json
 
-        # This should be an htmx response
         empty = (
             chart_type
             in [
@@ -482,6 +479,7 @@ class ReportesView(AdminDashboardPassessTest, FormView):
             ]
             and sum(query_data) == 0
         )
+
         res = HttpResponse()
         trigger_client_event(
             response=res,
@@ -492,6 +490,7 @@ class ReportesView(AdminDashboardPassessTest, FormView):
                 "empty": empty,
             },
         )
+
         return res
 
     def get_context_data(self, **kwargs):

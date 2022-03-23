@@ -4,7 +4,8 @@ Querys para los filtros del dashboard.
 from distribuidor_dj.apps.invoice.models import Invoice, InvoiceStatusDate
 from distribuidor_dj.apps.shipment.models import Shipment
 
-from django.db.models import F, IntegerField, Value
+from django.db.models import DurationField, F
+from django.db.models.expressions import ExpressionWrapper, OuterRef, Subquery
 from django.utils import timezone
 
 
@@ -224,6 +225,13 @@ def facturas_vigentes_vencidas_rango(form):
 def facturas_ordenadas_tiempo_cancelacion_dia(form):
     if form.is_valid():
         fecha_especificada = form.cleaned_data["dia"]
+        paidSub = InvoiceStatusDate.objects.filter(
+            invoice=OuterRef("pk"), status=Invoice.States.PAID
+        )
+        unpaidSub = InvoiceStatusDate.objects.filter(
+            invoice=OuterRef("pk"), status=Invoice.States.UNPAID
+        )
+
         ordenadas = (
             Invoice.objects.filter(
                 state=Invoice.States.PAID,
@@ -231,16 +239,13 @@ def facturas_ordenadas_tiempo_cancelacion_dia(form):
                 dates__date__date=fecha_especificada,
             )
             .annotate(
-                tiempo_cancelacion=Value(
-                    (
-                        InvoiceStatusDate.objects.get(
-                            id=F("id"), status=Invoice.States.PAID
-                        ).date
-                        - InvoiceStatusDate.objects.get(
-                            id=F("id"), status=Invoice.States.UNPAID
-                        ).date
-                    ).days,  # Aqui obtengo los dias
-                    output_field=IntegerField(),
+                date_paid=Subquery(paidSub.values("date")[:1]),
+                date_init=Subquery(unpaidSub.values("date")[:1]),
+            )
+            .annotate(
+                tiempo_cancelacion=ExpressionWrapper(
+                    F("date_paid") - F("date_init"),
+                    output_field=DurationField(),
                 )
             )
             .order_by("tiempo_cancelacion")
@@ -251,6 +256,12 @@ def facturas_ordenadas_tiempo_cancelacion_dia(form):
 def facturas_ordenadas_tiempo_cancelacion_mes(form):
     if form.is_valid():
         month = form.cleaned_data["month"]
+        paidSub = InvoiceStatusDate.objects.filter(
+            invoice=OuterRef("pk"), status=Invoice.States.PAID
+        )
+        unpaidSub = InvoiceStatusDate.objects.filter(
+            invoice=OuterRef("pk"), status=Invoice.States.UNPAID
+        )
         ordenadas = (
             Invoice.objects.filter(
                 state=Invoice.States.PAID,
@@ -259,21 +270,13 @@ def facturas_ordenadas_tiempo_cancelacion_mes(form):
                 dates__date__year=timezone.now().year,
             )
             .annotate(
-                # tiempo_cancelacion es un entero que representa
-                # los dias en que se tardo en cancelar la factura
-                # Value es para para que no de un error de
-                # https://stackoverflow.com/a/58411109
-                # AttributeError: 'datetime.timedelta' object has no attribute 'resolve_expression'  # noqa: E501
-                tiempo_cancelacion=Value(
-                    (
-                        InvoiceStatusDate.objects.get(
-                            id=F("id"), status=Invoice.States.PAID
-                        ).date
-                        - InvoiceStatusDate.objects.get(
-                            id=F("id"), status=Invoice.States.UNPAID
-                        ).date
-                    ).days,  # Aqui obtengo los dias
-                    output_field=IntegerField(),  # Declaramos que el valor es de tipo entero  # noqa: E501
+                date_paid=Subquery(paidSub.values("date")[:1]),
+                date_init=Subquery(unpaidSub.values("date")[:1]),
+            )
+            .annotate(
+                tiempo_cancelacion=ExpressionWrapper(
+                    F("date_paid") - F("date_init"),
+                    output_field=DurationField(),
                 )
             )
             .order_by("tiempo_cancelacion")
@@ -286,6 +289,12 @@ def facturas_ordenadas_tiempo_cancelacion_rango(form):
     if form.is_valid():
         initial_date = form.cleaned_data["initial_date"]
         end_date = form.cleaned_data["end_date"]
+        paidSub = InvoiceStatusDate.objects.filter(
+            invoice=OuterRef("pk"), status=Invoice.States.PAID
+        )
+        unpaidSub = InvoiceStatusDate.objects.filter(
+            invoice=OuterRef("pk"), status=Invoice.States.UNPAID
+        )
         ordenadas = (
             Invoice.objects.filter(
                 state=Invoice.States.PAID,
@@ -293,16 +302,13 @@ def facturas_ordenadas_tiempo_cancelacion_rango(form):
                 dates__date__range=[initial_date, end_date],
             )
             .annotate(
-                tiempo_cancelacion=Value(
-                    (
-                        InvoiceStatusDate.objects.get(
-                            id=F("id"), status=Invoice.States.PAID
-                        ).date
-                        - InvoiceStatusDate.objects.get(
-                            id=F("id"), status=Invoice.States.UNPAID
-                        ).date
-                    ).days,  # Aqui obtengo los dias
-                    output_field=IntegerField(),
+                date_paid=Subquery(paidSub.values("date")[:1]),
+                date_init=Subquery(unpaidSub.values("date")[:1]),
+            )
+            .annotate(
+                tiempo_cancelacion=ExpressionWrapper(
+                    F("date_paid") - F("date_init"),
+                    output_field=DurationField(),
                 )
             )
             .order_by("tiempo_cancelacion")
