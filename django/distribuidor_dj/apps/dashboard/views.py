@@ -6,11 +6,11 @@ Dashboard views
 import requests
 from distribuidor_dj.apps.invoice.models import Invoice
 from distribuidor_dj.apps.shipment.models import AddressState, Shipment
+from distribuidor_dj.utils import const
 from django_htmx.http import trigger_client_event
 
 from django.conf import settings
 from django.contrib.auth.models import User
-from django.db.models import Q
 from django.db.models.query import QuerySet
 from django.http import HttpResponse
 from django.http.response import JsonResponse
@@ -236,7 +236,9 @@ def clientes_ordenados_solicitudes_realizadas_dia(form):
         fecha_especificada = form.cleaned_data["dia"]
 
         clientes = list(
-            User.objects.filter(~Q(id__in=[1, 4])).values("id", "username")
+            User.objects.filter(groups__name=const.COMMERCE_GROUP_NAME).values(
+                "id", "username"
+            )
         )
 
         totales_clientes = []
@@ -255,7 +257,9 @@ def clientes_ordenados_solicitudes_realizadas_mes(form):
         month = form.cleaned_data["month"]
 
         clientes = list(
-            User.objects.filter(~Q(id__in=[1, 4])).values("id", "username")
+            User.objects.filter(groups__name=const.COMMERCE_GROUP_NAME).values(
+                "id", "username"
+            )
         )
 
         totales_clientes = []
@@ -275,7 +279,9 @@ def clientes_ordenados_solicitudes_realizadas_rango(form):
         end_date = form.cleaned_data["end_date"]
 
         clientes = list(
-            User.objects.filter(~Q(id__in=[1, 4])).values("id", "username")
+            User.objects.filter(groups__name=const.COMMERCE_GROUP_NAME).values(
+                "id", "username"
+            )
         )
 
         totales_clientes = []
@@ -470,15 +476,12 @@ class ReportesView(AdminDashboardPassessTest, FormView):
             )
             return response
 
-        empty = (
-            chart_type
-            in [
-                ChartTypeChoices.ENVIOS,
-                ChartTypeChoices.CLIENTES,
-                ChartTypeChoices.FACTURAS_VG_VC,
-            ]
-            and sum(query_data) == 0
-        )
+        empty = False
+        if chart_type in [
+            ChartTypeChoices.ENVIOS,
+            ChartTypeChoices.FACTURAS_VG_VC,
+        ]:
+            empty = sum(query_data) == 0
 
         res = HttpResponse()
         trigger_client_event(
