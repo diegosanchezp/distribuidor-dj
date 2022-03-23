@@ -1,8 +1,6 @@
 """
 Querys para los filtros del dashboard.
 """
-from datetime import timedelta
-
 from distribuidor_dj.apps.invoice.models import Invoice, InvoiceStatusDate
 from distribuidor_dj.apps.shipment.models import Shipment
 
@@ -135,16 +133,16 @@ def facturas_vigentes_vencidas_dia(form):
             state=Invoice.States.UNPAID,
             dates__status=Invoice.States.UNPAID,
             # casts the datetime as date
-            dates__date__date__range=[timezone.now(), fecha_especificada],
+            dates__date__date=fecha_especificada,
         ).count()
 
         # Obtener numero facturas vencidas pendientes por cobrar
         # en el dia especificado de tiempo
         n_vencidas = Invoice.objects.filter(
-            state=Invoice.States.UNPAID,
-            dates__status=Invoice.States.UNPAID,
+            state=Invoice.States.OVERDUE,
+            dates__status=Invoice.States.OVERDUE,
             # casts the datetime as date
-            dates__date__date__range=[fecha_especificada, timezone.now()],
+            dates__date__date=fecha_especificada,
         ).count()
 
         # Hacer calculos de porcentajes
@@ -164,24 +162,24 @@ def facturas_vigentes_vencidas_mes(form):
         month = form.cleaned_data["month"]
         # Obtener numero solictudes pendientes por despachar
         # en el mes/año especificado de tiempo
+        last_year = timezone.now().year - 1
+
         n_vigentes = Invoice.objects.filter(
             state=Invoice.States.UNPAID,
             dates__status=Invoice.States.UNPAID,
             # casts the datetime as date
-            dates__date__month__gte=month,
-            dates__date__year__gte=timezone.now().year - 1,
-            dates__date__date__gte=timezone.now(),
+            dates__date__month=month,
+            dates__date__year=last_year,
         ).count()
 
         # Obtener numero solictudes despachadas
         # en el mes/año especificado de tiempo
         n_vencidas = Invoice.objects.filter(
-            state=Invoice.States.UNPAID,
-            dates__status=Invoice.States.UNPAID,
+            state=Invoice.States.OVERDUE,
+            dates__status=Invoice.States.OVERDUE,
             # casts the datetime as date
             dates__date__month=month,
-            dates__date__year=timezone.now().year - 1,
-            dates__date__date__lt=timezone.now(),
+            dates__date__year=last_year,
         ).count()
 
         # Hacer calculos de porcentajes
@@ -203,19 +201,15 @@ def facturas_vigentes_vencidas_rango(form):
             state=Invoice.States.UNPAID,
             dates__status=Invoice.States.UNPAID,
             # casts the datetime as date
-            dates__date__range=[timezone.now(), end_date],
+            dates__date__range=[initial_date, end_date],
         ).count()
 
         # Obtener numero solictudes despachadas
         # en el mes/año especificado de tiempo
         n_vencidas = Invoice.objects.filter(
-            state=Invoice.States.UNPAID,
-            dates__status=Invoice.States.UNPAID,
-            # casts the datetime as date
-            dates__date__range=[
-                initial_date,
-                timezone.now() - timedelta(days=1),
-            ],
+            state=Invoice.States.OVERDUE,
+            dates__status=Invoice.States.OVERDUE,
+            dates__date__range=[initial_date, end_date],
         ).count()
 
         # Hacer calculos de porcentajes
@@ -227,7 +221,7 @@ def facturas_vigentes_vencidas_rango(form):
         return (p_vigentes, p_vencidas)
 
 
-def facturas_ordenadas_fecha_cancelacion_dia(form):
+def facturas_ordenadas_tiempo_cancelacion_dia(form):
     if form.is_valid():
         fecha_especificada = form.cleaned_data["dia"]
         ordenadas = (
@@ -254,7 +248,7 @@ def facturas_ordenadas_fecha_cancelacion_dia(form):
         return ordenadas
 
 
-def facturas_ordenadas_fecha_cancelacion_mes(form):
+def facturas_ordenadas_tiempo_cancelacion_mes(form):
     if form.is_valid():
         month = form.cleaned_data["month"]
         ordenadas = (
@@ -288,7 +282,7 @@ def facturas_ordenadas_fecha_cancelacion_mes(form):
         return ordenadas
 
 
-def facturas_ordenadas_fecha_cancelacion_rango(form):
+def facturas_ordenadas_tiempo_cancelacion_rango(form):
     if form.is_valid():
         initial_date = form.cleaned_data["initial_date"]
         end_date = form.cleaned_data["end_date"]

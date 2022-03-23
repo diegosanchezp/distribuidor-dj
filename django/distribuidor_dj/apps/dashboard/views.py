@@ -32,9 +32,9 @@ from .mixins import (
     ShipmentDetailTest,
 )
 from .querys import (
-    facturas_ordenadas_fecha_cancelacion_dia,
-    facturas_ordenadas_fecha_cancelacion_mes,
-    facturas_ordenadas_fecha_cancelacion_rango,
+    facturas_ordenadas_tiempo_cancelacion_dia,
+    facturas_ordenadas_tiempo_cancelacion_mes,
+    facturas_ordenadas_tiempo_cancelacion_rango,
     facturas_vigentes_vencidas_dia,
     facturas_vigentes_vencidas_mes,
     facturas_vigentes_vencidas_rango,
@@ -237,19 +237,19 @@ class ReportesView(AdminDashboardPassessTest, FormView):
             BaseDateFilterFormChoices.DIA: {
                 "class": dash_forms.ChartDateDayFilterForm,
                 "name": "day_form",
-                "query": facturas_ordenadas_fecha_cancelacion_dia,
+                "query": facturas_ordenadas_tiempo_cancelacion_dia,
                 "chartName": "facturasOrdenadasFechaCancelacion",
             },
             BaseDateFilterFormChoices.MES: {
                 "class": dash_forms.ChartDateMonthFilterForm,
                 "name": "month_form",
-                "query": facturas_ordenadas_fecha_cancelacion_mes,
+                "query": facturas_ordenadas_tiempo_cancelacion_mes,
                 "chartName": "facturasOrdenadasFechaCancelacion",
             },
             BaseDateFilterFormChoices.INTERVALO: {
                 "class": dash_forms.ChartDateRangeFilterForm,  # noqa: E501, E261
                 "name": "range_form",
-                "query": facturas_ordenadas_fecha_cancelacion_rango,
+                "query": facturas_ordenadas_tiempo_cancelacion_rango,
                 "chartName": "facturasOrdenadasFechaCancelacion",
             },
         },
