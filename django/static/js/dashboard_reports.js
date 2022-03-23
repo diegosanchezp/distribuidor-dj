@@ -1,9 +1,23 @@
+function generarLetra(){
+	var letras = ["a","b","c","d","e","f","0","1","2","3","4","5","6","7","8","9"];
+	var numero = (Math.random()*15).toFixed(0);
+	return letras[numero];
+}
+
+function colorHEX(){
+	var coolor = "";
+	for(var i=0;i<6;i++){
+		coolor = coolor + generarLetra() ;
+	}
+	return "#" + coolor;
+}
 
 const despachadasPendientesId = "despachadasPendientes"
 const clientesOrdenadosId="clientesOrdenados"
 const destinosOrdenadosId="destinosOrdenados"
 const facturasVigentesId="vencidasVigentes"
 const facturasOrdenadasFechaCancelacionId = "facturasOrdenadasFechaCancelacion"
+
 
 window.addEventListener('DOMContentLoaded', () => {
   const { jsPDF } = window.jspdf;
@@ -18,7 +32,6 @@ window.addEventListener('DOMContentLoaded', () => {
     ...pieLabelsStyles,
     display: true,
   };
-  const facturasOrdenadasFechaCancelacionTable = document.getElementById(facturasOrdenadasFechaCancelacionId);
 
   const chartJsMap = {
     // chartDespachadasPendientes
@@ -155,6 +168,29 @@ window.addEventListener('DOMContentLoaded', () => {
   document.body.addEventListener("createnewchart",(evt)=>{
     // Update chart
     const data = evt.detail; // JSON
+
+    if (evt.detail.chartName === destinosOrdenadosId){
+      let colors = []
+      data.data.totales_destinos.forEach(() => {
+        colors.push(colorHEX())
+      })
+      chartDestinosOrdenados.data.datasets[0].backgroundColor = colors
+      chartDestinosOrdenados.data.labels = data.data.destinos.map(destino => destino.state__name);
+      chartDestinosOrdenados.data.datasets[0].data = data.data.totales_destinos;
+      chartDestinosOrdenados.update()
+			return
+    }
+    if (evt.detail.chartName === clientesOrdenadosId){
+      let colors = []
+      data.data.totales_clientes.forEach(() => {
+        colors.push(colorHEX())
+      })
+      chartClientesOrdenados.data.datasets[0].backgroundColor = colors
+      chartClientesOrdenados.data.labels = data.data.clientes.map(cliente => cliente.username);
+      chartClientesOrdenados.data.datasets[0].data = data.data.totales_clientes;
+      chartClientesOrdenados.update()
+			return
+    }
     const chart = chartJsMap[data.chartName].chart;
     chart.data.datasets[0].data = data.data;
     chart.update();

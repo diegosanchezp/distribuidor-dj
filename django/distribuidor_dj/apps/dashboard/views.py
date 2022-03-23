@@ -5,10 +5,12 @@ Dashboard views
 
 import requests
 from distribuidor_dj.apps.invoice.models import Invoice
-from distribuidor_dj.apps.shipment.models import Shipment
+from distribuidor_dj.apps.shipment.models import Address, Shipment
 from django_htmx.http import trigger_client_event
 
 from django.conf import settings
+from django.contrib.auth.models import User
+from django.db.models import Q
 from django.db.models.query import QuerySet
 from django.http import HttpResponse
 from django.http.response import JsonResponse
@@ -168,6 +170,126 @@ class InvoiceDetailView(InvoiceDetailTest, UpdateView):
             )
 
 
+def destinos_ordenados_solicitudes_realizadas_dia(form):
+    if form.is_valid():
+        fecha_especificada = form.cleaned_data["dia"]
+
+        destinos = list(
+            Address.objects.all().values("state__name", "state__id")
+        )
+
+        totales_destinos = []
+
+        for destino in destinos:
+            total_destino = Shipment.objects.filter(
+                target_address__state=destino["state__id"],
+                dates__date__date=fecha_especificada,
+            ).count()
+            totales_destinos.append(total_destino)
+
+        return {"destinos": destinos, "totales_destinos": totales_destinos}
+
+
+def destinos_ordenados_solicitudes_realizadas_mes(form):
+    if form.is_valid():
+        month = form.cleaned_data["month"]
+
+        destinos = list(
+            Address.objects.all().values("state__name", "state__id")
+        )
+
+        totales_destinos = []
+
+        for destino in destinos:
+            total_destino = Shipment.objects.filter(
+                target_address__state=destino["state__id"],
+                dates__date__month=month,
+            ).count()
+            totales_destinos.append(total_destino)
+
+        return {"destinos": destinos, "totales_destinos": totales_destinos}
+
+
+def destinos_ordenados_solicitudes_realizadas_rango(form):
+    if form.is_valid():
+        initial_date = form.cleaned_data["initial_date"]
+        end_date = form.cleaned_data["end_date"]
+
+        destinos = list(
+            Address.objects.all().values("state__name", "state__id")
+        )
+
+        totales_destinos = []
+
+        for destino in destinos:
+            total_destino = Shipment.objects.filter(
+                target_address__state=destino["state__id"],
+                dates__date__range=[initial_date, end_date],
+            ).count()
+            totales_destinos.append(total_destino)
+
+        return {"destinos": destinos, "totales_destinos": totales_destinos}
+
+
+def clientes_ordenados_solicitudes_realizadas_dia(form):
+    if form.is_valid():
+        fecha_especificada = form.cleaned_data["dia"]
+
+        clientes = list(
+            User.objects.filter(~Q(id__in=[1, 4])).values("id", "username")
+        )
+
+        totales_clientes = []
+
+        for cliente in clientes:
+            total_cliente = Shipment.objects.filter(
+                commerce=cliente["id"], dates__date__date=fecha_especificada
+            ).count()
+            totales_clientes.append(total_cliente)
+
+        return {"clientes": clientes, "totales_clientes": totales_clientes}
+
+
+def clientes_ordenados_solicitudes_realizadas_mes(form):
+    if form.is_valid():
+        month = form.cleaned_data["month"]
+
+        clientes = list(
+            User.objects.filter(~Q(id__in=[1, 4])).values("id", "username")
+        )
+
+        totales_clientes = []
+
+        for cliente in clientes:
+            total_cliente = Shipment.objects.filter(
+                commerce=cliente["id"], dates__date__month=month
+            ).count()
+            totales_clientes.append(total_cliente)
+
+        return {"clientes": clientes, "totales_clientes": totales_clientes}
+
+
+def clientes_ordenados_solicitudes_realizadas_rango(form):
+    if form.is_valid():
+        initial_date = form.cleaned_data["initial_date"]
+        end_date = form.cleaned_data["end_date"]
+
+        clientes = list(
+            User.objects.filter(~Q(id__in=[1, 4])).values("id", "username")
+        )
+
+        totales_clientes = []
+
+        for cliente in clientes:
+            total_cliente = Shipment.objects.filter(
+                commerce=cliente["id"],
+                dates__date__range=[initial_date, end_date],
+            ).count()
+            totales_clientes.append(total_cliente)
+
+        return {"clientes": clientes, "totales_clientes": totales_clientes}
+
+
 class ReportesView(AdminDashboardPassessTest, FormView):
     template_name = "dashboard/reportes.html"
 
@@ -253,6 +375,46 @@ class ReportesView(AdminDashboardPassessTest, FormView):
                 "chartName": "facturasOrdenadasFechaCancelacion",
             },
         },
+        ChartTypeChoices.DESTINOS: {
+            BaseDateFilterFormChoices.DIA: {
+                "class": dash_forms.ChartDateDayFilterForm,
+                "name": "day_form",
+                "query": destinos_ordenados_solicitudes_realizadas_dia,
+                "chartName": "destinosOrdenados",
+            },
+            BaseDateFilterFormChoices.MES: {
+                "class": dash_forms.ChartDateMonthFilterForm,
+                "name": "month_form",
+                "query": destinos_ordenados_solicitudes_realizadas_mes,
+                "chartName": "destinosOrdenados",
+            },
+            BaseDateFilterFormChoices.INTERVALO: {
+                "class": dash_forms.ChartDateRangeFilterForm,  # noqa: E501, E261
+                "name": "range_form",
+                "query": destinos_ordenados_solicitudes_realizadas_rango,
+                "chartName": "destinosOrdenados",
+            },
+        },
+        ChartTypeChoices.CLIENTES: {
+            BaseDateFilterFormChoices.DIA: {
+                "class": dash_forms.ChartDateDayFilterForm,
+                "name": "day_form",
+                "query": clientes_ordenados_solicitudes_realizadas_dia,
+                "chartName": "clientesOrdenados",
+            },
+            BaseDateFilterFormChoices.MES: {
+                "class": dash_forms.ChartDateMonthFilterForm,
+                "name": "month_form",
+                "query": clientes_ordenados_solicitudes_realizadas_mes,
+                "chartName": "clientesOrdenados",
+            },
+            BaseDateFilterFormChoices.INTERVALO: {
+                "class": dash_forms.ChartDateRangeFilterForm,  # noqa: E501, E261
+                "name": "range_form",
+                "query": clientes_ordenados_solicitudes_realizadas_rango,
+                "chartName": "clientesOrdenados",
+            },
+        },
     }
 
     extra_context = {
@@ -275,7 +437,7 @@ class ReportesView(AdminDashboardPassessTest, FormView):
                 },
                 status=400,
             )
-
+        print(f.cleaned_data.get("chart_type"))
         # Get the child form class and construct the form
         chart_type = f.cleaned_data.get("chart_type")
         child_form_config = self.forms_config[chart_type][
