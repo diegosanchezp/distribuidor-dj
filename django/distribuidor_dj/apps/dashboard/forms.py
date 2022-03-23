@@ -85,14 +85,17 @@ class ChartDateMonthFilterForm(BaseDateFilterForm):
 
 
 class ChartDateRangeFilterForm(BaseDateFilterForm):
-    initial_date = forms.DateField(validators=[])
-    end_date = forms.DateField(validators=[])
+    initial_date = forms.DateField()
+    end_date = forms.DateField()
 
     def clean(self):
-        initial_date = self.cleaned_data.get("initial_date")
-        end_date = self.cleaned_data.get("end_date")
-        if initial_date >= end_date:
-            raise ValidationError("Fecha inicio mayor que fecha fin")
+        cleaned_data = super().clean()
+        initial_date = cleaned_data.get("initial_date")
+        end_date = cleaned_data.get("end_date")
+
+        if initial_date and end_date:
+            if initial_date >= end_date:
+                raise ValidationError("Fecha inicio mayor que fecha fin")
 
 
 # TODO
