@@ -177,7 +177,7 @@ window.addEventListener('DOMContentLoaded', () => {
         colors.push(colorHEX())
       })
       chart.data.datasets[0].backgroundColor = colors
-      chart.data.labels = data.data.destinos.map(destino => destino.state__name);
+      chart.data.labels = data.data.destinos.map(destino => destino.name);
       chart.data.datasets[0].data = data.data.totales_destinos;
       chart.update()
 			return

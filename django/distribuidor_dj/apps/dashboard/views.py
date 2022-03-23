@@ -5,7 +5,7 @@ Dashboard views
 
 import requests
 from distribuidor_dj.apps.invoice.models import Invoice
-from distribuidor_dj.apps.shipment.models import Address, Shipment
+from distribuidor_dj.apps.shipment.models import AddressState, Shipment
 from django_htmx.http import trigger_client_event
 
 from django.conf import settings
@@ -174,40 +174,40 @@ def destinos_ordenados_solicitudes_realizadas_dia(form):
     if form.is_valid():
         fecha_especificada = form.cleaned_data["dia"]
 
-        destinos = list(
-            Address.objects.all().values("state__name", "state__id")
-        )
-
+        destinos = AddressState.objects.all()
         totales_destinos = []
 
         for destino in destinos:
             total_destino = Shipment.objects.filter(
-                target_address__state=destino["state__id"],
+                target_address__state=destino.id,
                 dates__date__date=fecha_especificada,
             ).count()
             totales_destinos.append(total_destino)
 
-        return {"destinos": destinos, "totales_destinos": totales_destinos}
+        return {
+            "destinos": list(destinos.values()),
+            "totales_destinos": totales_destinos,
+        }
 
 
 def destinos_ordenados_solicitudes_realizadas_mes(form):
     if form.is_valid():
         month = form.cleaned_data["month"]
 
-        destinos = list(
-            Address.objects.all().values("state__name", "state__id")
-        )
-
+        destinos = AddressState.objects.all()
         totales_destinos = []
 
         for destino in destinos:
             total_destino = Shipment.objects.filter(
-                target_address__state=destino["state__id"],
+                target_address__state=destino.id,
                 dates__date__month=month,
             ).count()
             totales_destinos.append(total_destino)
 
-        return {"destinos": destinos, "totales_destinos": totales_destinos}
+        return {
+            "destinos": list(destinos.values()),
+            "totales_destinos": totales_destinos,
+        }
 
 
 def destinos_ordenados_solicitudes_realizadas_rango(form):
@@ -215,20 +215,20 @@ def destinos_ordenados_solicitudes_realizadas_rango(form):
         initial_date = form.cleaned_data["initial_date"]
         end_date = form.cleaned_data["end_date"]
 
-        destinos = list(
-            Address.objects.all().values("state__name", "state__id")
-        )
-
+        destinos = AddressState.objects.all()
         totales_destinos = []
 
         for destino in destinos:
             total_destino = Shipment.objects.filter(
-                target_address__state=destino["state__id"],
+                target_address__state=destino.id,
                 dates__date__range=[initial_date, end_date],
             ).count()
             totales_destinos.append(total_destino)
 
-        return {"destinos": destinos, "totales_destinos": totales_destinos}
+        return {
+            "destinos": list(destinos.values()),
+            "totales_destinos": totales_destinos,
+        }
 
 
 def clientes_ordenados_solicitudes_realizadas_dia(form):
