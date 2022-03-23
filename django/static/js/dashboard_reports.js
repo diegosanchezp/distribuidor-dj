@@ -1,3 +1,17 @@
+function generarLetra(){
+	var letras = ["a","b","c","d","e","f","0","1","2","3","4","5","6","7","8","9"];
+	var numero = (Math.random()*15).toFixed(0);
+	return letras[numero];
+}
+
+function colorHEX(){
+	var coolor = "";
+	for(var i=0;i<6;i++){
+		coolor = coolor + generarLetra() ;
+	}
+	return "#" + coolor;
+}
+
 // TODO: put this in a js file
 window.addEventListener('DOMContentLoaded', () => {
 
@@ -65,7 +79,7 @@ window.addEventListener('DOMContentLoaded', () => {
       }
     }
   );
-  const destinosOrdenados = new Chart(
+  const chartDestinosOrdenados = new Chart(
     document.getElementById(destinosOrdenadosId),
     {
       type: "bar",
@@ -121,13 +135,9 @@ window.addEventListener('DOMContentLoaded', () => {
     }
   );
 
-  const facturasOrdenadasFechaCancelacionTable = document.getElementById(facturasOrdenadasFechaCancelacionId);
-
   document.body.addEventListener("createnewchart",(evt)=>{
-
     // Update chart
     const data = evt.detail;
-    console.log(evt.detail.chartName)
 
     if (evt.detail.chartName === despachadasPendientesId){
       chartDespachadasPendientes.data.datasets[0].data = data.data;
@@ -137,9 +147,25 @@ window.addEventListener('DOMContentLoaded', () => {
       chartFacturasVigentes.data.datasets[0].data = data.data;
       chartFacturasVigentes.update()
     }
-    if (evt.detail.chartName === facturasOrdenadasFechaCancelacionId){
-      console.log(facturasOrdenadasFechaCancelacionTable)
-      console.log(data)
+    if (evt.detail.chartName === destinosOrdenadosId){
+      let colors = []
+      data.data.totales_destinos.forEach(() => {
+        colors.push(colorHEX())
+      })
+      chartDestinosOrdenados.data.datasets[0].backgroundColor = colors
+      chartDestinosOrdenados.data.labels = data.data.destinos.map(destino => destino.state__name);
+      chartDestinosOrdenados.data.datasets[0].data = data.data.totales_destinos;
+      chartDestinosOrdenados.update()
+    }
+    if (evt.detail.chartName === clientesOrdenadosId){
+      let colors = []
+      data.data.totales_clientes.forEach(() => {
+        colors.push(colorHEX())
+      })
+      chartClientesOrdenados.data.datasets[0].backgroundColor = colors
+      chartClientesOrdenados.data.labels = data.data.clientes.map(cliente => cliente.username);
+      chartClientesOrdenados.data.datasets[0].data = data.data.totales_clientes;
+      chartClientesOrdenados.update()
     }
   });
 });

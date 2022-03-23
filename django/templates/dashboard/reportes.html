@@ -35,8 +35,8 @@
                     @click="currentChart = 'clientes'"
                     x-bind:class="currentChart == 'clientes' ? 'tab tab-active':'tab' ">Clientes</a>
                 <a
-                    @click="currentChart = 'destinos'"
-                    x-bind:class="currentChart == 'destinos' ? 'tab tab-active':'tab'">
+                    @click="currentChart = 'destinosOrdenados'"
+                    x-bind:class="currentChart == 'destinosOrdenados' ? 'tab tab-active':'tab'">
                     Destinos
                 </a>
                 <a
@@ -64,7 +64,7 @@
             </div>
 
             {# Destinos #}
-            <div x-show="currentChart == 'destinos'" >
+            <div x-show="currentChart == 'destinosOrdenados'" >
                 <h2 class="text-lg text-center">Destinos ordenados por su cantidad de solicitudes. </h2>
                 <div style="background-color: white;" style="width: 500px;">
                     <canvas id="destinosOrdenados"></canvas>
