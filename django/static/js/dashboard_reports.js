@@ -202,6 +202,7 @@ window.addEventListener('DOMContentLoaded', () => {
     const chart = chartJsMap[evt.detail.currentChart].chart;
     const canvas = chart.canvas;
     const title = chartJsMap[evt.detail.currentChart].title;
+    let currentPage = 1;
     const doc = new jsPDF(
       // Set page size to letter
       {format: "letter"}
@@ -240,6 +241,7 @@ window.addEventListener('DOMContentLoaded', () => {
     // Calculate margins to center the chart
     const marginWidth = (pageWidth - canvasWidthMM) / 2;
 
+    // Variable to track placement of text and chart
     let offsetHeight = 10 + canvasHeightMM;
 
     doc.addImage(chart.canvas, "PNG", marginWidth , 10);
@@ -247,7 +249,13 @@ window.addEventListener('DOMContentLoaded', () => {
     const data = chart.data.datasets[0].data;
     for(let i=0; i<chart.data.labels.length; i++){
       const label = chart.data.labels[i];
-      offsetHeight+= (i+10);
+      if(offsetHeight >= pageHeight - 10){
+        offsetHeight = 10; // Reset
+        doc.addPage();
+        currentPage++;
+        doc.setPage(currentPage);
+      }
+      offsetHeight+=10;
       doc.text(
     `${label}: ${data[i]}`,
     10,
