@@ -267,7 +267,7 @@ def facturas_ordenadas_tiempo_cancelacion_mes(form):
                 state=Invoice.States.PAID,
                 dates__status=Invoice.States.PAID,
                 dates__date__month=month,
-                dates__date__year=timezone.now().year,
+                dates__date__year=timezone.now().year - 1,
             )
             .annotate(
                 date_paid=Subquery(paidSub.values("date")[:1]),
