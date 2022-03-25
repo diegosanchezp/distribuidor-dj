@@ -82,6 +82,9 @@ class ChartDateDayFilterForm(BaseDateFilterForm):
 
 class ChartDateMonthFilterForm(BaseDateFilterForm):
     month = forms.IntegerField(min_value=1, max_value=12)
+    year = forms.ChoiceField(
+        choices=[("2021", "2021"), ("2022", "2022")],
+    )
 
 
 class ChartDateRangeFilterForm(BaseDateFilterForm):
