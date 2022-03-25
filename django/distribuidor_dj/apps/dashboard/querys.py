@@ -6,7 +6,6 @@ from distribuidor_dj.apps.shipment.models import Shipment
 
 from django.db.models import DurationField, F
 from django.db.models.expressions import ExpressionWrapper, OuterRef, Subquery
-from django.utils import timezone
 
 
 # Querys
@@ -53,7 +52,7 @@ def solicitudes_despachadas_pendientes_mes(form):
     """
     if form.is_valid():
         month = form.cleaned_data["month"]
-        last_year = timezone.now().year - 1
+        year = form.cleaned_data["year"]
         # Obtener numero solictudes pendientes por despachar
         # en el mes/año especificado de tiempo
         n_pendientes = Shipment.objects.filter(
@@ -61,7 +60,7 @@ def solicitudes_despachadas_pendientes_mes(form):
             dates__status=Shipment.States.CREATED,
             # casts the datetime as date
             dates__date__month=month,
-            dates__date__year=last_year,
+            dates__date__year=year,
         ).count()
 
         # Obtener numero solictudes despachadas
@@ -71,7 +70,7 @@ def solicitudes_despachadas_pendientes_mes(form):
             dates__status=Shipment.States.SENDED,
             # casts the datetime as date
             dates__date__month=month,
-            dates__date__year=last_year,
+            dates__date__year=year,
         ).count()
 
         # Hacer calculos de porcentajes
@@ -163,14 +162,14 @@ def facturas_vigentes_vencidas_mes(form):
         month = form.cleaned_data["month"]
         # Obtener numero solictudes pendientes por despachar
         # en el mes/año especificado de tiempo
-        last_year = timezone.now().year - 1
+        year = form.cleaned_data["year"]
 
         n_vigentes = Invoice.objects.filter(
             state=Invoice.States.UNPAID,
             dates__status=Invoice.States.UNPAID,
             # casts the datetime as date
             dates__date__month=month,
-            dates__date__year=last_year,
+            dates__date__year=year,
         ).count()
 
         # Obtener numero solictudes despachadas
@@ -180,7 +179,7 @@ def facturas_vigentes_vencidas_mes(form):
             dates__status=Invoice.States.OVERDUE,
             # casts the datetime as date
             dates__date__month=month,
-            dates__date__year=last_year,
+            dates__date__year=year,
         ).count()
 
         # Hacer calculos de porcentajes
@@ -256,6 +255,7 @@ def facturas_ordenadas_tiempo_cancelacion_dia(form):
 def facturas_ordenadas_tiempo_cancelacion_mes(form):
     if form.is_valid():
         month = form.cleaned_data["month"]
+        year = form.cleaned_data["year"]
         paidSub = InvoiceStatusDate.objects.filter(
             invoice=OuterRef("pk"), status=Invoice.States.PAID
         )
@@ -267,7 +267,7 @@ def facturas_ordenadas_tiempo_cancelacion_mes(form):
                 state=Invoice.States.PAID,
                 dates__status=Invoice.States.PAID,
                 dates__date__month=month,
-                dates__date__year=timezone.now().year - 1,
+                dates__date__year=year,
             )
             .annotate(
                 date_paid=Subquery(paidSub.values("date")[:1]),

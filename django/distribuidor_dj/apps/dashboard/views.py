@@ -193,6 +193,7 @@ def destinos_ordenados_solicitudes_realizadas_dia(form):
 def destinos_ordenados_solicitudes_realizadas_mes(form):
     if form.is_valid():
         month = form.cleaned_data["month"]
+        year = form.cleaned_data["year"]
 
         destinos = AddressState.objects.all()
         totales_destinos = []
@@ -201,6 +202,7 @@ def destinos_ordenados_solicitudes_realizadas_mes(form):
             total_destino = Shipment.objects.filter(
                 target_address__state=destino.id,
                 dates__date__month=month,
+                dates__date__year=year,
             ).count()
             totales_destinos.append(total_destino)
 
@@ -255,6 +257,7 @@ def clientes_ordenados_solicitudes_realizadas_dia(form):
 def clientes_ordenados_solicitudes_realizadas_mes(form):
     if form.is_valid():
         month = form.cleaned_data["month"]
+        year = form.cleaned_data["year"]
 
         clientes = list(
             User.objects.filter(groups__name=const.COMMERCE_GROUP_NAME).values(
@@ -266,7 +269,9 @@ def clientes_ordenados_solicitudes_realizadas_mes(form):
 
         for cliente in clientes:
             total_cliente = Shipment.objects.filter(
-                commerce=cliente["id"], dates__date__month=month
+                commerce=cliente["id"],
+                dates__date__month=month,
+                dates__date__year=year,
             ).count()
             totales_clientes.append(total_cliente)
 

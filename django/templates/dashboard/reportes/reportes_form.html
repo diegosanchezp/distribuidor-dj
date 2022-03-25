@@ -32,10 +32,10 @@
       </div>
     </template>
     <template x-if="currentTab == '{{datechoices.MES.value}}' ">
-      <div>
-        <div class="flex flex-col items-center justify-center">
-          <label for="">Escoge un mes del año pasado</label>
-          <select name="month" class="select select-bordered w-full max-w-xs">
+      <div class="flex justify-center">
+        <div class="w-1/2 max-w-xs mr-6">
+          <label for="">Escoge un año entre el actual y el pasado</label>
+          <select name="month" class="select select-bordered w-full">
             <option value="1" selected>Enero</option>
             <option value="2">Febrero</option>
             <option value="3">Marzo</option>
@@ -50,11 +50,20 @@
             <option value="12">Diciembre</option>
           </select>
         </div>
-
-        {# Form Errors #}
-        {% include "dashboard/reportes/form_errors.html" with errors="mesErrors" %}
-
+        <div class="w-1/2 max-w-xs">
+          <label for="">Escoge un mes</label>
+          <select name="year" class="select select-bordered w-full">
+            {% for year in month_form.year %}
+              {{year}}
+            {% endfor %}
+          </select>
+        </div>
       </div>
+
+      {# Form Errors #}
+      {% include "dashboard/reportes/form_errors.html" with errors="mesErrors" %}
+
+
     </template>
     <template x-if="currentTab == '{{datechoices.INTERVALO.value}}' ">
       <section>
