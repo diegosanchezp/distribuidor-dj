@@ -119,6 +119,8 @@ window.addEventListener('DOMContentLoaded', () => {
           },
           options: {
             indexAxis: 'y',
+            //responsive: true,
+            maintainAspectRatio: false,
             scales: {
               y: {
                 beginAtZero: true
@@ -203,11 +205,19 @@ window.addEventListener('DOMContentLoaded', () => {
     const canvas = chart.canvas;
     const title = chartJsMap[evt.detail.currentChart].title;
     let currentPage = 1;
+
     const doc = new jsPDF(
       // Set page size to letter
       {format: "letter"}
     );
+
     doc.setFontSize(15);
+
+    // The width and height is in milimeters (mm)
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const pageHeight = doc.internal.pageSize.getHeight();
+
+    // Start PDF creation with jsPDF
 
     // Reconfigure chart for PDF display
     if(chart.config.type === "pie"){
@@ -218,25 +228,23 @@ window.addEventListener('DOMContentLoaded', () => {
           size: 12,
         },
       }
+      chart.canvas.parentNode.style.width = '350px';
     }else{
       // Bar chart doens't have top title, we to add one manually
       doc.text(`${title}`, 10,10);
+      chart.canvas.parentNode.style.width = '550px';
     }
 
-    // Start PDF creation with jsPDF
-
-    // The width is in milimeters (mm)
-    const pageWidth = doc.internal.pageSize.getWidth();
-    const pageHeight = doc.internal.pageSize.getHeight();
-
-    // Scale down the chart
-    chart.resize(350,350);
-    chart.update();
+    // Scale down the chart follwing parent width
+    chart.resize()
 
     // Convert canvas height and width to mm
     // 1px = 0.2645833333mm
     const canvasWidthMM = (canvas.width *0.2645833333);
     const canvasHeightMM = (canvas.height *0.2645833333);
+
+    // Update chart styles
+    chart.update();
 
     // Calculate margins to center the chart
     const marginWidth = (pageWidth - canvasWidthMM) / 2;
@@ -245,6 +253,9 @@ window.addEventListener('DOMContentLoaded', () => {
     let offsetHeight = 10 + canvasHeightMM;
 
     doc.addImage(chart.canvas, "PNG", marginWidth , 10);
+    offsetHeight+=10;
+    doc.text(`${new Date()}`, 10, offsetHeight);
+
     // Insert chart numeric data below de chart
     const data = chart.data.datasets[0].data;
     for(let i=0; i<chart.data.labels.length; i++){
@@ -257,11 +268,12 @@ window.addEventListener('DOMContentLoaded', () => {
       }
       offsetHeight+=10;
       doc.text(
-    `${label}: ${data[i]}`,
-    10,
+        `${label}: ${data[i]}`,
+        10,
         offsetHeight,
       )
     }
+
     doc.save("chart.pdf");
   });
 
@@ -282,6 +294,14 @@ document.addEventListener('alpine:init', () => {
     rangeErrors: {},
     currentChartIsEmpty: false,
     currentChart: despachadasPendientesId,
+    init(){
+      form = document.getElementById("chart-form");
+      // Get currently selected date filter
+      const selectedDateFilter = form.querySelector("input[type='radio']:checked");
+      if(selectedDateFilter){
+        this.currentTab = selectedDateFilter.value;
+      }
+    },
     input: {
       // Si hay un error un error en la respuesta de htmx, renderizar
       // errores del formulario

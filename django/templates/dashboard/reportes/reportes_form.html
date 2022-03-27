@@ -34,7 +34,7 @@
     <template x-if="currentTab == '{{datechoices.MES.value}}' ">
       <div class="flex justify-center">
         <div class="w-1/2 max-w-xs mr-6">
-          <label for="">Escoge un año entre el actual y el pasado</label>
+          <label for="">Escoge un mes</label>
           <select name="month" class="select select-bordered w-full">
             <option value="1" selected>Enero</option>
             <option value="2">Febrero</option>
@@ -51,7 +51,7 @@
           </select>
         </div>
         <div class="w-1/2 max-w-xs">
-          <label for="">Escoge un mes</label>
+          <label for="">Escoge un año entre el actual y el pasado</label>
           <select name="year" class="select select-bordered w-full">
             {% for year in month_form.year %}
               {{year}}
