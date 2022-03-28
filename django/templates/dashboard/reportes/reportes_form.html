@@ -24,7 +24,7 @@
               Escoge un dia
             </p>
           </label>
-          <input class="input self-center input-bordered" id="{{day_form.dia.id_for_label}}" name="{{day_form.dia.name}}" type="date" value="{{day_form.fields.dia.initial}}">
+          <input class="input self-center input-bordered" id="{{day_form.dia.id_for_label}}" name="{{day_form.dia.name}}" type="date" value="{{day_form.dia.initial|date:"Y-m-d"}}">
         </div>
 
         {# Form Errors #}
@@ -34,25 +34,16 @@
     <template x-if="currentTab == '{{datechoices.MES.value}}' ">
       <div class="flex justify-center">
         <div class="w-1/2 max-w-xs mr-6">
-          <label for="">Escoge un mes</label>
-          <select name="month" class="select select-bordered w-full">
-            <option value="1" selected>Enero</option>
-            <option value="2">Febrero</option>
-            <option value="3">Marzo</option>
-            <option value="4">Abril</option>
-            <option value="5">Mayo</option>
-            <option value="6">Junio</option>
-            <option value="7">Julio</option>
-            <option value="8">Agosto</option>
-            <option value="9">Septiembre</option>
-            <option value="10">Octubre</option>
-            <option value="11">Noviembre</option>
-            <option value="12">Diciembre</option>
+          <label for="{{month_form.month.id_for_label}}">Escoge un mes</label>
+          <select id="{{month_form.month.id_for_label}}" name="{{month_form.month.name}}" class="select select-bordered w-full">
+            {% for month in month_form.month %}
+              {{month}}
+            {% endfor %}
           </select>
         </div>
         <div class="w-1/2 max-w-xs">
-          <label for="">Escoge un año entre el actual y el pasado</label>
-          <select name="year" class="select select-bordered w-full">
+          <label for="{{month_form.year.id_for_label}}">Escoge un año entre el actual y el pasado</label>
+          <select id="{{month_form.year.id_for_label}}" name="{{month_form.year.name}}" class="select select-bordered w-full">
             {% for year in month_form.year %}
               {{year}}
             {% endfor %}
@@ -69,12 +60,12 @@
       <section>
         <div class="flex justify-center items-center gap-x-4">
           <div>
-            <label for="">Inicio</label>
-            <input class="input input-bordered" type="date" name="initial_date" min="2022-01-01">
+            <label for="{{range_form.initial_date.id_for_label}}">Inicio</label>
+            <input id="{{range_form.initial_date.id_for_label}}" class="input input-bordered" type="date" name="{{range_form.initial_date.name}}" value="{{range_form.initial_date.initial|date:"Y-m-d"}}">
           </div>
           <div>
-            <label for="">Fin</label>
-            <input class="input input-bordered" type="date" name="end_date">
+            <label for="{{range_form.end_date.id_for_label}}">Fin</label>
+            <input id="{{range_form.end_date.id_for_label}}" class="input input-bordered" type="date" name="{{range_form.end_date.name}}" value="{{range_form.end_date.initial|date:"Y-m-d"}}">
           </div>
           {# Form Errors #}
           {% include "dashboard/reportes/form_errors.html" with errors="rangeErrors" %}

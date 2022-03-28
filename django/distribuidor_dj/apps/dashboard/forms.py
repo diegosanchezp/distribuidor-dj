@@ -2,6 +2,8 @@
 Forms of the dashboard
 """
 
+import datetime
+
 from distribuidor_dj.apps.shipment.models import Shipment
 
 from django import forms
@@ -75,24 +77,55 @@ class DateRangeValidator:
 
 
 class ChartDateDayFilterForm(BaseDateFilterForm):
-    dia = forms.DateField(
-        initial=timezone.now(),
-    )
+    dia = forms.DateField()
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.fields["dia"].initial = timezone.now()
 
 
 class ChartDateMonthFilterForm(BaseDateFilterForm):
-    month = forms.IntegerField(min_value=1, max_value=12)
-    year = forms.ChoiceField(
+    month = forms.TypedChoiceField(
         choices=[
-            (str(timezone.now().year), str(timezone.now().year)),
-            (str(timezone.now().year - 1), str(timezone.now().year - 1)),
+            (1, "Enero"),
+            (2, "Febrero"),
+            (3, "Marzo"),
+            (4, "Abril"),
+            (5, "Mayo"),
+            (6, "Junio"),
+            (7, "Julio"),
+            (8, "Agosto"),
+            (9, "Septiembre"),
+            (10, "Octubre"),
+            (11, "Noviembre"),
+            (12, "Diciembre"),
         ],
+        coerce=int,
     )
+    year = forms.TypedChoiceField(coerce=int)
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        current_date = timezone.now()
+        current_year = current_date.year
+        self.fields["month"].initial = current_date.month
+        self.fields["year"].choices = [
+            (current_year, current_year),
+            (current_year - 1, current_year - 1),
+        ]
+        self.fields["year"].initial = current_year
 
 
 class ChartDateRangeFilterForm(BaseDateFilterForm):
     initial_date = forms.DateField()
     end_date = forms.DateField()
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        current_date = timezone.now()
+        delta = datetime.timedelta(days=30)
+        self.fields["initial_date"].initial = current_date - delta
+        self.fields["end_date"].initial = current_date + delta
 
     def clean(self):
         cleaned_data = super().clean()
