@@ -20,8 +20,11 @@ const facturasOrdenadasFechaCancelacionId = "facturasOrdenadasFechaCancelacion"
 
 
 window.addEventListener('DOMContentLoaded', () => {
+
   const { jsPDF } = window.jspdf;
 
+  // https://docs.djangoproject.com/en/4.0/ref/templates/builtins/#json-script
+  const defaultChartData = JSON.parse(document.getElementById('default_chart_data').textContent);
   const pieLabelsStyles={
       color: "#ffffff",
       font: {
@@ -46,7 +49,7 @@ window.addEventListener('DOMContentLoaded', () => {
               'Solicitudes Despachadas',
             ],
             datasets: [{
-              data: [], // TOOD: grab default data from somewhere else
+              data: defaultChartData[despachadasPendientesId].dataset_data,
               backgroundColor: [
                 'rgb(255, 99, 132)',
                 'rgb(54, 162, 235)',
@@ -74,12 +77,9 @@ window.addEventListener('DOMContentLoaded', () => {
         {
           type: "bar",
           data: {
-            labels: [
-              "gshoes",
-              "jjclothes",
-            ],
+            labels: defaultChartData[clientesOrdenadosId].labels,
             datasets: [{
-              data: [2,10],
+              data: defaultChartData[clientesOrdenadosId].dataset_data,
               backgroundColor: [
                 'rgba(255, 99, 132, 0.2)',
                 'rgba(255, 159, 64, 0.2)',
@@ -103,14 +103,9 @@ window.addEventListener('DOMContentLoaded', () => {
         {
           type: "bar",
           data: {
-            labels: [
-              "Amazonas",
-              "Anzoátegui",
-              "Zulia",
-              "Tachira",
-            ],
+            labels: defaultChartData[destinosOrdenadosId].labels,
             datasets: [{
-              data: [2,10,11,14],
+              data: defaultChartData[destinosOrdenadosId].dataset_data,
               backgroundColor: [
                 'rgba(255, 99, 132, 0.2)',
                 'rgba(255, 159, 64, 0.2)',
@@ -142,7 +137,7 @@ window.addEventListener('DOMContentLoaded', () => {
               'Facturas vencidas por cobrar.',
             ],
             datasets: [{
-              data: [2, 10], // TOOD: grab default data from somewhere else
+              data: defaultChartData[facturasVigentesId].dataset_data,
               backgroundColor: [
                 'rgb(255, 99, 132)',
                 'rgb(54, 162, 235)',
@@ -286,6 +281,7 @@ document.addEventListener('alpine:init', () => {
     rangeErrors: {},
     currentChartIsEmpty: false,
     currentChart: despachadasPendientesId,
+    pieWidth: '700px',
     init(){
       form = document.getElementById("chart-form");
       // Get currently selected date filter

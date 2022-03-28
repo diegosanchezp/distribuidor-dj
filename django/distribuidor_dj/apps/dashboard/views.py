@@ -219,26 +219,6 @@ class ReportesView(AdminDashboardPassessTest, FormView):
                 "chartName": "facturasVigentes",
             },
         },
-        ChartTypeChoices.DESTINOS: {
-            BaseDateFilterFormChoices.DIA: {
-                "class": dash_forms.ChartDateDayFilterForm,
-                "name": "day_form",
-                "query": facturas_vigentes_vencidas_dia,
-                "chartName": "facturasVigentes",
-            },
-            BaseDateFilterFormChoices.MES: {
-                "class": dash_forms.ChartDateMonthFilterForm,
-                "name": "month_form",
-                "query": facturas_vigentes_vencidas_mes,
-                "chartName": "facturasVigentes",
-            },
-            BaseDateFilterFormChoices.INTERVALO: {
-                "class": dash_forms.ChartDateRangeFilterForm,  # noqa: E501, E261
-                "name": "range_form",
-                "query": facturas_vigentes_vencidas_rango,
-                "chartName": "facturasVigentes",
-            },
-        },
         ChartTypeChoices.FACTURAS_ORD: {
             BaseDateFilterFormChoices.DIA: {
                 "class": dash_forms.ChartDateDayFilterForm,
@@ -351,7 +331,7 @@ class ReportesView(AdminDashboardPassessTest, FormView):
             response = render(
                 self.request,
                 template_name="dashboard/reportes/tabla_facturas.html",
-                context={"facturas": query_data},
+                context={"facturas_tc": query_data},
             )
             return response
 
@@ -377,25 +357,47 @@ class ReportesView(AdminDashboardPassessTest, FormView):
 
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
-        # TODO: querys por defecto
         if "day_form" not in kwargs:
             ctx["day_form"] = dash_forms.ChartDateDayFilterForm()
         if "month_form" not in kwargs:
             ctx["month_form"] = dash_forms.ChartDateMonthFilterForm()
         if "range_form" not in kwargs:
             ctx["range_form"] = dash_forms.ChartDateRangeFilterForm()
+        # querys por defecto
+        ctx["default_chart_data"] = self.get_default_querys(ctx)
         return ctx
 
-    def get_default_querys(self):
-        # dia_params = {"dia": timezone.now().day}
-        # month_params = {"month": timezone.now().month, "year": timezone.now().year}  # noqa: E501
-        # range_params={"month": timezone.now()}
-        # month_params={""}
+    def get_default_querys(self, ctx):
+        month_params = {
+            "month": ctx["month_form"]["month"].initial,
+            "year": ctx["month_form"]["year"].initial,
+        }
+        # Do not delete it can be useful if I want to have
+        # default data for month and range
+        # dia_params = {"dia": ctx["day_form"]["dia"].initial}
+        # range_params={
+        #     "initial_date": ctx["range_form"]["initial_date"].initial,
+        #     "end_date":ctx["range_form"]["end_date"].initial
+        # }
 
-        # despechadas_pendientes_dia = self.forms_config[
-        #     ChartTypeChoices.ENVIOS
-        # ][BaseDateFilterFormChoices.DIA][
-        #     "query"
-        # ](dia=timezone.now().day)
-        # pass
-        pass
+        ctx["facturas_tc"] = facturas_ordenadas_tiempo_cancelacion_mes(
+            **month_params
+        )
+
+        data = {
+            ChartTypeChoices.ENVIOS: {
+                "dataset_data": solicitudes_despachadas_pendientes_mes(
+                    **month_params
+                ),
+            },
+            ChartTypeChoices.FACTURAS_VG_VC: {
+                "dataset_data": facturas_vigentes_vencidas_mes(**month_params),
+            },
+            ChartTypeChoices.DESTINOS: destinos_ordenados_solicitudes_realizadas_mes(  # noqa: E501
+                **month_params
+            ),
+            ChartTypeChoices.CLIENTES: clientes_ordenados_solicitudes_realizadas_mes(  # noqa: E501
+                **month_params
+            ),
+        }
+        return data

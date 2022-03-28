@@ -6,6 +6,7 @@
     <script src="{% static "js/dashboard_reports.js" %}"></script>
     {# Para renderizar los graficos de chart.js a pdf #}
     <script src="{% static "jspdf/dist/jspdf.umd.js" %}"></script>
+    {{ default_chart_data|json_script:"default_chart_data" }}
 {% endblock %}
 
 {% block extrastyles %}
@@ -25,8 +26,7 @@
 
     <form
       class="flex flex-col px-6"
-      x-data="formComponent('{{datechoices.DIA.value}}')"
-      data-initial-tab="{{datechoices.DIA.value}}"
+      x-data="formComponent('{{datechoices.MES.value}}')"
       method="GET"
       x-bind="form"
       id="chart-form"

@@ -16,8 +16,7 @@
     {% endfor %}
   </section>
   <section id="date-filters" class="self-center my-2">
-    <template x-if="currentTab == '{{datechoices.DIA.value}}' ">
-      <div>
+      <div x-show="currentTab == '{{datechoices.DIA.value}}'">
         <div class="flex flex-col items-center">
           <label class="" for="{{day_form.dia.id_for_label}}">
             <p>
@@ -30,9 +29,7 @@
         {# Form Errors #}
         {% include "dashboard/reportes/form_errors.html" with errors="diaErrors" %}
       </div>
-    </template>
-    <template x-if="currentTab == '{{datechoices.MES.value}}' ">
-      <div class="flex justify-center">
+      <div x-show="currentTab == '{{datechoices.MES.value}}' " class="flex justify-center">
         <div class="w-1/2 max-w-xs mr-6">
           <label for="{{month_form.month.id_for_label}}">Escoge un mes</label>
           <select id="{{month_form.month.id_for_label}}" name="{{month_form.month.name}}" class="select select-bordered w-full">
@@ -54,10 +51,7 @@
       {# Form Errors #}
       {% include "dashboard/reportes/form_errors.html" with errors="mesErrors" %}
 
-
-    </template>
-    <template x-if="currentTab == '{{datechoices.INTERVALO.value}}' ">
-      <section>
+      <section x-show="currentTab == '{{datechoices.INTERVALO.value}}' ">
         <div class="flex justify-center items-center gap-x-4">
           <div>
             <label for="{{range_form.initial_date.id_for_label}}">Inicio</label>
@@ -71,7 +65,6 @@
           {% include "dashboard/reportes/form_errors.html" with errors="rangeErrors" %}
         </div>
       </section>
-    </template>
   </section>
   <div class="flex justify-center">
     <button class="btn btn-primary self-center my-2" type="submit">Aplicar</button>
