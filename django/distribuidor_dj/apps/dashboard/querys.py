@@ -227,7 +227,7 @@ facturas_ordenadas_tiempo_cancelacion_rango = (
 
 destinos_ordenados_solicitudes_realizadas_dia = (
     DestinosOrdenadosSolicitudesRealizadas(
-        date_filter=BaseDateFilterFormChoices.MES
+        date_filter=BaseDateFilterFormChoices.DIA
     )
 )
 
