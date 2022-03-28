@@ -173,25 +173,17 @@ window.addEventListener('DOMContentLoaded', () => {
 
     const chart = chartJsMap[data.chartName].chart;
 
-    if (evt.detail.chartName === destinosOrdenadosId){
+    if(
+      [destinosOrdenadosId,clientesOrdenadosId].includes(
+        evt.detail.chartName)
+    ){
       let colors = []
-      data.data.totales_destinos.forEach(() => {
+      data.data.labels.forEach(() => {
         colors.push(colorHEX())
       })
       chart.data.datasets[0].backgroundColor = colors
-      chart.data.labels = data.data.destinos.map(destino => destino.name);
-      chart.data.datasets[0].data = data.data.totales_destinos;
-      chart.update()
-			return
-    }
-    if (evt.detail.chartName === clientesOrdenadosId){
-      let colors = []
-      data.data.totales_clientes.forEach(() => {
-        colors.push(colorHEX())
-      })
-      chart.data.datasets[0].backgroundColor = colors
-      chart.data.labels = data.data.clientes.map(cliente => cliente.username);
-      chart.data.datasets[0].data = data.data.totales_clientes;
+      chart.data.labels = data.data.labels
+      chart.data.datasets[0].data = data.data.dataset_data;
       chart.update()
 			return
     }

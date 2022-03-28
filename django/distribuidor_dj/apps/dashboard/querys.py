@@ -150,6 +150,7 @@ class DestinosOrdenadosSolicitudesRealizadas(BaseDashQuery):
         super().__call__(**kwargs)
         destinos = AddressState.objects.all()
         totales_destinos = []
+        destinos_names = []
 
         for destino in destinos:
             total_destino = Shipment.objects.filter(
@@ -157,11 +158,11 @@ class DestinosOrdenadosSolicitudesRealizadas(BaseDashQuery):
                 **self.field_value_lookups,
             ).count()
             totales_destinos.append(total_destino)
-
-            return {
-                "destinos": list(destinos.values()),
-                "totales_destinos": totales_destinos,
-            }
+            destinos_names.append(destino.name)
+        return {
+            "labels": destinos_names,
+            "dataset_data": totales_destinos,
+        }
 
 
 class ClientesOrdenadosSolicitudesRealizadas(BaseDashQuery):
@@ -170,20 +171,25 @@ class ClientesOrdenadosSolicitudesRealizadas(BaseDashQuery):
 
         clientes = list(
             User.objects.filter(groups__name=const.COMMERCE_GROUP_NAME).values(
-                "id", "username"
+                "username"
             )
         )
 
+        clientes_usernames = []
         totales_clientes = []
 
         for cliente in clientes:
+            username = cliente["username"]
             total_cliente = Shipment.objects.filter(
-                commerce=cliente["id"],
+                commerce__username=username,
                 **self.field_value_lookups,
             ).count()
             totales_clientes.append(total_cliente)
-
-        return {"clientes": clientes, "totales_clientes": totales_clientes}
+            clientes_usernames.append(username)
+        return {
+            "labels": clientes_usernames,
+            "dataset_data": totales_clientes,
+        }
 
 
 # Query Alias
