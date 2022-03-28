@@ -5,12 +5,10 @@ Dashboard views
 
 import requests
 from distribuidor_dj.apps.invoice.models import Invoice
-from distribuidor_dj.apps.shipment.models import AddressState, Shipment
-from distribuidor_dj.utils import const
+from distribuidor_dj.apps.shipment.models import Shipment
 from django_htmx.http import trigger_client_event
 
 from django.conf import settings
-from django.contrib.auth.models import User
 from django.db.models.query import QuerySet
 from django.http import HttpResponse
 from django.http.response import JsonResponse
@@ -34,6 +32,12 @@ from .mixins import (
     ShipmentDetailTest,
 )
 from .querys import (
+    clientes_ordenados_solicitudes_realizadas_dia,
+    clientes_ordenados_solicitudes_realizadas_mes,
+    clientes_ordenados_solicitudes_realizadas_rango,
+    destinos_ordenados_solicitudes_realizadas_dia,
+    destinos_ordenados_solicitudes_realizadas_mes,
+    destinos_ordenados_solicitudes_realizadas_rango,
     facturas_ordenadas_tiempo_cancelacion_dia,
     facturas_ordenadas_tiempo_cancelacion_mes,
     facturas_ordenadas_tiempo_cancelacion_rango,
@@ -168,137 +172,6 @@ class InvoiceDetailView(InvoiceDetailTest, UpdateView):
                 },
                 status=payment_res.status_code,
             )
-
-
-def destinos_ordenados_solicitudes_realizadas_dia(form):
-    if form.is_valid():
-        fecha_especificada = form.cleaned_data["dia"]
-
-        destinos = AddressState.objects.all()
-        totales_destinos = []
-
-        for destino in destinos:
-            total_destino = Shipment.objects.filter(
-                target_address__state=destino.id,
-                dates__date__date=fecha_especificada,
-            ).count()
-            totales_destinos.append(total_destino)
-
-        return {
-            "destinos": list(destinos.values()),
-            "totales_destinos": totales_destinos,
-        }
-
-
-def destinos_ordenados_solicitudes_realizadas_mes(form):
-    if form.is_valid():
-        month = form.cleaned_data["month"]
-        year = form.cleaned_data["year"]
-
-        destinos = AddressState.objects.all()
-        totales_destinos = []
-
-        for destino in destinos:
-            total_destino = Shipment.objects.filter(
-                target_address__state=destino.id,
-                dates__date__month=month,
-                dates__date__year=year,
-            ).count()
-            totales_destinos.append(total_destino)
-
-        return {
-            "destinos": list(destinos.values()),
-            "totales_destinos": totales_destinos,
-        }
-
-
-def destinos_ordenados_solicitudes_realizadas_rango(form):
-    if form.is_valid():
-        initial_date = form.cleaned_data["initial_date"]
-        end_date = form.cleaned_data["end_date"]
-
-        destinos = AddressState.objects.all()
-        totales_destinos = []
-
-        for destino in destinos:
-            total_destino = Shipment.objects.filter(
-                target_address__state=destino.id,
-                dates__date__range=[initial_date, end_date],
-            ).count()
-            totales_destinos.append(total_destino)
-
-        return {
-            "destinos": list(destinos.values()),
-            "totales_destinos": totales_destinos,
-        }
-
-
-def clientes_ordenados_solicitudes_realizadas_dia(form):
-    if form.is_valid():
-        fecha_especificada = form.cleaned_data["dia"]
-
-        clientes = list(
-            User.objects.filter(groups__name=const.COMMERCE_GROUP_NAME).values(
-                "id", "username"
-            )
-        )
-
-        totales_clientes = []
-
-        for cliente in clientes:
-            total_cliente = Shipment.objects.filter(
-                commerce=cliente["id"], dates__date__date=fecha_especificada
-            ).count()
-            totales_clientes.append(total_cliente)
-
-        return {"clientes": clientes, "totales_clientes": totales_clientes}
-
-
-def clientes_ordenados_solicitudes_realizadas_mes(form):
-    if form.is_valid():
-        month = form.cleaned_data["month"]
-        year = form.cleaned_data["year"]
-
-        clientes = list(
-            User.objects.filter(groups__name=const.COMMERCE_GROUP_NAME).values(
-                "id", "username"
-            )
-        )
-
-        totales_clientes = []
-
-        for cliente in clientes:
-            total_cliente = Shipment.objects.filter(
-                commerce=cliente["id"],
-                dates__date__month=month,
-                dates__date__year=year,
-            ).count()
-            totales_clientes.append(total_cliente)
-
-        return {"clientes": clientes, "totales_clientes": totales_clientes}
-
-
-def clientes_ordenados_solicitudes_realizadas_rango(form):
-    if form.is_valid():
-        initial_date = form.cleaned_data["initial_date"]
-        end_date = form.cleaned_data["end_date"]
-
-        clientes = list(
-            User.objects.filter(groups__name=const.COMMERCE_GROUP_NAME).values(
-                "id", "username"
-            )
-        )
-
-        totales_clientes = []
-
-        for cliente in clientes:
-            total_cliente = Shipment.objects.filter(
-                commerce=cliente["id"],
-                dates__date__range=[initial_date, end_date],
-            ).count()
-            totales_clientes.append(total_cliente)
-
-        return {"clientes": clientes, "totales_clientes": totales_clientes}
 
 
 class ReportesView(AdminDashboardPassessTest, FormView):
@@ -448,7 +321,6 @@ class ReportesView(AdminDashboardPassessTest, FormView):
                 },
                 status=400,
             )
-        print(f.cleaned_data.get("chart_type"))
         # Get the child form class and construct the form
         chart_type = f.cleaned_data.get("chart_type")
         child_form_config = self.forms_config[chart_type][
@@ -471,7 +343,9 @@ class ReportesView(AdminDashboardPassessTest, FormView):
             )
             return res
 
-        query_data: list = child_form_config["query"](actual_form)
+        query_data: list = child_form_config["query"](
+            **actual_form.cleaned_data
+        )
 
         if chart_type == ChartTypeChoices.FACTURAS_ORD:
             response = render(
@@ -512,8 +386,16 @@ class ReportesView(AdminDashboardPassessTest, FormView):
             ctx["range_form"] = dash_forms.ChartDateRangeFilterForm()
         return ctx
 
-    def get_query(self):
-        # tipo = form.cleaned_data.get("tipo")
-        pass
+    def get_default_querys(self):
+        # dia_params = {"dia": timezone.now().day}
+        # month_params = {"month": timezone.now().month, "year": timezone.now().year}  # noqa: E501
+        # range_params={"month": timezone.now()}
+        # month_params={""}
 
-    # Fatan mas de 9 Querys...
+        # despechadas_pendientes_dia = self.forms_config[
+        #     ChartTypeChoices.ENVIOS
+        # ][BaseDateFilterFormChoices.DIA][
+        #     "query"
+        # ](dia=timezone.now().day)
+        # pass
+        pass

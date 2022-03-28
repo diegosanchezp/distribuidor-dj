@@ -84,8 +84,8 @@ class ChartDateMonthFilterForm(BaseDateFilterForm):
     month = forms.IntegerField(min_value=1, max_value=12)
     year = forms.ChoiceField(
         choices=[
-            (f"{timezone.now().year -1}", f"{timezone.now().year -1}"),
-            (f"{timezone.now().year}", f"{timezone.now().year}"),
+            (str(timezone.now().year), str(timezone.now().year)),
+            (str(timezone.now().year - 1), str(timezone.now().year - 1)),
         ],
     )
 

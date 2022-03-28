@@ -46,7 +46,7 @@ window.addEventListener('DOMContentLoaded', () => {
               'Solicitudes Despachadas',
             ],
             datasets: [{
-              data: [2, 10], // TOOD: grab default data from somewhere else
+              data: [], // TOOD: grab default data from somewhere else
               backgroundColor: [
                 'rgb(255, 99, 132)',
                 'rgb(54, 162, 235)',
