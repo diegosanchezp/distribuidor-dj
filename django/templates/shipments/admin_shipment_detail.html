@@ -39,11 +39,23 @@
   <div class="flex justify-center gap-x-6 items-center">
     <a
       class="badge badge-sm"
-      href="{% url "dashboard:invoice-detail" pk=shipment.invoice.id %}"
+      href="
+        {% if request.user.is_staff %}
+          {% url "dashboard:admin-invoice-detail" pk=shipment.invoice.id %}"
+        {% else %}
+          {% url "dashboard:invoice-detail" pk=shipment.invoice.id %}
+      {% endif %}
+    "
       >{{ shipment.id }}
     </a>
     <a
-      href="{% url "dashboard:invoice-detail" pk=shipment.invoice.id %}"
+      href="
+        {% if request.user.is_staff %}
+          {% url "dashboard:admin-invoice-detail" pk=shipment.invoice.id %}"
+        {% else %}
+          {% url "dashboard:invoice-detail" pk=shipment.invoice.id %}
+        {% endif %}
+      "
       class="btn btn-sm btn-outline btn-info"
       >
       Ver detalle
