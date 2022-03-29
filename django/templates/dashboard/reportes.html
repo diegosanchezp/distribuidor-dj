@@ -139,23 +139,7 @@
                     <article class="" x-show="currentChart == '{{chartIds.FACTURAS_ORD}}'">
                         <div class="overflow-x-auto">
                             <h2 class="text-lg text-center">Facturas ordenadas por tiempo de cancelación</h2>
-                            <table id="facturasOrdenadasFechaCancelacion" class="table w-full">
-                                <!-- head -->
-                                <thead>
-                                    <tr>
-                                        <th>Id Factura</th>
-                                        <th>Tiempo de Cancelación en dias</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <!-- row 1 -->
-                                    <tr>
-                                        <th>417c8acd-1f8f-41e2-903e-67ad5c583cd2</th>
-                                        <td>2</td>
-                                    </tr>
-                                    <!-- row 2 -->
-                                </tbody>
-                            </table>
+                            {% include "dashboard/reportes/tabla_facturas.html" %}
                         </div>
                     </article>
                 </section>

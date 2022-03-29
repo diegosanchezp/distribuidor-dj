@@ -109,6 +109,12 @@ class InvoicesView(DashboardPassesTestMixin, ListView):
         return queryset
 
 
+class AdminInvoicesView(AdminDashboardPassessTest, ListView):
+    template_name = "dashboard/invoices.html"
+    model = Invoice
+    paginate_by = 10
+
+
 class SettingsView(DashboardPassesTestMixin, TemplateView):
     template_name = "dashboard/settings.html"
 
@@ -172,6 +178,14 @@ class InvoiceDetailView(InvoiceDetailTest, UpdateView):
                 },
                 status=payment_res.status_code,
             )
+
+
+class AdminInvoiceDetailView(AdminDashboardPassessTest, DetailView):
+
+    template_name = "dashboard/invoice-detail.html"
+    model = Invoice
+    context_object_name = "invoice"
+    extra_context = {"states": Invoice.States}
 
 
 class ReportesView(AdminDashboardPassessTest, FormView):

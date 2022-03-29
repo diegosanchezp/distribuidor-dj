@@ -42,4 +42,14 @@ urlpatterns = [
         shviews.AdminShipmentDetail.as_view(),
         name="admin-shipment-detail",
     ),
+    path(
+        "admin/invoice-detail/<slug:pk>",
+        views.AdminInvoiceDetailView.as_view(),
+        name="admin-invoice-detail",
+    ),
+    path(
+        "admin/invoices/",
+        views.AdminInvoicesView.as_view(),
+        name="admin-invoices",
+    ),
 ]

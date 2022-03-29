@@ -21,7 +21,7 @@ class AdminDashIndex(AdminDashboardPassessTest, TemplateView):
 
 class AdminDashShipmentList(AdminDashboardPassessTest, ShipmentsView):
     template_name = "shipments/admin_shipments.html"
-    paginate_by = 2  # change this later to 10
+    paginate_by = 10  # change this later to 10
     extra_context = {"shipment_detail_url": "dashboard:admin-shipment-detail"}
 
     def get_queryset(self) -> "QuerySet[Shipment]":

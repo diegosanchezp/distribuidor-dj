@@ -59,11 +59,11 @@ class SolicitudesDespachadasPendientes(BaseDashQuery):
             **self.field_value_lookups,
         ).count()
 
-        # Obtener numero solictudes despachadas
+        # Obtener numero solictudes despachadas aka recibidas
         # en el dia especificado de tiempo
         n_despachadas = Shipment.objects.filter(
-            state=Shipment.States.SENDED,
-            dates__status=Shipment.States.SENDED,
+            state=Shipment.States.RECIEVED,
+            dates__status=Shipment.States.RECIEVED,
             # casts the datetime as date
             **self.field_value_lookups,
         ).count()
@@ -155,6 +155,7 @@ class DestinosOrdenadosSolicitudesRealizadas(BaseDashQuery):
         for destino in destinos:
             total_destino = Shipment.objects.filter(
                 target_address__state=destino.id,
+                dates__status=Shipment.States.CREATED,
                 **self.field_value_lookups,
             ).count()
             totales_destinos.append(total_destino)
@@ -182,6 +183,7 @@ class ClientesOrdenadosSolicitudesRealizadas(BaseDashQuery):
             username = cliente["username"]
             total_cliente = Shipment.objects.filter(
                 commerce__username=username,
+                dates__status=Shipment.States.CREATED,
                 **self.field_value_lookups,
             ).count()
             totales_clientes.append(total_cliente)

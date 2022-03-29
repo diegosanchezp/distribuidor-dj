@@ -18,7 +18,7 @@ class ProductQuantityInline(admin.TabularInline):
 class ShipmentStatusDateInline(admin.StackedInline):
     model = ShipmentStatusDate
     extra = 1
-    fields = ("status", "date")
+    fields = ("status",)
 
 
 # Register your models here.
