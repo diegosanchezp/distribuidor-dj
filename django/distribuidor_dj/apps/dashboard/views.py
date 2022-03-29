@@ -151,7 +151,7 @@ class InvoiceDetailView(InvoiceDetailTest, UpdateView):
         }
 
         payment_res = requests.post(
-            url="https://dakiti-back.herokuapp.com/api/testcards",
+            url="https://dakiti-back.herokuapp.com/api/cardPayment",
             json=res_data,
         )
         # Todo refactor this horrible code
