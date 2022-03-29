@@ -48,6 +48,7 @@
 
         </section>
         {# Formularios para pago de facturas #}
+        {% if not request.user.is_staff %}
             <section
                 class="w-full bg-neutral rounded-2xl col-start-9 col-end-13 py-8 px-12 shadow-2xl"
                 >
@@ -156,6 +157,7 @@
                     </template>
                 {% endif %}
             </section>
+        {% endif %}
     </section>
 
 {% endblock body %}

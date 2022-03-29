@@ -56,7 +56,13 @@
             <td>{{invoice.ammount}}</td>
             {# Accion #}
             <th>
-              <a href="{% url "dashboard:invoice-detail" pk=invoice.id %}">
+              <a href="
+                {% if request.user.is_staff %}
+                  {% url "dashboard:admin-invoice-detail" pk=invoice.id %}
+                {%else%}
+                  {% url "dashboard:invoice-detail" pk=invoice.id %}
+                {% endif %}
+                ">
                 <button class="btn btn-ghost btn-xs">Detail</button>
               </a>
             </th>

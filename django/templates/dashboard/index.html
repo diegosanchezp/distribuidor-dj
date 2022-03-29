@@ -33,6 +33,7 @@
                     <a
                         href="
                             {% if request.user.is_staff %}
+                                {% url "dashboard:admin-invoices" %}
                             {% else %}
                                 {% url "dashboard:invoices" %}
                             {%endif%}
