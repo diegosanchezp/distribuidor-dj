@@ -1,42 +1,166 @@
 {% extends "dashboard/base.html" %}
 {% load static %}
+
 {% block extrascripts %}
     <script defer src="{% static "chart.js/dist/chart.min.js" %}"></script>
-    <script>
-      window.addEventListener('DOMContentLoaded', (event) => {
-        const labels = [
-          'January',
-          'February',
-          'March',
-          'April',
-          'May',
-          'June',
-        ];
+    <script src="{% static "js/dashboard_reports.js" %}"></script>
+    {# Para renderizar los graficos de chart.js a pdf #}
+    <script src="{% static "jspdf/dist/jspdf.umd.js" %}"></script>
+    {{ default_chart_data|json_script:"default_chart_data" }}
+{% endblock %}
 
-        const data = {
-          labels: labels,
-          datasets: [{
-            label: 'My First dataset',
-            backgroundColor: 'rgb(255, 99, 132)',
-            borderColor: 'rgb(255, 99, 132)',
-            data: [0, 10, 5, 2, 20, 30, 45],
-          }]
-        };
-
-        const config = {
-          type: 'line',
-          data: data,
-          options: {}
-        };
-        const myChart = new Chart(
-          document.getElementById('myChart'),
-          config
-        );
-      });
-    </script>
+{% block extrastyles %}
+    <style>
+        @media print {
+            #main-header, #main-footer, #generateGraphPDFButton,
+            #main-tabs, #reportes_form, #arrow-back{
+                display: none;
+            }
+        }
+    </style>
 {% endblock %}
 {% block body %}
-    <div style="background-color: white;">
-      <canvas id="myChart"></canvas>
+    <div id="arrow-back">
+        {% include "components/dashboard/title.html" with underline_text="Repo" underline_subtext="rtes" %}
     </div>
+
+    <form
+      class="flex flex-col px-6"
+      x-data="formComponent('{{datechoices.MES.value}}')"
+      method="GET"
+      x-bind="form"
+      id="chart-form"
+      @createnewchart="createNewChart"
+      hx-target="#facturasOrdenadasFechaCancelacion"
+      hx-swap="innerHTML show:top"
+      hx-get
+      >
+        <section x-data="{
+            pieWidth: '700px',
+        }">
+            <h2 class="text-lg">Tipo</h2>
+            {# Tabs for charts #}
+            <input type="hidden" name="{{form.chart_type.name}}" x-bind:value="currentChart">
+            <section class="tabs tabs-boxed justify-center" id="main-tabs">
+                <a
+                    @click="currentChart = '{{chartIds.ENVIOS}}'"
+                    x-bind:class="currentChart == '{{chartIds.ENVIOS}}' ? 'tab tab-active':'tab'">
+                    Envios
+                </a>
+                <a
+                    @click="currentChart = '{{chartIds.CLIENTES}}'"
+                    x-bind:class="currentChart == '{{chartIds.CLIENTES}}' ? 'tab tab-active':'tab' ">Clientes</a>
+                <a
+                    @click="currentChart = '{{chartIds.DESTINOS}}'"
+                    x-bind:class="currentChart == '{{chartIds.DESTINOS}}' ? 'tab tab-active':'tab'">
+                    Destinos
+                </a>
+                <a
+                    @click="currentChart = '{{chartIds.FACTURAS_VG_VC}}'"
+                    x-bind:class="currentChart == '{{chartIds.FACTURAS_VG_VC}}' || currentChart == '{{chartIds.FACTURAS_ORD}}' ? 'tab tab-active':'tab'" >
+                    Facturas</a>
+            </section>
+
+            <div id="generateGraphPDFButton" class="flex justify-between my-3">
+                <h2 class="text-lg">Filtros de fecha</h2>
+                <button
+                    class="btn btn-secondary"
+
+                    @click="generateGraphPDF"
+                    type="button"
+                >
+                    Descargar como PDF
+                </button>
+            </div>
+
+            <div id="reportes_form">
+                {% include "dashboard/reportes/reportes_form.html" %}
+            </div>
+
+            <div x-show="currentChartIsEmpty" class="alert shadow-lg">
+                <div>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-info flex-shrink-0 w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <span>No hay data que desplegar para la fecha indicada</span>
+                </div>
+            </div>
+
+            <section class="flex justify-center">
+                <div x-show="currentChart == '{{chartIds.ENVIOS}}'" x-bind:style="`width: ${pieWidth}`">
+                    <canvas id="{{chartIds.ENVIOS}}"></canvas>
+                </div>
+            </section>
+
+            <div x-show="currentChart == '{{chartIds.CLIENTES}}'" >
+                <h2 class="text-lg text-center">Clientes ordenados con la cantidad de solicitudes realizadas</h2>
+                <div style="background-color: white;" style="width: 500px;">
+                    <canvas id="{{chartIds.CLIENTES}}"></canvas>
+                </div>
+            </div>
+
+            {# Destinos #}
+            <div x-show="currentChart == '{{chartIds.DESTINOS}}'" >
+                <h2 class="text-lg text-center">Destinos ordenados por su cantidad de solicitudes. </h2>
+                <div style="background-color: white;">
+                    <canvas id="{{chartIds.DESTINOS}}"></canvas>
+                </div>
+            </div>
+
+            {# Nested Tabs for factura charts #}
+            <div
+                x-data="{
+                    currentFacturaFiltro: '{{chartIds.FACTURAS_VG_VC}}',
+                }"
+            >
+                {# BEGIN TABS #}
+                <section class="tabs tabs-boxed justify-center" x-show="currentChart == '{{chartIds.FACTURAS_VG_VC}}' || currentChart == '{{chartIds.FACTURAS_ORD}}' ">
+                    <a
+                        @click="currentChart = '{{chartIds.FACTURAS_VG_VC}}'"
+                        x-bind:class="currentChart == '{{chartIds.FACTURAS_VG_VC}}' ? 'tab tab-active':'tab'">
+                        Vencidas/vigentes
+                    </a>
+                    <a
+                        @click="currentChart = '{{chartIds.FACTURAS_ORD}}'"
+                        x-bind:class="currentChart  == '{{chartIds.FACTURAS_ORD}}' ? 'tab tab-active':'tab'">
+                        Ordenadas
+                    </a>
+                </section>
+                {# BEGIN TABS #}
+
+                {# Los dos filtros de las facturas #}
+                <section id="filtros-facturas"
+                     x-show="currentChart == '{{chartIds.FACTURAS_VG_VC}}' || currentChart == '{{chartIds.FACTURAS_ORD}}'">
+                    <article class="flex justify-center" x-show="currentChart == '{{chartIds.FACTURAS_VG_VC}}'">
+                        <div x-bind:style="`width: ${pieWidth}`">
+                            <canvas id="{{chartIds.FACTURAS_VG_VC}}"></canvas>
+                        </div>
+                    </article>
+
+                    {# Tablita de facturas ordenadas #}
+                    <article class="" x-show="currentChart == '{{chartIds.FACTURAS_ORD}}'">
+                        <div class="overflow-x-auto">
+                            <h2 class="text-lg text-center">Facturas ordenadas por tiempo de cancelación</h2>
+                            <table id="facturasOrdenadasFechaCancelacion" class="table w-full">
+                                <!-- head -->
+                                <thead>
+                                    <tr>
+                                        <th>Id Factura</th>
+                                        <th>Tiempo de Cancelación en dias</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- row 1 -->
+                                    <tr>
+                                        <th>417c8acd-1f8f-41e2-903e-67ad5c583cd2</th>
+                                        <td>2</td>
+                                    </tr>
+                                    <!-- row 2 -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </article>
+                </section>
+
+            </div>
+        </section>
+    </form>
 {% endblock %}

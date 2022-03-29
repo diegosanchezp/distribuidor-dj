@@ -62,5 +62,23 @@
                 </div>
             </div>
         {% endif %}
+        {% if request.user.is_staff %}
+            <div class="card shadow-2xl lg:card-side bg-accent text-primary-content">
+                <div class="card-body">
+                    <h2 class="card-title">Reportes</h2>
+                    <p>Observa como se comporta la data de envios y facturas</p>
+                    <div class="justify-end card-actions">
+                        <a
+                            href="{% url "dashboard:reportes" %}"
+                            class="btn btn-accent">
+                            Ver más
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block w-6 h-6 ml-2 stroke-current">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        {%endif%}
     </section>
 {% endblock body %}
