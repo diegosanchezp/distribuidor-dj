@@ -136,7 +136,7 @@ class FacturasOrdenadasTiempoCancelacion(BaseDashQuery):
             )
             .annotate(
                 tiempo_cancelacion=ExpressionWrapper(
-                    F("date_paid") - F("date_init"),
+                    F("date_paid__date") - F("date_init__date"),
                     output_field=DurationField(),
                 )
             )
