@@ -1,0 +1,16 @@
+[
+{
+    "model": "auth.group",
+    "fields": {
+        "name": "comercio",
+        "permissions": []
+    }
+},
+{
+    "model": "auth.group",
+    "fields": {
+        "name": "cliente",
+        "permissions": []
+    }
+}
+]
