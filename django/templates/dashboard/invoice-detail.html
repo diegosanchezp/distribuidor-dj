@@ -16,9 +16,13 @@
         >
         <section class="w-full bg-neutral rounded-2xl col-span-8 px-6 pt-6 pb-14 shadow-2xl">
             <p>Factura <span class="text-bold">{{ invoice.id }}</span></p>
-            <p class="pt-9">Correspondiente a </p>
             {% for date in invoice.dates.all %}
-                <p class="text-2xl pt-6 pb-20">Mes de {{ date.date|date:"F"}} {{ date.date|date:"Y"}}.</p>
+                {% if date.status == states.UNPAID %}
+                    <p class="pt-9">Creada en la fecha <b>{{ date.date|date:"d-M-Y"}}</b></p>
+                {% endif %}
+                {% if date.status == states.PAID %}
+                    <p class="pt-9">Pagada en la fecha <b>{{ date.date|date:"d-M-Y"}}</b></p>
+                {% endif %}
             {% endfor %}
             <div class="divider"></div>
             <section class="flex items-center justify-between">
@@ -33,7 +37,7 @@
                     {% endif %}
                     <p class="pl-2" x-text="invoiceState"></p>
                 </section>
-                <p>Monto Total: ${{invoice.ammount}}</p>
+                <p>Monto Total: <b>${{invoice.ammount}}</b></p>
             </section>
             {% comment %}
                 <p class="pt-28 font-bold">Factura vence:</p>
