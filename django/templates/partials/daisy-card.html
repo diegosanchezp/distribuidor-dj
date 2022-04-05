@@ -2,7 +2,7 @@
 {% load static %}
 <div class="card card-bordered w-96 bg-base-100 shadow-xl m-10" >
   <figure>
-    <img src="{%if static_img%}{% static static_img %}{% endif %}{%if picsum_url%}{{picsum_url}}{%endif%}">
+    <img class="w-full" src="{%if static_img%}{% static static_img %}{% endif %}{%if picsum_url%}{{picsum_url}}{%endif%}">
   </figure>
   <div class="card-body">
     <h2 class="card-title">{{card_title}}</h2>

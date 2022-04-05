@@ -1,10 +1,15 @@
 {% extends "dashboard/base.html" %}
+{% load static %}
+
 {% block body %}
   {% include "components/dashboard/title.html" with underline_text="Dash" underline_subtext="board" %}
 
     <section class="grid grid-cols-3 gap-6 px-4">
-        <div class="card shadow-2xl lg:card-side bg-primary text-primary-content">
+        <div class="card shadow-2xl lg:card-side border border-primary text-primary-content relative">
             <div class="card-body">
+                <section class="w-full bg-primary rounded-xl">
+                    <img class="w-full rounded-xl max-h-60" src="{% static "img/shipments.png" %}"/>
+                </section>
                 <h2 class="card-title">Envios</h2>
                 <p>Revisa toda la información de los envíos creados.</p>
                 <div class="justify-end card-actions">
@@ -25,8 +30,9 @@
                 </div>
             </div>
         </div>
-        <div class="card shadow-2xl lg:card-side bg-secondary text-primary-content">
+        <div class="card shadow-2xl lg:card-side border border-secondary text-primary-content">
             <div class="card-body">
+                <img class="w-full rounded-xl max-h-60" src="{% static "img/invoices.png" %}"/>
                 <h2 class="card-title">Facturas</h2>
                 <p>Revisa toda  la información de las facturas.</p>
                 <div class="justify-end card-actions">
@@ -48,8 +54,11 @@
             </div>
         </div>
         {% if not request.user.is_staff %}
-            <div class="card shadow-2xl lg:card-side bg-accent text-primary-content">
+            <div class="card shadow-2xl lg:card-side border border-accent text-primary-content">
                 <div class="card-body">
+                    <section class="w-full bg-accent-focus py-4 rounded-xl">
+                        <img class="rounded-xl max-h-52 mx-auto" src="{% static "img/configuraciones-2.png" %}"/>
+                    </section>
                     <h2 class="card-title">Configuración</h2>
                     <p>Tokens de autenticación y información de perfil.</p>
                     <div class="justify-end card-actions">
@@ -64,8 +73,9 @@
             </div>
         {% endif %}
         {% if request.user.is_staff %}
-            <div class="card shadow-2xl lg:card-side bg-accent text-primary-content">
+            <div class="card shadow-2xl lg:card-side border border-accent text-primary-content">
                 <div class="card-body">
+                    <img class="w-full rounded-xl" src="{% static "img/reports.png" %}"/>
                     <h2 class="card-title">Reportes</h2>
                     <p>Observa como se comporta la data de envios y facturas</p>
                     <div class="justify-end card-actions">
