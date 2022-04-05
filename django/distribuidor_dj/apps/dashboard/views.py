@@ -124,7 +124,7 @@ class InvoiceDetailView(InvoiceDetailTest, UpdateView):
     model = Invoice
     context_object_name = "invoice"
     form_class = DakitiForm
-    extra_context = {"states": Invoice.States}
+    extra_context = {"states": Invoice.States, "shipstates": Shipment.States}
 
     def get_form_kwargs(self):
         return FormMixin.get_form_kwargs(self)
@@ -140,6 +140,20 @@ class InvoiceDetailView(InvoiceDetailTest, UpdateView):
     def form_valid(self, form):
         invoice: "Invoice" = self.object
 
+        if (
+            invoice.shipment.state == Shipment.States.CREATED
+            or invoice.shipment.state == Shipment.States.SENDED
+        ):
+            return JsonResponse(
+                data={
+                    "error": (
+                        "El envio no ha sido recibido,"
+                        "por lo tanto,"
+                        "no puedes pagar la factura"
+                    )
+                },
+                status=400,
+            )
         # Api key de prueba
         # "apiKey": "71b86b25305c5ae6028e0d6060658e3d9862a06d",
         res_data = form.cleaned_data | {
